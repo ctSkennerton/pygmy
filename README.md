@@ -19,8 +19,10 @@ We are currently setting up a Linux development environment for this project. Th
 * [premake](http://premake.github.io/): which is required to build ticpp
 
 to compile on linux:
+```
 git clone --recursive https://github.com/ctSkennerton/pygmy.git
 make
+```
 
 ## Copyright
 
