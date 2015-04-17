@@ -39,7 +39,7 @@ public:
 
 	/** 
 	 * @brief Reconstruct display lists. 
-	 * @param refresh True if OpenGL scene should be re-rendered.
+	 * @param refresh True if GL scene should be re-rendered.
 	 */
 	virtual void Redraw(bool bRender);
 
@@ -83,20 +83,20 @@ public:
     
 protected:
 	/** 
-	 * @brief Render the OpenGL scene. Called by Render() and OnPaint() which 
+	 * @brief Render the GL scene. Called by Render() and OnPaint() which 
 	 *				set up the appropriate device context. 
 	 */
 	virtual void RenderScene();
 	
 	/** 
 	 * @brief Reconstruct tree display lists.
-	 * @param refresh True if OpenGL scene should be re-rendered.
+	 * @param refresh True if GL scene should be re-rendered.
 	 */
 	virtual void RedrawTree(bool bRender);
 
 	/** 
 	 * @brief Reconstruct text search display lists.
-	 * @param refresh True if OpenGL scene should be re-rendered.
+	 * @param refresh True if GL scene should be re-rendered.
 	 */
 	virtual void RedrawTextSearch(bool bRender);
 	

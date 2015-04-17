@@ -58,7 +58,8 @@ uint ColourMap::GetSize() const
 
 ColourMap::TYPE ColourMap::ReadType(const std::wstring& filename)
 {
-	std::wifstream file(filename.c_str());
+	std::string tmp(filename.begin(), filename.end());
+	std::wifstream file(tmp.c_str());
 	if(!file)
 	{
 		utils::Log::Inst().Error(_T("(Error) ColourMap::ReadType(): invalid colour map file."));
@@ -88,7 +89,8 @@ ColourMap::TYPE ColourMap::ReadType(const std::wstring& filename)
 
 bool ColourMap::Load(const std::wstring& filename)
 {
-	std::wifstream file(filename.c_str());
+	std::string tmp(filename.begin(), filename.end());
+	std::wifstream file(tmp.c_str());
 	if(!file)
 		return false;
 

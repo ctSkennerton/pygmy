@@ -108,7 +108,7 @@ void Viewport::SaveRasterImage(const wstring& filename, const wstring& extension
 
 	if(extension == _T("png"))
 	{
-		// OpenGL assumes (0,0) is the lower, left. This image formats assume 
+		// GL assumes (0,0) is the lower, left. This image formats assume 
 		// (0,0) is the upper, left so we must "flip" the image.
 		unsigned char* buffer = new unsigned char[width*height*4];
 		glReadPixels(0,0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -131,7 +131,7 @@ void Viewport::SaveRasterImage(const wstring& filename, const wstring& extension
 	}
 	else if(extension == _T("ppm"))
 	{
-				// OpenGL assumes (0,0) is the lower, left. This image formats assume 
+				// GL assumes (0,0) is the lower, left. This image formats assume 
 		// (0,0) is the upper, left so we must "flip" the image.
 		unsigned char* buffer = new unsigned char[width*height*4];
 		glReadPixels(0,0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);

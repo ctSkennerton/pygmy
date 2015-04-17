@@ -39,7 +39,7 @@ bool PygmyApp::OnInit()
 
 		if(!m_treeFilename.IsEmpty())
 		{
-			std::wstring filename = m_treeFilename;
+			std::wstring filename = m_treeFilename.wc_str();
 			frame->OpenTree(filename);
 		}
 		

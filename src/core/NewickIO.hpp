@@ -96,7 +96,8 @@ public:
    */
 	void Write(utils::Tree<NodePhylo>::Ptr tree, const std::wstring & filename, bool overwrite = true) const
 	{
-		std::wofstream output(filename.c_str(), overwrite ? (std::ios::out) : (std::ios::out|std::ios::app));
+		std::string tmp(filename.begin(), filename.end());
+		std::wofstream output(tmp.c_str(), overwrite ? (std::ios::out) : (std::ios::out|std::ios::app));
 		Write(tree, output); 
 		output.close();
 	}

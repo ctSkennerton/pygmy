@@ -151,7 +151,7 @@ void VisualColourMap::RenderDiscreteMap(ColourMapDiscretePtr colourMap, int widt
 	{
 		// Note: the y value is purposely incremented in this manner to ensure that rounding errors
 		// do not cause the different colour map segments to have a 1 pixel gap between them.
-		colourMap->GetColour(i).SetColourOpenGL();
+		colourMap->GetColour(i).SetColourGL();
 		glBegin(GL_QUADS);
 			glVertex2i(x + dx, int(y));
 			glVertex2i(x, int(y));
@@ -264,12 +264,12 @@ void VisualColourMap:: RenderContinuousMap(ColourMapContinuousPtr colourMap, int
 		// Note: the y value is purposely incremented in this manner to ensure that rounding errors
 		// do not cause the different colour map segments to have a 1 pixel gap between them.
 		glBegin(GL_QUADS);
-			colourMap->GetColour(i).SetColourOpenGL();
+			colourMap->GetColour(i).SetColourGL();
 			glVertex2i(x + dx, int(y));
 			glVertex2i(x, int(y));
 
 			y += dy;
-			colourMap->GetColour(i+1).SetColourOpenGL();
+			colourMap->GetColour(i+1).SetColourGL();
 			glVertex2i(x, int(y));
 			glVertex2i(x + dx, int(y));
 		glEnd();	

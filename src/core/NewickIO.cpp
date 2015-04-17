@@ -30,7 +30,8 @@ bool NewickIO::Read(Tree<NodePhylo>::Ptr tree, const wstring& filename)
 		tree->SetName(_T(""));
 
 	// Parse Newick file
-	wifstream input(file.c_str(), std::ios::in);
+	std::string tmp(file.begin(), file.end());
+	wifstream input(tmp.c_str(), std::ios::in);
 	bool bLoaded = Read(tree, input);
 	input.close();
 

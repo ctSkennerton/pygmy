@@ -13,7 +13,7 @@
 namespace Image {
 
 // PNG Library
-#include "../png/png.h"
+#include <png.h>
 
 // *** Binary images ***
 

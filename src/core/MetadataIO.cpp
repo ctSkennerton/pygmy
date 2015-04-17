@@ -32,7 +32,10 @@ bool MetadataIO::Read(const std::wstring& filename, VisualTreePtr visualTree, Me
 	metadataInfo->Clear();
 
 	// open file containing metadata
-	wifstream infile(filename.c_str());
+	// convert from wstring to string cause apparently 
+	// wifstream in gcc 4.8 takes const char *
+	std::string tmp(filename.begin(), filename.end());
+	wifstream infile(tmp.c_str());
 	if(!infile.is_open()) 
 	{
 		utils::Log::Inst().Warning(_T("(Warning) Failed to open metadata file."));	

@@ -53,7 +53,7 @@ private:
 
 static const wxCmdLineEntryDesc gCmdLineDesc [] =
 {
-	{ wxCMD_LINE_PARAM,  NULL, NULL, "input tree", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+	{ wxCMD_LINE_PARAM,  NULL, NULL, L"input tree", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 
 	{ wxCMD_LINE_NONE }
 };

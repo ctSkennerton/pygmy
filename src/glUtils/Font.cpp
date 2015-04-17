@@ -15,7 +15,7 @@
 using namespace glUtils;
 using namespace utils;
 
-Font::Font(const std::wstring& fontFile): m_fontFile(fontFile)
+glUtils::Font::Font(const std::wstring& fontFile): m_fontFile(fontFile)
 		
 {
 	glDisable(GL_LINE_SMOOTH);
@@ -30,7 +30,7 @@ Font::Font(const std::wstring& fontFile): m_fontFile(fontFile)
 	m_font->UseDisplayList(true);
 }
 
-Font::~Font()
+glUtils::Font::~Font()
 {
 	if(m_font != NULL)
 	{
@@ -39,7 +39,7 @@ Font::~Font()
 	}
 }
 
-void Font::SetTypeface(const std::wstring& fontFile)
+void glUtils::Font::SetTypeface(const std::wstring& fontFile)
 {
 	std::string str(fontFile.begin(), fontFile.end());
 	m_font = new FTTextureFont(str.c_str());
@@ -51,20 +51,20 @@ void Font::SetTypeface(const std::wstring& fontFile)
 	m_font->UseDisplayList(true);
 }
 
-void Font::Render(const std::wstring& text, uint x, uint y)
+void glUtils::Font::Render(const std::wstring& text, uint x, uint y)
 {
 	glUtils::ErrorGL::Check();
 	m_font->Render(text.c_str(), -1, FTPoint(x, y), FTPoint(), FTGL::RENDER_FRONT);
 	glUtils::ErrorGL::Check();
 }
 
-void Font::SetSize(uint size)
+void glUtils::Font::SetSize(uint size)
 {
 	bool rtn = m_font->FaceSize(size);
 	utils::Error::Assert(rtn);
 }
 
-BBox Font::GetBoundingBox(const std::wstring& text) 
+BBox glUtils::Font::GetBoundingBox(const std::wstring& text) 
 { 
 	glUtils::ErrorGL::Check();
 	FTBBox bbox = m_font->BBox(text.c_str()); 

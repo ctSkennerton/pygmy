@@ -895,7 +895,8 @@ void VisualTree::ProjectTree(std::vector<std::wstring>& names)
 	if(m_metadataInfo)
 	{
 		m_metadataInfo->SetMetadata(m_tree);
-		((PygmyFrame*)App::Inst().GetMainFrame())->OnChangeColourMap(wxCommandEvent());
+		wxCommandEvent tmp;
+		((PygmyFrame*)App::Inst().GetMainFrame())->OnChangeColourMap(tmp);
 	}
 
 	Layout();
@@ -916,7 +917,8 @@ void VisualTree::RestoreTree()
 	if(m_metadataInfo)
 	{
 		m_metadataInfo->SetMetadata(m_tree);	
-		((PygmyFrame*)App::Inst().GetMainFrame())->OnChangeColourMap(wxCommandEvent());
+		wxCommandEvent tmp;
+		((PygmyFrame*)App::Inst().GetMainFrame())->OnChangeColourMap(tmp);
 	}
 
 	Layout(); 

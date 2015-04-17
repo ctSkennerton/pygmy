@@ -143,14 +143,14 @@ void ViewportOverview::RedrawTree(bool bRender)
 				// draw horizontal line
 				glBegin(GL_QUADS);
 					if(State::Inst().GetColourOverviewTree())
-						node->GetColour().SetColourOpenGL();
+						node->GetColour().SetColourGL();
 					else
 						glColor3f(0.5f, 0.5f, 0.5f);
 					glVertex2i(int(parentPos.x*sx + dx), int(childPos.y*sy + dy + thicknessMajor));
 					glVertex2i(int(parentPos.x*sx + dx), int(childPos.y*sy + dy - thicknessMinor));
 
 					if(State::Inst().GetColourOverviewTree())
-							child->GetColour().SetColourOpenGL();
+							child->GetColour().SetColourGL();
 						else
 							glColor3f(0.5f, 0.5f, 0.5f);
 					glVertex2i(int(childPos.x*sx + dx), int(childPos.y*sy + dy - thicknessMinor));
@@ -170,7 +170,7 @@ void ViewportOverview::RedrawTree(bool bRender)
 			if(!node->IsLeaf())
 			{
 				if(State::Inst().GetColourOverviewTree())
-					node->GetColour().SetColourOpenGL();
+					node->GetColour().SetColourGL();
 				else
 					glColor3f(0.5f, 0.5f, 0.5f);
 

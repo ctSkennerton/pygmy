@@ -18,7 +18,7 @@ namespace glUtils
 {
 
 /**
- * @brief Render TrueType fonts on OpenGL canvas.
+ * @brief Render TrueType fonts on GL canvas.
  */
 class Font
 {
@@ -39,7 +39,7 @@ public:
 	void SetTypeface(const std::wstring& fontFile);
 
 	/**
-	 * @brief Render text to current OpenGL canvas.
+	 * @brief Render text to current GL canvas.
 	 * @param text Text to render.
 	 * @param x,y Location to render bottom, left corner of text.
 	 */

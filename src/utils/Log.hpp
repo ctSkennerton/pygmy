@@ -138,7 +138,7 @@ protected:
   Log()
 	{
 		wxString logFile = pygmy::App::Inst().GetExeDir() + _T("Log.txt");
-		m_log.open(logFile.wc_str());
+		m_log.open(logFile.ToAscii());
 		m_logData.reserve(1000);	// allocate enough space to store a thousand entries
 
 		m_console = NULL;
@@ -153,7 +153,7 @@ protected:
 
 private:
 	/** Log stream */
-	std::ofstream m_log;
+	std::wofstream m_log;
 
 	/** Vector of log data. */
 	std::vector<std::wstring> m_logData;

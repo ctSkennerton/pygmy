@@ -112,7 +112,7 @@ bool ColourMapManager::LoadColourMaps(const std::wstring& colorMapPath)
 	using namespace boost::filesystem; 
 	
 	// check if colour map directory exists
-	wpath colorMapDir(colorMapPath);
+	path colorMapDir(colorMapPath);
 	if(!exists(colorMapDir)) 
 	{
 		utils::Log::Inst().Error(_T("ColourMapManager::LoadColourMaps(): failed to open colour map directory."));
@@ -120,14 +120,14 @@ bool ColourMapManager::LoadColourMaps(const std::wstring& colorMapPath)
 	}
 
 	// iterate over all files in colour map directory
-	wdirectory_iterator end_itr; 
+	directory_iterator end_itr; 
 	ColourMapPtr tempColourMap(new ColourMap());
 	bool bSuccess;
-  for(wdirectory_iterator itr(colorMapDir); itr != end_itr; ++itr)
+  for(directory_iterator itr(colorMapDir); itr != end_itr; ++itr)
   {
 		if (!is_directory(itr->status()))
 		{
-			std::wstring filename = itr->path().file_string();
+			std::wstring filename = itr->path().wstring();
 			ColourMap::TYPE type = tempColourMap->ReadType(filename);
 			ColourMapPtr colourMap;
 			if(type == ColourMap::CONTINUOUS)

@@ -80,7 +80,7 @@ public:
 	/** 
 	 * @brief Process mouse moving events. 
 	 * @param mousePt Screen position of mouse.
-	 * @return True if the OpenGL viewport should be refreshed.
+	 * @return True if the GL viewport should be refreshed.
 	 */
 	virtual bool MouseMove(const utils::Point& mousePt) { return false; }
 

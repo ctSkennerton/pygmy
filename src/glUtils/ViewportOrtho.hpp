@@ -20,7 +20,7 @@ namespace glUtils
 {
 
 /**
- * @brief Base class for an orthographic OpenGL canvas.
+ * @brief Base class for an orthographic GL canvas.
  */
 class ViewportOrtho : public Viewport
 {
@@ -67,7 +67,7 @@ public:
 	virtual float GetTranslation() const { return m_translate; };
     
 protected:
-	/** Setup OpenGL canvas */
+	/** Setup GL canvas */
 	virtual void InitCanvas();
 
 	/** 

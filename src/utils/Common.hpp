@@ -99,10 +99,18 @@ typedef struct sINTERVAL
 #define TAN_30	0.5773502692f
 #define COS_30	0.8660254038f
 #define SIN_30	0.5f
+#ifndef FLT_MAX
 #define FLT_MAX std::numeric_limits<float>::max()
+#endif
+#ifndef FLT_MIN
 #define FLT_MIN -std::numeric_limits<float>::max()
+#endif
+#ifndef DBL_MAX
 #define DBL_MAX std::numeric_limits<double>::max()
+#endif
+#ifndef DBL_MIN
 #define DBL_MIN -std::numeric_limits<double>::max()
+#endif
 
 //--- Useful flags ---
 

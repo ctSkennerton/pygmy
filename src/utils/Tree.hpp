@@ -409,7 +409,7 @@ void Tree<N>::ProjectTree(std::vector<std::wstring>& names)
 	}
 
 	// 2. Remove all nodes contained in the projection set.
-	std::map<std::wstring, N*>::iterator it;
+	typename std::map<std::wstring, N*>::iterator it;
 	foreach(const std::wstring& name, names)
 	{
 		it = namesToNodes.find(name);

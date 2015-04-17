@@ -27,7 +27,7 @@ public:
 	 * @brief Constructor.
 	 * @param parent Parent for this frame
 	 * @param visualTree Visual tree to select taxa from.
-	 * @param viewport OpenGL viewport containing the visual tree.
+	 * @param viewport GL viewport containing the visual tree.
 	 */
 	TaxaSelectionDlg(wxWindow* parent, VisualTreePtr visualTree, ViewportMainPtr viewport);
 
