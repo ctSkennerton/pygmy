@@ -13,9 +13,14 @@ We are currently setting up a Linux development environment for this project. Th
 * [freetype](http://www.freetype.org/): software library to render fonts.
 * [ftgl](http://sourceforge.net/projects/ftgl/): library that uses Freetype2 to simplify rendering fonts in OpenGL applications.
 * [libpng](http://www.libpng.org/pub/png/libpng.html): offcial PNG reference library.
-* [ticpp](https://code.google.com/p/ticpp/): tiny XML parser.
+* [ticpp](https://code.google.com/p/ticpp/): tiny XML parser - included as a submodule of this git repository.
 * [wxWidgets](https://www.wxwidgets.org/): cross-platform GUI library.
 * [zlib](http://www.zlib.net/): an unobtrusive compression library.
+* [premake](http://premake.github.io/): which is required to build ticpp
+
+to compile on linux:
+git clone --recursive https://github.com/ctSkennerton/pygmy.git
+make
 
 ## Copyright
 
