@@ -25,7 +25,7 @@ class ColourMapContinuous: public ColourMap
 {
 public:
 	/** Constructor. */
-	ColourMapContinuous(const std::wstring& name = _T("<no name>"), TYPE type = CONTINUOUS): ColourMap(name, type) {}
+        ColourMapContinuous(const QString& name = "<no name>", TYPE type = CONTINUOUS): ColourMap(name, type) {}
 
 	/** Destructor. */
 	virtual ~ColourMapContinuous() {}

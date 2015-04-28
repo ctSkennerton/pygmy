@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/fonts/andale.ttf</file>
+        <file>resources/fonts/arial.ttf</file>
+        <file>resources/fonts/courier.ttf</file>
+        <file>resources/fonts/georgia.ttf</file>
+        <file>resources/fonts/impact.ttf</file>
+        <file>resources/fonts/times.ttf</file>
+        <file>resources/fonts/trebuchet.ttf</file>
+        <file>resources/fonts/verdana.ttf</file>
+    </qresource>
+</RCC>

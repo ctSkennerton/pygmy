@@ -76,7 +76,7 @@ void ViewportMain::RenderScene()
 		}
 	}
 
-  SwapBuffers();
+    SwapBuffers();
 
 	glUtils::ErrorGL::Check();
 

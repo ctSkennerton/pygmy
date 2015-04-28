@@ -9,9 +9,9 @@
 
 #ifndef _COLOR_
 #define _COLOR_
-
-#include "../core/Precompiled.hpp"
-
+#include <QColor>
+#include <gl.h>
+#include "../core/DataTypes.hpp"
 namespace utils
 {
 
@@ -43,7 +43,7 @@ public:
 	 * @brief Constructor. Specify colour components between 0 and 1. 
 	 * @param colour wxWidgets colour object.
 	 */
-  Colour( const wxColour& colour );
+  Colour( const QColor& colour );
 
 	/** Destructor. */
   ~Colour( void );

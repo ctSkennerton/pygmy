@@ -12,12 +12,15 @@
 #ifndef _TREE_
 #define _TREE_
 
-#include "../core/Precompiled.hpp"
 
 #include "../utils/TreeTools.hpp"
-#include "../utils/Log.hpp"
 
-#include <ostream>
+#include <QSharedPointer>
+#include <QString>
+#include <queue>
+#include <vector>
+#include <set>
+#include <stack>
 
 namespace utils
 {
@@ -35,17 +38,17 @@ template<class N> class Tree
 {
 public:
 	/** Allows convenient syntax for creating smart pointers of this class. */
-	typedef boost::shared_ptr< Tree<N> > Ptr;	
+    typedef QSharedPointer< Tree<N> > Ptr;
 
 public:	
 	/** Constructor. */
-	Tree(): m_root(NULL), m_name(_T("")), m_numLeaves(0), m_numNodes(0), m_lengthOfTree(0) {}
+    Tree(): m_root(NULL), m_name(""), m_numLeaves(0), m_numNodes(0), m_lengthOfTree(0) {}
 
 	/**
 	 * @brief Constructor
 	 * @param root Root of tree.
 	 */
-	Tree(N* root): m_root(root), m_name(_T("")), m_numLeaves(0), m_numNodes(0), m_lengthOfTree(0) {}
+    Tree(N* root): m_root(root), m_name(""), m_numLeaves(0), m_numNodes(0), m_lengthOfTree(0) {}
 
 	/** Copy constructor. */
 	Tree(const Tree<N>& t);
@@ -61,13 +64,13 @@ public:
 
 public:
 	/** Get name of tree. */
-	std::wstring GetName() const  { return m_name; }
+    QString GetName() const  { return m_name; }
 
 	/**
 	 * @brief Set name of tree.
 	 * @param name Desired name of tree.
 	 */		
-	void SetName(const std::wstring & name) { m_name = name; }
+    void SetName(const QString & name) { m_name = name; }
 
 	/** 
 	 * @brief Set root node of tree.
@@ -85,7 +88,7 @@ public:
 	N* GetNode(unsigned int id) const; 
 
 	/** Get node with the given name. */
-	N* GetNode(const std::wstring& name) const;
+    N* GetNode(const QString& name) const;
 
 	/** Get number of leaf nodes in tree. */
 	unsigned int GetNumberOfLeaves() const { return m_numLeaves; }
@@ -97,7 +100,7 @@ public:
 	std::vector<unsigned int> GetLeafIds() const { return TreeTools<N>::GetLeafIds(m_root); }
 
 	/** Get name of all leaf nodes in depth first order. */
-	std::vector<std::wstring> GetLeafNames() const { return TreeTools<N>::GetLeafNames(m_root); }
+    std::vector<QString> GetLeafNames() const { return TreeTools<N>::GetLeafNames(m_root); }
 
 	/** Get number of nodes in tree. */
 	unsigned int GetNumberOfNodes() const { return m_numNodes; }
@@ -157,7 +160,7 @@ public:
 	 * @param names Names of leaf nodes to project tree onto.
 	 * Note: names will contain a list of all the names not found in the tree after function returns.
 	 */
-	void ProjectTree(std::vector<std::wstring>& names);
+    void ProjectTree(std::vector<QString>& names);
 
 	/** 
 	 * @brief Set a new root for the tree.
@@ -180,7 +183,7 @@ protected:
 
 protected:
 	N* m_root;
-	std::wstring m_name;
+    QString m_name;
 
 	uint m_numLeaves;
 	uint m_numNodes;
@@ -263,19 +266,20 @@ N* Tree<N>::GetNode(unsigned int id) const
 }
 
 template <class N>
-N* Tree<N>::GetNode(const std::wstring& name) const
+N* Tree<N>::GetNode(const QString& name) const
 {
 	std::vector<N*> nodes = TreeTools<N>::SearchNodeWithName(m_root, name);
 
 	if(nodes.size() > 1)
 	{
-		std::wstring warning = _T("Node::GetNode(): multiple nodes have id = "); 
-		utils::Log::Inst().Warning(warning + name);
+        QString warning = "Node::GetNode(): multiple nodes have id = ";
+        //TODO: add in error msg
+        //utils::Log::Inst().Warning(warning + name);
 		return NULL;
 	}
 	else if(nodes.size() == 0)
 	{
-		//std::wstring warning = "Node::GetNode(): no node with id = "; 
+        //QString warning = "Node::GetNode(): no node with id = ";
 		//error::Log::Inst().Warning(warning + name);
 		return NULL;
 	}
@@ -338,7 +342,7 @@ void Tree<N>::CollapseNodes(float support)
 {
 	std::queue<N*> queue;
 	std::vector<N*> children = GetRootNode()->GetChildren();
-	foreach(N* child, children)
+    for(N* child : children)
 	{
 		queue.push(child);
 	}
@@ -353,7 +357,7 @@ void Tree<N>::CollapseNodes(float support)
 			// collapse this node by assigning all of its children to
 			// the parent of this node
 			std::vector<N*> children = curNode->GetChildren();
-			foreach(N* child, children)
+            for(N* child : children)
 			{
 				curNode->GetParent()->AddChild(child);
 				child->SetParent(curNode->GetParent());
@@ -375,7 +379,7 @@ void Tree<N>::CollapseNodes(float support)
 		{
 			// add children to the queue
 			std::vector<N*> children = curNode->GetChildren();
-			foreach(N* child, children)
+            for(N* child : children)
 			{
 				if(!child->IsLeaf())
 					queue.push(child);
@@ -388,12 +392,12 @@ void Tree<N>::CollapseNodes(float support)
 }
 
 template <class N>
-void Tree<N>::ProjectTree(std::vector<std::wstring>& names)
+void Tree<N>::ProjectTree(std::vector<QString>& names)
 {
 	// mark all internal node as unprocessed so we can distinguish them for 
 	// true leaf nodes
 	std::vector<N*> nodes = GetNodes();
-	foreach(N* node, nodes)
+    for(N* node : nodes)
 	{
 		node->SetProcessed(!node->IsLeaf());
 	}
@@ -402,15 +406,15 @@ void Tree<N>::ProjectTree(std::vector<std::wstring>& names)
 
 	// 1. Create dictionary mapping names to leaf nodes.
 	std::vector<N*> leafNodes = GetLeaves();
-	std::map<std::wstring, N*> namesToNodes;
-	foreach(N* leaf, leafNodes)
+    std::map<QString, N*> namesToNodes;
+    for(N* leaf : leafNodes)
 	{
-		namesToNodes.insert(std::pair<std::wstring, N*>(leaf->GetName(), leaf));
+        namesToNodes.insert(std::pair<QString, N*>(leaf->GetName(), leaf));
 	}
 
 	// 2. Remove all nodes contained in the projection set.
-	std::map<std::wstring, N*>::iterator it;
-	foreach(const std::wstring& name, names)
+    typename std::map<QString, N*>::iterator it;
+    for(const QString& name : names)
 	{
 		it = namesToNodes.find(name);
 		if(it != namesToNodes.end())
@@ -431,7 +435,7 @@ void Tree<N>::ProjectTree(std::vector<std::wstring>& names)
 	while(!curNodes.empty())
 	{
 		nextNodes.clear();
-		foreach(N* node, curNodes)
+        for(N* node : curNodes)
 		{
 			if(!node->IsRoot())
 				nextNodes.insert(node->GetParent());
@@ -559,7 +563,7 @@ void Tree<N>::Reroot(N* node)
 	delete m_root;
 
 	std::vector<N*> children = newRoot->GetChildren();
-	foreach(N* child, children)
+    for(N* child : children)
 	{
 		if(!child->IsLeaf())
 			child->SetBootstrapToParent(node->GetBootstrapToParent());

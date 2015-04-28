@@ -82,11 +82,6 @@ typedef struct sINTERVAL
 	float end;
 } Interval;
 
-//--- Common macros
-
-// Allows for more natural iteration over a sequence
-#define foreach BOOST_FOREACH
-
 
 //--- Common Numeric Values ---------------------------------------------------
 

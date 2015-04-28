@@ -10,7 +10,6 @@
 #ifndef _PARSIMONY_CALCULATOR_
 #define _PARSIMONY_CALCULATOR_
 
-#include "../core/Precompiled.hpp"
 
 #include "../utils/Tree.hpp"
 #include "../core/NodePhylo.hpp"
@@ -19,12 +18,12 @@ typedef struct sPARSIMONY_DATA
 {
 	sPARSIMONY_DATA(): nodeScore(0) {}
 
-	uint GetScore(const std::wstring& character) { return characterScores[character]; }
+        uint GetScore(const QString& character) { return characterScores[character]; }
 	uint GetNodeScore() { return nodeScore; }
 
-	std::map<std::wstring, uint> characterScores;
+        std::map<QString, uint> characterScores;
 	uint nodeScore;
-	std::set<std::wstring> parsimoniousCharacters;
+        std::set<QString> parsimoniousCharacters;
 } ParsimonyData;
 
 namespace utils
@@ -44,17 +43,17 @@ public:
 	~ParsimonyCalculator() {}
 
 	/** Calculate parismony score and assignment of labels giving this score. */
-	uint Calculate(Tree<pygmy::NodePhylo>::Ptr tree, const std::wstring& field, const std::set< std::wstring >& characters);
+        uint Calculate(Tree<pygmy::NodePhylo>::Ptr tree, const QString& field, const std::set< QString >& characters);
 
 	/** Get parsimony data for a given node. */
 	void GetData(pygmy::NodePhylo* node, ParsimonyData& parsimonyData);
 
 protected:
 	/** Propagate parsimony scores up tree.*/
-	void CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const std::wstring& field, const std::set< std::wstring >& characters);
+        void CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const QString& field, const std::set< QString >& characters);
 
 	/** Propagate most parsimonious character states down tree. */
-	void CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const std::wstring& field, const std::set< std::wstring >& characters);
+        void CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const QString& field, const std::set< QString >& characters);
 
 protected:
 	/** Parsimony data for each node (indexed by node id). */

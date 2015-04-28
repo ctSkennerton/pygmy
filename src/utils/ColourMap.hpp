@@ -10,7 +10,6 @@
 #ifndef _COLOUR_MAP_
 #define _COLOUR_MAP_
 
-#include "../core/Precompiled.hpp"
 
 #include "../utils/Colour.hpp"
 
@@ -29,7 +28,7 @@ public:
 
 public:
 	/** Constructor. */
-	ColourMap(const std::wstring& name = _T("<no name>"), TYPE type = UNKNOWN): m_name(name), m_type(type), m_bCustom(false) {}
+        ColourMap(const QString& name = "<no name>", TYPE type = UNKNOWN): m_name(name), m_type(type), m_bCustom(false) {}
 
 	/** Constructor. */
 	ColourMap(ColourMapPtr colourMap);
@@ -53,10 +52,10 @@ public:
 	Colour GetColour(uint index) const;
 
 	/** Set name of colour map. */
-	void SetName(const std::wstring& name) { m_name = name; }
+        void SetName(const QString& name) { m_name = name; }
   
 	/** Get name of colour map. */
-	const std::wstring& GetName() const { return m_name; }
+        const QString& GetName() const { return m_name; }
 
   /** Get the size of the colour map. */
   uint GetSize() const;
@@ -78,14 +77,14 @@ public:
 	 * @param filename Filename (including path) of colour map to read.
 	 * @return Type of colour map.
 	 */
-	TYPE ReadType(const std::wstring& filename);
+        TYPE ReadType(const QString& filename);
 
 	/** 
 	 * @brief Load colour map from file. 
 	 * @param filename Filename (including path) of colour map to load.
 	 * @return True if colour maps loaded successfully, otherwise False.
 	 */
-	bool Load(const std::wstring& filename);
+        bool Load(const QString& filename);
 
 	/** Determine if colour map has been modified (i.e., is a custom colour map). */
 	bool IsCustom() const { return m_bCustom; }
@@ -98,7 +97,7 @@ protected:
 	std::vector<Colour> m_colourMap;
 
 	/** Name of colour map. */
-	std::wstring m_name;
+        QString m_name;
 
 	/** Type of colour map. */
 	TYPE m_type;

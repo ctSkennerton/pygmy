@@ -10,7 +10,6 @@
 #ifndef _GEO_TREE_VIEW_HPP_
 #define _GEO_TREE_VIEW_HPP_
 
-#include "../core/Precompiled.hpp"
 
 #include "../core/NodePhylo.hpp"
 #include "../core/VisualObject.hpp"
@@ -19,6 +18,7 @@
 
 #include "../utils/Colour.hpp"
 #include "../utils/Tree.hpp"
+#include "Filter.hpp"
 
 namespace pygmy 
 {
@@ -99,7 +99,7 @@ public:
 	 * @param field Field to base colours on.
 	 * @param colourMap Colour map to associate with tree. 
 	 */
-	void PropagateColours(const std::wstring& field, utils::ColourMapPtr colourMap);
+    void PropagateColours(const QString& field, utils::ColourMapPtr colourMap);
 
 	/**
 	 * @brief Calculate dimensions of tree.
@@ -132,7 +132,7 @@ public:
 	 * @param names Names of leaf nodes to project tree onto.
 	 * Note: names will contain a list of all the names not found in the tree after function returns.
 	 */
-	void ProjectTree(std::vector<std::wstring>& names);
+    void ProjectTree(std::vector<QString>& names);
 
 	/**
 	 * @brief Collapse all nodes with a bootstrap value less than the specified value. 

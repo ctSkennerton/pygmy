@@ -9,24 +9,22 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
 
 #include "ParsimonyCalculator.hpp"
 
 using namespace utils;
-using namespace std;
 using namespace pygmy;
 
-uint ParsimonyCalculator::Calculate(Tree<pygmy::NodePhylo>::Ptr tree, const std::wstring& field, const std::set< std::wstring >& characters)
+uint ParsimonyCalculator::Calculate(Tree<pygmy::NodePhylo>::Ptr tree, const QString& field, const std::set< QString >& characters)
 {
 	// initialize leaf nodes
 	std::vector<NodePhylo*> leaves = tree->GetLeaves();
-	foreach(NodePhylo* leaf, leaves)
+    for(NodePhylo* leaf : leaves)
 	{
 		ParsimonyData parsimonyData;
 		parsimonyData.nodeScore = 0;
 
-		foreach(const std::wstring& character, characters)
+        for(const QString& character : characters)
 		{
 			parsimonyData.characterScores[character] = INT_MAX;
 		}
@@ -45,11 +43,11 @@ uint ParsimonyCalculator::Calculate(Tree<pygmy::NodePhylo>::Ptr tree, const std:
 	return m_parsimonyData[tree->GetRootNode()->GetId()].GetNodeScore();
 }
 
-void ParsimonyCalculator::CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const std::wstring& field, const std::set< std::wstring >& characters)
+void ParsimonyCalculator::CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const QString& field, const std::set< QString >& characters)
 {
 	// set flag indicating if a node has been processed
 	std::vector<NodePhylo*> nodes = tree->GetNodes();
-	foreach(NodePhylo* node, nodes)
+    for(NodePhylo* node : nodes)
 	{
 		node->SetProcessed(node->IsLeaf());
 	}
@@ -57,7 +55,7 @@ void ParsimonyCalculator::CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const st
 	// calculate values for internal nodes in breadth-first order starting from the leaf nodes
 	std::vector<NodePhylo*> leaves = tree->GetLeaves();
 	std::set<NodePhylo*> curNodes;
-	foreach(NodePhylo* leaf, leaves)
+    for(NodePhylo* leaf : leaves)
 	{
 		curNodes.insert(leaf->GetParent());
 	}
@@ -66,12 +64,12 @@ void ParsimonyCalculator::CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const st
 	while(!curNodes.empty())
 	{
 		nextNodes.clear();
-		foreach(NodePhylo* curNode, curNodes)
+        for(NodePhylo* curNode : curNodes)
 		{
 			// check if all children have been processed
 			bool bAllProcessed = true;
 			std::vector<NodePhylo*> children = curNode->GetChildren();
-			foreach(NodePhylo* child, children)
+            for(NodePhylo* child : children)
 			{
 				if(!child->IsProcessed())
 				{
@@ -87,10 +85,10 @@ void ParsimonyCalculator::CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const st
 			// calculate parsimony data for internal node
 			ParsimonyData parsimonyData;
 			parsimonyData.nodeScore = INT_MAX;
-			foreach(const std::wstring& character, characters)
+            for(const QString& character : characters)
 			{
 				parsimonyData.characterScores[character] = 0;
-				foreach(NodePhylo* child, children)
+                for(NodePhylo* child : children)
 				{
 					uint nodeScore = m_parsimonyData[child->GetId()].GetNodeScore() + 1;
 					uint characterScore = m_parsimonyData[child->GetId()].GetScore(character);
@@ -117,11 +115,11 @@ void ParsimonyCalculator::CalculateUp(Tree<pygmy::NodePhylo>::Ptr tree, const st
 	}
 }
 
-void ParsimonyCalculator::CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const std::wstring& field, const std::set< std::wstring >& characters)
+void ParsimonyCalculator::CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const QString& field, const std::set< QString >& characters)
 {
 	// assign parsimonious characters to root node
 	ParsimonyData& data = m_parsimonyData[tree->GetRootNode()->GetId()];
-	foreach(const std::wstring& character, characters)
+    for(const QString& character: characters)
 	{
 		if(data.GetScore(character) == data.GetNodeScore())
 			data.parsimoniousCharacters.insert(character);
@@ -130,7 +128,7 @@ void ParsimonyCalculator::CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const 
 	// assign parsimonious characters to internal nodes in a breadth-first manner
 	std::set<NodePhylo*> curNodes;
 	std::vector<NodePhylo*> children = tree->GetRootNode()->GetChildren();
-	foreach(NodePhylo* child, children)
+    for(NodePhylo* child : children)
 	{
 		curNodes.insert(child);
 	}
@@ -139,12 +137,12 @@ void ParsimonyCalculator::CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const 
 	while(!curNodes.empty())
 	{
 		nextNodes.clear();
-		foreach(NodePhylo* node, curNodes)
+        for(NodePhylo* node : curNodes)
 		{
 			// assign parsimonious characters to node
 			ParsimonyData& dataParent = m_parsimonyData[node->GetParent()->GetId()];
 			ParsimonyData& dataNode = m_parsimonyData[node->GetId()];
-			foreach(const std::wstring& character, dataParent.parsimoniousCharacters)
+            for(const QString& character : dataParent.parsimoniousCharacters)
 			{
 				if(dataNode.GetNodeScore() + 1 >= dataNode.GetScore(character))
 				{
@@ -152,7 +150,7 @@ void ParsimonyCalculator::CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const 
 				}
 			}
 
-			foreach(const std::wstring& character, characters)
+            for(const QString& character : characters)
 			{	
 				if(dataNode.GetNodeScore() == dataNode.GetScore(character))
 				{
@@ -162,7 +160,7 @@ void ParsimonyCalculator::CalculateDown(Tree<pygmy::NodePhylo>::Ptr tree, const 
 			
 			// process children
 			std::vector<NodePhylo*> children = node->GetChildren();
-			foreach(NodePhylo* child, children)
+            for(NodePhylo* child : children)
 			{
 				nextNodes.insert(child);
 			}

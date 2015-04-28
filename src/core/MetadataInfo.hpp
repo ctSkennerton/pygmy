@@ -10,8 +10,6 @@
 #ifndef _METADATA_INFO_HPP_
 #define _METADATA_INFO_HPP_
 
-#include "../core/Precompiled.hpp"
-
 #include "../core/NodePhylo.hpp"
 
 #include "../utils/Tree.hpp"
@@ -41,18 +39,18 @@ typedef struct sFIELD_INFO
 		: minValue(0), maxValue(0), dataType(NUMERICAL) {}
 
 	/** Constructor. */
-	sFIELD_INFO(float _minValue, float _maxValue, DATA_TYPE _dataType, const std::set<std::wstring>& _values)
+    sFIELD_INFO(float _minValue, float _maxValue, DATA_TYPE _dataType, const std::set<QString>& _values)
 		: minValue(_minValue), maxValue(_maxValue), dataType(_dataType), values(_values) {}
 
 	/** Get string corresponding to data type. */
-	std::wstring GetDataTypeStr()
+    QString GetDataTypeStr()
 	{
 		if(dataType == CATEGORICAL)
-			return _T("Categorical");
+            return "Categorical";
 		else if(dataType == NUMERICAL)
-			return _T("Numerical");
+            return "Numerical";
 
-		return _T("");
+        return "";
 	}
 
 	/** Minimum value of field. */
@@ -65,7 +63,7 @@ typedef struct sFIELD_INFO
 	DATA_TYPE dataType;
 
 	/** Values for this field. */
-	std::set<std::wstring> values;
+    std::set<QString> values;
 } FieldInfo;
 
 /**
@@ -82,10 +80,10 @@ public:
 	~MetadataInfo( void ) {}
 
 	/** Get summary information for given field. */
-	FieldInfo GetInfo(const std::wstring& field) { return m_metadataInfo[field]; }
+    FieldInfo GetInfo(const QString& field) { return m_metadataInfo[field]; }
 
 	/** Add new metadata. */
-	void AddMetadata(const std::map<std::wstring, std::wstring>& metadata);
+    void AddMetadata(const std::map<QString, QString>& metadata);
 
 	/** Set metadata to reflect data in the leaf nodes of a tree. */
 	void SetMetadata(utils::Tree<NodePhylo>::Ptr tree);
@@ -94,13 +92,13 @@ public:
 	void Clear() { m_metadataInfo.clear(); }
 
 	/** Get all fields. */
-	std::vector<std::wstring> GetFields();
+    std::vector<QString> GetFields();
 
 	/** Check if data is missing. */
-	static bool IsMissingData(const std::wstring& value);
+    static bool IsMissingData(const QString& value);
 
 private:
-	std::map<std::wstring, FieldInfo> m_metadataInfo;
+    std::map<QString, FieldInfo> m_metadataInfo;
 };
 
 }

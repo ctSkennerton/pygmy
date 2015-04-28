@@ -10,8 +10,6 @@
 #ifndef _LINE_HPP_
 #define _LINE_HPP_
 
-#include "../core/Precompiled.hpp"
-
 #include "../utils/Point.hpp"
 
 namespace utils

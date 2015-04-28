@@ -11,7 +11,7 @@
 #define _OPENGL_FONT_
 
 #include "../utils/Common.hpp"
-
+#include <QString>
 #include <FTGL/ftgl.h>
 
 namespace glUtils
@@ -27,7 +27,7 @@ public:
 	 * @brief Build a new font.
 	 * @param fontFile TrueType font file (e.g., times.ttf, arial.ttf).
 	 */
-	Font(const std::wstring& fontFile);
+    Font(const QString& fontFile);
 
 	/** Destructor. */
 	~Font();
@@ -36,14 +36,14 @@ public:
 	 * @brief Change the font typeface.
 	 * @param fontFile TrueType font file (e.g., times.ttf, arial.ttf).
 	 */
-	void SetTypeface(const std::wstring& fontFile);
+    void SetTypeface(const QString& fontFile);
 
 	/**
 	 * @brief Render text to current OpenGL canvas.
 	 * @param text Text to render.
 	 * @param x,y Location to render bottom, left corner of text.
 	 */
-	void Render(const std::wstring& text, uint x, uint y);
+    void Render(const QString& text, uint x, uint y);
 
 	/**
 	 * @brief Set size of font.
@@ -75,17 +75,20 @@ public:
 	 * @param text Text to determine bounding box of.
 	 * @return Bounding box.
 	 */
-	utils::BBox GetBoundingBox(const std::wstring& text);
+    utils::BBox GetBoundingBox(const QString& text);
 
 	/**
 	 * @brief Type of font (e.g., Times.ttf, Arial.ttf).
 	 * @return TrueType filename.
 	 */
-	const std::wstring& GetFontFile() { return m_fontFile; }
+    const QString& GetFontFile() { return m_fontFile; }
 
 private:
 	/** TTF font file. */
-	std::wstring m_fontFile;
+    QString m_fontFile;
+
+    /** The contents of the TTF font file used for FTGL*/
+    unsigned char * m_fontBuffer;
 
 	/** Smart pointer to a FTFont. */
 	FTTextureFont* m_font;

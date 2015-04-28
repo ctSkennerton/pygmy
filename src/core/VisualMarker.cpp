@@ -7,13 +7,10 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
 
 #include "../core/VisualMarker.hpp"
-#include "../core/App.hpp"
 
 #include "../glUtils/ErrorGL.hpp"
-#include "../utils/StringTools.hpp"
 
 using namespace pygmy;
 using namespace utils;

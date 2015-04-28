@@ -14,18 +14,19 @@
 typedef unsigned int uint;
 typedef unsigned char byte;
 typedef unsigned long ulong;
+#include <QSharedPointer>
 
 // smart pointers to classes
 namespace pygmy
 {
 	class Filter;
-	typedef boost::shared_ptr<Filter> FilterPtr;
+    typedef QSharedPointer<Filter> FilterPtr;
 
 	class TextSearch;
-	typedef boost::shared_ptr<TextSearch> TextSearchPtr;
+    typedef QSharedPointer<TextSearch> TextSearchPtr;
 
 	class MetadataInfo;
-	typedef boost::shared_ptr<MetadataInfo> MetadataInfoPtr;
+    typedef QSharedPointer<MetadataInfo> MetadataInfoPtr;
 
 	class ViewportOverview;
 	typedef ViewportOverview* ViewportOverviewPtr;
@@ -37,13 +38,13 @@ namespace pygmy
 	typedef ViewportMain* ViewportMainPtr;
 
 	class VisualColourMap;
-	typedef boost::shared_ptr<VisualColourMap> VisualColourMapPtr;
+    typedef QSharedPointer<VisualColourMap> VisualColourMapPtr;
 
 	class VisualObject;
-	typedef boost::shared_ptr<VisualObject> VisualObjectPtr;
+    typedef QSharedPointer<VisualObject> VisualObjectPtr;
 
 	class VisualTree;
-	typedef boost::shared_ptr<VisualTree> VisualTreePtr;
+    typedef QSharedPointer<VisualTree> VisualTreePtr;
 }
 
 namespace glUtils
@@ -56,28 +57,28 @@ namespace glUtils
 	typedef ViewportOrtho* ViewportOrthoPtr;	// smart pointer are not used here since wxWidgets objects
 																						// handle deallocation internally	
 	class Font;
-	typedef boost::shared_ptr<Font> FontPtr;
+    typedef QSharedPointer<Font> FontPtr;
 }
 
 namespace utils
 {
 	class Colour;
-	typedef boost::shared_ptr<Colour> ColourPtr;
+    typedef QSharedPointer<Colour> ColourPtr;
 	
 	class ColourMap;
-	typedef boost::shared_ptr<ColourMap> ColourMapPtr;
+    typedef QSharedPointer<ColourMap> ColourMapPtr;
 
 	class ColourMapContinuous;
-	typedef boost::shared_ptr<ColourMapContinuous> ColourMapContinuousPtr;
+    typedef QSharedPointer<ColourMapContinuous> ColourMapContinuousPtr;
 
 	class ColourMapDiscrete;
-	typedef boost::shared_ptr<ColourMapDiscrete> ColourMapDiscretePtr;
+    typedef QSharedPointer<ColourMapDiscrete> ColourMapDiscretePtr;
 
 	class ColourMapManager;
-	typedef boost::shared_ptr<ColourMapManager> ColourMapManagerPtr;
+    typedef QSharedPointer<ColourMapManager> ColourMapManagerPtr;
 
 	class ParsimonyCalculator;
-	typedef boost::shared_ptr<ParsimonyCalculator> ParsimonyCalculatorPtr;
+    typedef QSharedPointer<ParsimonyCalculator> ParsimonyCalculatorPtr;
 
 }
 

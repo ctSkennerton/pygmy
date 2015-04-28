@@ -10,8 +10,6 @@
 #ifndef _NODE_PHYLO_H_
 #define _NODE_PHYLO_H_
 
-#include "../core/Precompiled.hpp"
-
 #include "../utils/Node.hpp"
 #include "../utils/Point.hpp"
 #include "../utils/Colour.hpp"
@@ -38,7 +36,7 @@ public:
 	 * @param id Unique id identifying node.
 	 * @param name Name of node.
 	 */
-	NodePhylo(NodeId id,  const std::wstring & name): Node(id, name), m_bootstrap(NO_DISTANCE), m_pos(utils::Point()),
+    NodePhylo(NodeId id,  const QString & name): Node(id, name), m_bootstrap(NO_DISTANCE), m_pos(utils::Point()),
 												m_colour(utils::Colour(0,0,0)), m_bProcessed(false), m_bMissingData(false),
 												m_crossings(0), m_baryCenter(0), m_layoutPos(0), m_bSelected(false) {}
 
@@ -167,17 +165,17 @@ public:
 	const utils::Colour& GetColour() const { return m_colour; }
 
 	/** Set metadata for node. */
-	void SetMetadata(const std::map<std::wstring, std::wstring>& metadata) { m_metadata = metadata; }
+    void SetMetadata(const std::map<QString, QString>& metadata) { m_metadata = metadata; }
 
 	/** Get metadata for node. */
-	std::map<std::wstring, std::wstring> GetMetadata() const { return m_metadata; }
+    std::map<QString, QString> GetMetadata() const { return m_metadata; }
 
 	/** 
 	 * @brief Get data for specified field. 
 	 * @param field Field to get data for. 
 	 * @return Data associated with the provided field.
 	 */
-	const std::wstring& GetData(const std::wstring& field) { return m_metadata[field]; }
+    const QString& GetData(const QString& field) { return m_metadata[field]; }
 
 	/** Set processed flag. */
 	void SetProcessed(bool state) { m_bProcessed = state; }
@@ -229,7 +227,7 @@ protected:
 	utils::Colour m_colour;
 
 	/** Metadata associated with node. */
-	std::map<std::wstring, std::wstring> m_metadata;
+    std::map<QString, QString> m_metadata;
 
 	/** Processed flag useful for many algorithms. */
 	bool m_bProcessed;

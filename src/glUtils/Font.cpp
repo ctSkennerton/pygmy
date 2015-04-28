@@ -7,21 +7,39 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
 
 #include "../glUtils/Font.hpp"
 #include "../glUtils/ErrorGL.hpp"
 
+#include <QFile>
+#include <QByteArray>
+#include <QtDebug>
+
+
 using namespace glUtils;
 using namespace utils;
 
-Font::Font(const std::wstring& fontFile): m_fontFile(fontFile)
+Font::Font(const QString& fontFile): m_fontFile(fontFile)
 		
 {
-	glDisable(GL_LINE_SMOOTH);
+    qDebug() << "Fontfile: "<<fontFile;
 
-	std::string str(fontFile.begin(), fontFile.end());
-	m_font = new FTTextureFont(str.c_str());
+    //glDisable(GL_LINE_SMOOTH);
+    QFile font_file(fontFile);
+    if (!font_file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Failed to open resources font file";
+        return;
+    }
+
+    QByteArray contents = font_file.readAll();
+    m_fontBuffer = new unsigned char[contents.size()];
+    for(int i = 0; i < contents.size(); ++i)
+    {
+        m_fontBuffer[i] = static_cast<unsigned char>(contents.at(i));
+    }
+
+    m_font = new FTTextureFont(m_fontBuffer, contents.size());
 
 	// check if font opened correctly
 	utils::Error::Assert(!m_font->Error());
@@ -37,12 +55,15 @@ Font::~Font()
 		//delete m_font;
 		m_font = NULL;
 	}
+    if(m_fontBuffer != NULL)
+    {
+        delete [] m_fontBuffer;
+    }
 }
 
-void Font::SetTypeface(const std::wstring& fontFile)
+void Font::SetTypeface(const QString& fontFile)
 {
-	std::string str(fontFile.begin(), fontFile.end());
-	m_font = new FTTextureFont(str.c_str());
+    m_font = new FTTextureFont(fontFile.toLatin1().data());
 
 	// check if font opened correctly
 	utils::Error::Assert(!m_font->Error());
@@ -51,10 +72,10 @@ void Font::SetTypeface(const std::wstring& fontFile)
 	m_font->UseDisplayList(true);
 }
 
-void Font::Render(const std::wstring& text, uint x, uint y)
+void Font::Render(const QString& text, uint x, uint y)
 {
 	glUtils::ErrorGL::Check();
-	m_font->Render(text.c_str(), -1, FTPoint(x, y), FTPoint(), FTGL::RENDER_FRONT);
+    m_font->Render(text.toLatin1().data(), -1, FTPoint(x, y), FTPoint(), FTGL::RENDER_FRONT);
 	glUtils::ErrorGL::Check();
 }
 
@@ -64,10 +85,10 @@ void Font::SetSize(uint size)
 	utils::Error::Assert(rtn);
 }
 
-BBox Font::GetBoundingBox(const std::wstring& text) 
+BBox Font::GetBoundingBox(const QString& text)
 { 
 	glUtils::ErrorGL::Check();
-	FTBBox bbox = m_font->BBox(text.c_str()); 
+    FTBBox bbox = m_font->BBox(text.toLatin1().data());
 	glUtils::ErrorGL::Check();
 
 	return BBox(bbox.Lower().Xf(), bbox.Lower().Yf(), 

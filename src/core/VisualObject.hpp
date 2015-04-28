@@ -10,8 +10,6 @@
 #ifndef _VISUAL_OBJECT_
 #define _VISUAL_OBJECT_
 
-#include "../core/Precompiled.hpp"
-
 #include "../utils/Colour.hpp"
 
 #include "../utils/Point.hpp"
@@ -69,7 +67,7 @@ public:
 	 * @param popupMenu Popup menu to populate.
 	 * @return True if view is processing the event, else false.
 	 */
-	bool MouseRightDown(const utils::Point& mousePt, wxMenu& popupMenu);
+    //bool MouseRightDown(const utils::Point& mousePt, wxMenu& popupMenu);
 
 	/** 
 	 * @brief Process mouse dragging events. 
@@ -88,7 +86,7 @@ public:
 	 * @brief Process keyboard events. 
 	 * @param mousePt Screen position of mouse.
 	 */
-	virtual void KeyboardEvent(wxKeyEvent& event) { return; }
+    //virtual void KeyboardEvent(wxKeyEvent& event) { return; }
 
 protected:
 	/** Flag indicating if object should be visible or not. */

@@ -10,8 +10,7 @@
 #ifndef _STATE_H_
 #define _STATE_H_
 
-#include <string>
-#include <ticpp/ticpp.h>
+#include <QString>
 
 #include "../utils/Point.hpp"
 
@@ -36,10 +35,10 @@ public:
 	const glUtils::FontPtr GetFont() const { return m_font; }
 
 	/** TrueType font to use in application (i.e., times.ttf, arial.ttf) */
-	void SetFontFile(const std::wstring& fontFile) { m_fontFile = fontFile; }
+    void SetFontFile(const QString& fontFile) { m_fontFile = fontFile; }
 
 	/** TrueType font to use in application (i.e., times.ttf, arial.ttf) (read-only) */
-	const std::wstring& GetFontFile() const { return m_fontFile; }
+    const QString& GetFontFile() const { return m_fontFile; }
 
 	/** Set size of tree font. */
 	void SetTreeFontSize(uint size) { m_treeFontSize = size; }
@@ -156,10 +155,10 @@ public:
 	bool GetShowInternalLabels() const { return m_bShowInternalLabels; }
 
 	/** Set field of internal nodes to display. */
-	void SetInternalNodeField(const std::wstring& field) { m_internalLabelField = field; }
+    void SetInternalNodeField(const QString& field) { m_internalLabelField = field; }
 
 	/** Get field of internal nodes to display. */
-	std::wstring GetInternalNodeField() const { return m_internalLabelField; }
+    QString GetInternalNodeField() const { return m_internalLabelField; }
 
 	/** Set size of internal node font. */
 	void SetInternalNodeFontSize(uint size) { m_internalLabelSize = size; }
@@ -186,10 +185,10 @@ public:
 	bool GetInternalNodeFontScientific() { return m_bInternalLabelScientific; }
 
 	/** Set desired position of internal labels. */
-	void SetInternalLabelPos(const std::wstring& pos) { m_internalLabelPos = pos; }
+    void SetInternalLabelPos(const QString& pos) { m_internalLabelPos = pos; }
 
 	/** Get desired position of internal labels. */
-	std::wstring GetInternalLabelPos() const { return m_internalLabelPos; }
+    QString GetInternalLabelPos() const { return m_internalLabelPos; }
 
 	/** Sensitivity of scroll wheel translation. */
 	void SetScrollSensitivity(float sensitivity) { m_scrollSensitivity = sensitivity; }
@@ -222,10 +221,10 @@ public:
 	bool GetShowMetadataLabels() { return m_bShowMetadataLabels; }
 
 	/** Set metadata field. */
-	void SetMetadataField(const std::wstring& field) { m_metadataField = field; }
+    void SetMetadataField(const QString& field) { m_metadataField = field; }
 
 	/** Get metadata field. */
-	const std::wstring& GetMetadataField() { return m_metadataField; }
+    const QString& GetMetadataField() { return m_metadataField; }
 	
 	/** Set flag indicating if overview tree should be rendered in colour. */
 	void SetColourOverviewTree(bool state) { m_bColourOverviewTree = state; }
@@ -267,10 +266,10 @@ public:
 	 * @brief Load project settings from file.
 	 * @param filename XML file containing project settings.
 	 */
-	void Load(const std::wstring& filename);
+    void Load();
 
 	/** Save settings. */
-	void Save(const std::wstring& filename);
+    void Save();
 
 protected:
 	/** Private singleton constructor (must instantiate  this class through Inst()). */
@@ -283,14 +282,12 @@ protected:
   State& operator= (const State&);
 
 private:
-	/** TinyXML++ document reader. */
-	ticpp::Document m_doc;
 	
 	/** Name of file holding project settings. */
-	std::wstring m_settingsFile;
+    QString m_settingsFile;
 
 	/** Font to use in project. */
-	std::wstring m_fontFile;
+    QString m_fontFile;
 
 	/** Pointer to font class used to render TrueType fonts on an OpenGL canvas. */
 	glUtils::FontPtr m_font;
@@ -350,7 +347,7 @@ private:
 	bool m_bShowInternalLabels;
 
 	/** Field of internal nodes to display. */
-	std::wstring m_internalLabelField;
+    QString m_internalLabelField;
 
 	/** Size of internal node font. */
 	uint m_internalLabelSize;
@@ -365,7 +362,7 @@ private:
 	bool m_bInternalLabelScientific;
 
 	/** Get desired position of internal labels. */
-	std::wstring m_internalLabelPos; 
+    QString m_internalLabelPos;
 
 	/** Sensitivity of scroll wheel. */
 	float m_scrollSensitivity;
@@ -383,7 +380,7 @@ private:
 	bool m_bShowMetadataLabels;
 
 	/** Metadata field. */
-	std::wstring m_metadataField; 
+    QString m_metadataField;
 
 	/** Flag indicating if overview tree should be rendered in colour. */
 	bool m_bColourOverviewTree;

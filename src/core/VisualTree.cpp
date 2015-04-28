@@ -7,23 +7,18 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
 
-#include "../core/VisualTree.hpp"
-#include "../core/State.hpp"
-#include "../core/MetadataInfo.hpp"
-#include "../core/VisualColourMap.hpp"
-#include "../core/NodePhylo.hpp"
-#include "../core/Filter.hpp"
+#include "VisualTree.hpp"
+#include "VisualColourMap.hpp"
+#include "NodePhylo.hpp"
+#include "State.hpp"
+#include "MetadataInfo.hpp"
 
 #include "../glUtils/ErrorGL.hpp"
 #include "../glUtils/Font.hpp"
 
-#include "../gui/PygmyFrame.hpp"
-
 #include "../utils/Tree.hpp"
 #include "../utils/Geometry.hpp"
-#include "../utils/StringTools.hpp"
 
 #include "../utils/ColourMap.hpp"
 #include "../utils/ColourMapDiscrete.hpp"
@@ -237,7 +232,7 @@ void VisualTree::RenderTree(float translation, float zoom)
 
 			float yMin = 1000.0f, yMax = 0.0f;
 			std::vector<NodePhylo*> children = curNode->GetChildren();
-			foreach(NodePhylo* child, children)
+            for(NodePhylo* child : children)
 			{	
 				Point childPos = child->GetPosition();
 
@@ -342,7 +337,7 @@ void VisualTree::RenderTextSearch(float translation, float zoom)
 		float height = (float)State::Inst().GetFont()->GetSize();
 		float descender = (float)State::Inst().GetFont()->GetDescender();
 
-		foreach(NodePhylo* leaf, m_visibleLeafNodes)
+        for(NodePhylo* leaf: m_visibleLeafNodes)
 		{
 			Point childPos = leaf->GetPosition();
 
@@ -392,7 +387,7 @@ void VisualTree::RenderLeafNodeLabels(float translation, float zoom)
 		float height = (float)State::Inst().GetFont()->GetSize();
 		float descender = (float)State::Inst().GetFont()->GetDescender();
 
-		foreach(NodePhylo* leaf, m_visibleLeafNodes)
+        for(NodePhylo* leaf : m_visibleLeafNodes)
 		{
 			// adjust position of nodes based on desired orientation
 			Point childPos = leaf->GetPosition();
@@ -403,7 +398,7 @@ void VisualTree::RenderLeafNodeLabels(float translation, float zoom)
 			// render label		
 			if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
 			{
-				std::wstring label = leaf->GetName() + _T(" [") + leaf->GetData(State::Inst().GetMetadataField()) + _T("]");
+                QString label = leaf->GetName() + " [" + leaf->GetData(State::Inst().GetMetadataField()) + "]";
 				State::Inst().GetFont()->Render(label, fontX, int(fontY - translation + 0.5));	
 			}
 			else if(State::Inst().GetShowLeafLabels())
@@ -443,90 +438,90 @@ void VisualTree::RenderInternalLabels(float translation, float zoom)
 		float height = (float)State::Inst().GetFont()->GetSize();
 		float descender = (float)State::Inst().GetFont()->GetDescender();
 
-		foreach(VisualNode& visNode, m_visibleNodes)
+        for(VisualNode& visNode : m_visibleNodes)
 		{
 			NodePhylo* node = visNode.node;
-			if(node->IsLeaf() && State::Inst().GetInternalNodeField() != _T("Distance"))
+            if(node->IsLeaf() && State::Inst().GetInternalNodeField() != "Distance")
 				continue;
 
 			// set position of label
 			Point pos = node->GetPosition();
 
-			std::wstring label;
-			if(State::Inst().GetInternalNodeField() == _T("Bootstrap"))
+            QString label;
+            if(State::Inst().GetInternalNodeField() == "Bootstrap")
 			{
-				label = _T("N/A");
+                label = "N/A" ;
 				if(node->GetBootstrapToParent() != Node::NO_DISTANCE)
 				{
-					label = utils::StringTools::ToString(node->GetBootstrapToParent(), 
-																									State::Inst().GetInternalNodeFontPrecision(), 
-																									State::Inst().GetInternalNodeFontScientific());
+                    label = QString::number(node->GetBootstrapToParent()/*,
+                                            State::Inst().GetInternalNodeFontPrecision(),
+                                            State::Inst().GetInternalNodeFontScientific()*/);
 				}
 			}
-			else if(State::Inst().GetInternalNodeField() == _T("Distance"))
+            else if(State::Inst().GetInternalNodeField() == "Distance")
 			{
-				label = _T("N/A");
+                label = "N/A";
 				if(node->GetDistanceToParent() != Node::NO_DISTANCE)
 				{
-					label = utils::StringTools::ToString(node->GetDistanceToParent(), 
-																								State::Inst().GetInternalNodeFontPrecision(), 
-																								State::Inst().GetInternalNodeFontScientific());
+                    label = QString::number(node->GetDistanceToParent())/*,
+                                            State::Inst().GetInternalNodeFontPrecision(),
+                                            State::Inst().GetInternalNodeFontScientific()*/;
 				}
 			}
-			else if(State::Inst().GetInternalNodeField() == _T("Height"))
+            else if(State::Inst().GetInternalNodeField() == "Height")
 			{
-				label = utils::StringTools::ToString(TreeTools<NodePhylo>::GetDepth(node));
+                label = QString::number(TreeTools<NodePhylo>::GetDepth(node));
 			}
-			else if(State::Inst().GetInternalNodeField() == _T("Name"))
+            else if(State::Inst().GetInternalNodeField() == "Name")
 			{
 				label = node->GetName();
 			}
-			else if(State::Inst().GetInternalNodeField() == _T("Number of Leaves"))
+            else if(State::Inst().GetInternalNodeField() == "Number of Leaves")
 			{
-				label = utils::StringTools::ToString(TreeTools<NodePhylo>::GetNumberOfLeaves(node));
+                label = QString::number(TreeTools<NodePhylo>::GetNumberOfLeaves(node));
 			}
-			else if(State::Inst().GetInternalNodeField() == _T("Parsimony Data"))
+            else if(State::Inst().GetInternalNodeField() == "Parsimony Data")
 			{
-				label = _T("N/A");
+                label = "N/A";
 				if(m_parsimonyCalculator)
 				{
 					ParsimonyData data;
 					m_parsimonyCalculator->GetData(node, data);
 
-					label = utils::StringTools::ToString(data.nodeScore) + _T(": ");
+                    label = QString::number(data.nodeScore) + ": ";
 
-					std::map<std::wstring, uint>::iterator it;
+                    std::map<QString, uint>::iterator it;
 					for ( it=data.characterScores.begin() ; it != data.characterScores.end(); it++ )
 					{
-						label += it->first + _T("(") + utils::StringTools::ToString(it->second) + _T("), ");
+                        label += it->first + "(" + QString::number(it->second) + "), ";
 					}
 
-					label = label.substr(0, label.length()-2);
-					label += _T(" : ");
+                    label = label.mid(0, label.length()-2);
+                    label += " : ";
 
-					std::set<std::wstring>::iterator itSet;
+                    std::set<QString>::iterator itSet;
 					for(itSet=data.parsimoniousCharacters.begin(); itSet != data.parsimoniousCharacters.end(); itSet++)
 					{
-						label += (*itSet) + _T(",");
+                        label += (*itSet) + ",";
 					}
 
-					label = label.substr(0,label.length()-1);
+                    label = label.mid(0,label.length()-1);
 				}
 			}
 
-			if(utils::StringTools::IsIntegerNumber(label))
+            if(label.toInt())
 			{
-				label = label.substr(0, label.find(_T(".")));
+                label = label.mid(0, label.indexOf("."));
 			}
 
 			BBox bb = State::Inst().GetFont()->GetBoundingBox(label);
 			int fontY, fontX;
-			if(State::Inst().GetInternalLabelPos() == _T("Right"))
+            if(State::Inst().GetInternalLabelPos() == "Right")
 			{
 				fontY = int(border.y + pos.y * m_treeHeight * zoom  - 0.2f * (height-descender));
 				fontX = int(border.x + pos.x * m_treeWidth + State::Inst().GetLineWidth() + 1.5);
 			}
-			else if(State::Inst().GetInternalLabelPos() == _T("Above Left"))
+            else if(State::Inst().GetInternalLabelPos() == "Above Left")
 			{				
 				fontY = int(border.y + pos.y * m_treeHeight * zoom - 0.2f * (height-descender) + bb.Height()*0.5 + State::Inst().GetLineWidth() + 0.5);	
 				fontX = int(border.x + pos.x * m_treeWidth - bb.Width() - State::Inst().GetLineWidth() + 0.5);
@@ -642,11 +637,11 @@ void VisualTree::LabelBoundingBoxes()
 
 	std::vector<NodePhylo*> leafNodes = m_tree->GetLeaves();
 	State::Inst().GetFont()->SetSize(State::Inst().GetTreeFontSize());
-	foreach(NodePhylo* leaf, leafNodes)
+    for(NodePhylo* leaf : leafNodes)
 	{
-		std::wstring label;
+        QString label;
 		if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
-			label = leaf->GetName() + _T(" [") + leaf->GetData(State::Inst().GetMetadataField()) + _T("]");
+            label = leaf->GetName() + " [" + leaf->GetData(State::Inst().GetMetadataField()) + "]";
 		else if(State::Inst().GetShowLeafLabels())
 			label = leaf->GetName();
 		else if(State::Inst().GetShowMetadataLabels())
@@ -662,21 +657,21 @@ void VisualTree::LabelBoundingBoxes()
 	}
 
 	// get maximum height of label
-	BBox bbox = State::Inst().GetFont()->GetBoundingBox(_T("ABCDEFJHIJKLMNOPQRSTUVWXYZabcdefjhijklmnopqrstuvwxyz123456789!@#$%^&*()-_=+[{]}|;:',<.>/?"));
+    BBox bbox = State::Inst().GetFont()->GetBoundingBox("ABCDEFJHIJKLMNOPQRSTUVWXYZabcdefjhijklmnopqrstuvwxyz123456789!@#$%^&*()-_=+[{]}|;:',<.>/?");
 	m_highestLabel = bbox.Height();
 }
 
-void VisualTree::PropagateColours(const std::wstring& field, ColourMapPtr colourMap)
+void VisualTree::PropagateColours(const QString& field, ColourMapPtr colourMap)
 {
-	FieldInfo fieldInfo = m_metadataInfo->GetInfo(field);
+/*	FieldInfo fieldInfo = m_metadataInfo->GetInfo(field);
 
 	if(colourMap->GetType() == ColourMap::CATEGORICAL
 			|| (colourMap->GetType() == ColourMap::DISCRETE && fieldInfo.dataType == FieldInfo::CATEGORICAL))
 	{
-		ColourMapDiscretePtr discreteMap = boost::dynamic_pointer_cast<ColourMapDiscrete>(colourMap);
+        ColourMapDiscretePtr discreteMap = colourMap.dynamicCast<ColourMapDiscretePtr>();
 
 		std::vector<NodePhylo*> nodes = m_tree->GetLeaves();
-		foreach(NodePhylo* node, nodes)
+        for(NodePhylo* node : nodes)
 		{
 			if(!MetadataInfo::IsMissingData(node->GetData(field)))
 			{
@@ -696,7 +691,7 @@ void VisualTree::PropagateColours(const std::wstring& field, ColourMapPtr colour
 	}
 	else if(colourMap->GetType() == ColourMap::DISCRETE && fieldInfo.dataType == FieldInfo::NUMERICAL)
 	{
-		ColourMapDiscretePtr discreteMap = boost::dynamic_pointer_cast<ColourMapDiscrete>(colourMap);
+        ColourMapDiscretePtr discreteMap = colourMap.dynamicCast<ColourMapDiscrete>();
 
 		// determine number of colour bins
 		uint bins = fieldInfo.values.size();
@@ -715,14 +710,14 @@ void VisualTree::PropagateColours(const std::wstring& field, ColourMapPtr colour
 
 		// assign each leaf node to a bin
 		std::vector<NodePhylo*> nodes = m_tree->GetLeaves();
-		foreach(NodePhylo* node, nodes)
+        for(NodePhylo* node : nodes)
 		{
-			std::wstring nodeValue = node->GetData(field);
+            QString nodeValue = node->GetData(field);
 			if(!MetadataInfo::IsMissingData(nodeValue))
 			{
-				float value = utils::StringTools::ToFloat(nodeValue);
+                float value = nodeValue.toFloat();
 				uint bin = 0;
-				foreach(double boundry, binBoundries)
+                for(double boundry : binBoundries)
 				{
 					if(value <= boundry)
 						break;
@@ -747,25 +742,26 @@ void VisualTree::PropagateColours(const std::wstring& field, ColourMapPtr colour
 	}
 	else if(colourMap->GetType() == ColourMap::CONTINUOUS)
 	{
-		ColourMapContinuousPtr continuousMap = boost::dynamic_pointer_cast<ColourMapContinuous>(colourMap);
+        ColourMapContinuousPtr continuousMap = colourMap.dynamicCast<ColourMapContinuous>();
 
 		std::vector<NodePhylo*> nodes = m_tree->GetLeaves();
-		foreach(NodePhylo* node, nodes)
+        for(NodePhylo* node : nodes)
 		{
-			std::wstring nodeValue = node->GetData(field);
+            QString nodeValue = node->GetData(field);
 			if(!MetadataInfo::IsMissingData(nodeValue))
 			{
-				if(utils::StringTools::IsDecimalNumber(nodeValue))
+                bool convOk;
+                float value = nodeValue.toFloat(&convOk);
+                if(convOk)
 				{
 					// handle a numerical field using a continuous colour map
-					float value = utils::StringTools::ToFloat(nodeValue);			
 					node->SetColour(continuousMap->GetColour(value, fieldInfo.minValue, fieldInfo.maxValue));
 				}
 				else
 				{
 					// handle a categorical field using a continuous colour map
 					uint pos = 0;
-					foreach(const std::wstring& value, fieldInfo.values)
+                    for(const QString& value : fieldInfo.values)
 					{
 						if(nodeValue == value)
 							break;
@@ -787,19 +783,20 @@ void VisualTree::PropagateColours(const std::wstring& field, ColourMapPtr colour
 
 		PropagateLeafNodeColours(true);
 	}
+    */
 }
 
 void VisualTree::PropagateLeafNodeColours(bool bMixColour)
 {
 	// mark all internal nodes as unprocessed and leaf nodes as processed
 	std::vector<NodePhylo*> nodes = m_tree->GetNodes();
-	foreach(NodePhylo* node, nodes)
+    for(NodePhylo* node : nodes)
 		node->SetProcessed(node->IsLeaf());
 
 	// queue of nodes that need to be assigned a colour
 	std::queue<NodePhylo*> queue;	
 	std::vector<NodePhylo*> leafNodes = m_tree->GetLeaves();
-	foreach(NodePhylo* leaf, leafNodes)
+    for(NodePhylo* leaf : leafNodes)
 		queue.push(leaf->GetParent());
 
 	while(!queue.empty())
@@ -819,7 +816,7 @@ void VisualTree::PropagateLeafNodeColours(bool bMixColour)
 		bool bAllLeavesMissingData = true;
 		uint numChildrenWithData = 0;
 		Colour colour;
-		foreach(NodePhylo* child, children)
+        for(NodePhylo* child : children)
 		{
 			if(!child->IsProcessed())
 			{
@@ -887,10 +884,10 @@ void VisualTree::PropagateLeafNodeColours(bool bMixColour)
 	}
 }
 
-void VisualTree::ProjectTree(std::vector<std::wstring>& names)
+void VisualTree::ProjectTree(std::vector<QString>& names)
 {
 	//m_tree = m_originalTree->Clone();
-	m_tree->ProjectTree(names);
+    /*m_tree->ProjectTree(names);
 	
 	if(m_metadataInfo)
 	{
@@ -898,7 +895,7 @@ void VisualTree::ProjectTree(std::vector<std::wstring>& names)
 		((PygmyFrame*)App::Inst().GetMainFrame())->OnChangeColourMap(wxCommandEvent());
 	}
 
-	Layout();
+    Layout();*/
 }
 
 void VisualTree::CollapseNodes(float support)
@@ -911,7 +908,7 @@ void VisualTree::CollapseNodes(float support)
 
 void VisualTree::RestoreTree() 
 { 
-	m_tree = m_originalTree->Clone(); 
+    /*m_tree = m_originalTree->Clone();
 
 	if(m_metadataInfo)
 	{
@@ -919,7 +916,7 @@ void VisualTree::RestoreTree()
 		((PygmyFrame*)App::Inst().GetMainFrame())->OnChangeColourMap(wxCommandEvent());
 	}
 
-	Layout(); 
+    Layout();*/
 }
 
 bool VisualTree::MouseLeftDown(const utils::Point& mousePt)
@@ -930,7 +927,7 @@ bool VisualTree::MouseLeftDown(const utils::Point& mousePt)
 
 	// check if user has clicked on a node
 	bool bSelected = false;
-	foreach(VisualNode& visNode, m_visibleNodes)
+    for(VisualNode& visNode : m_visibleNodes)
 	{
 		visNode.visualMarker.SetVisibility(true);
 		if(visNode.visualMarker.MouseLeftDown(mousePt))
@@ -956,20 +953,20 @@ void VisualTree::Reroot()
 	// later restored this data will be missing. As such, we explicitly restore
 	// bootstrap values from the original tree here.
 	std::vector< NodePhylo* > rootChildren = m_tree->GetRootNode()->GetChildren();
-	foreach(NodePhylo* node, rootChildren)
+    for(NodePhylo* node : rootChildren)
 	{
 		std::vector< NodePhylo* > children = node->GetChildren();
 
 		std::vector< NodePhylo* > originalNodes = m_originalTree->GetRootNode()->GetChildren();
-		foreach(NodePhylo* originalNode, originalNodes)
+        for(NodePhylo* originalNode : originalNodes)
 		{
 			std::vector< NodePhylo* > originalChildren = originalNode->GetChildren();
 
 			bool bIdentical = true;
-			foreach(NodePhylo* child, children)
+            for(NodePhylo* child : children)
 			{
 				bool bMatch = false;
-				foreach(NodePhylo* originalChild, originalChildren)
+                for(NodePhylo* originalChild : originalChildren)
 				{
 					if(child->GetId() == originalChild->GetId())
 					{
@@ -998,12 +995,12 @@ void VisualTree::Reroot()
 
 uint VisualTree::Parsimony()
 {
-	State::Inst().SetInternalNodeField(_T("Parsimony Data"));
+    State::Inst().SetInternalNodeField("Parsimony Data");
 
 	if(!m_parsimonyCalculator)
 		m_parsimonyCalculator.reset(new utils::ParsimonyCalculator());
 
-	std::wstring field = State::Inst().GetMetadataField();
+    QString field = State::Inst().GetMetadataField();
 	return m_parsimonyCalculator->Calculate(m_tree, field, m_metadataInfo->GetInfo(field).values);
 }
 
@@ -1015,7 +1012,7 @@ utils::Tree<NodePhylo>::Ptr VisualTree::GetSelectedSubtree()
 	// Find selected node in newly cloned tree
 	NodePhylo* activeNode;
 	std::vector<NodePhylo*> nodes = subtree->GetNodes();
-	foreach(NodePhylo* node, nodes)
+    for(NodePhylo* node : nodes)
 	{
 		if(node->GetId() == m_activeNode.node->GetId())
 		{

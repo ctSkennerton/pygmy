@@ -25,10 +25,10 @@ class ColourMapDiscrete: public ColourMap
 {
 public:
 	/** Constructor. */
-	ColourMapDiscrete(): ColourMap(_T("<no name>"), DISCRETE) {}
+        ColourMapDiscrete(): ColourMap("<no name>", DISCRETE) {}
 
 	/** Constructor. */
-	ColourMapDiscrete(const std::wstring& name, TYPE type = DISCRETE): ColourMap(name, type) {}
+        ColourMapDiscrete(const QString& name, TYPE type = DISCRETE): ColourMap(name, type) {}
 
 	/** Constructor. */
 	ColourMapDiscrete(ColourMapPtr colourMap);
@@ -56,13 +56,13 @@ public:
 	 * @param name Name to associate with this colour.
 	 * @param colour Desired colour.
 	 */
-	void SetColour(const std::wstring& name, const Colour& colour);
+        void SetColour(const QString& name, const Colour& colour);
 
 	/** Set colour of colour map at a given index. */
 	void SetColour(const Colour& colour, uint index) { ColourMap::SetColour(colour, index); }
 
 	/** Get colour associated with the given name. */
-	bool GetColour(const std::wstring& name, Colour& colour) const;
+        bool GetColour(const QString& name, Colour& colour) const;
 
 	/** Get colour from underlying colour map. */
 	Colour GetColour(uint index) const { return ColourMap::GetColour(index); }
@@ -71,14 +71,14 @@ public:
 	void ClearNames() { m_colourNames.clear(); }
 
 	/** Get map which associates names with colour. */
-	std::map<std::wstring, Colour> GetNameToColourMap() { return m_colourNames; }
+        std::map<QString, Colour> GetNameToColourMap() { return m_colourNames; }
 
 	/** Get size of map which associates names to colours. */
 	uint GetNameToColourMapSize() { return m_colourNames.size(); }
 
 protected:
 	/** Name associated with each colour. */
-	std::map<std::wstring, Colour> m_colourNames;
+        std::map<QString, Colour> m_colourNames;
 };
 
 }

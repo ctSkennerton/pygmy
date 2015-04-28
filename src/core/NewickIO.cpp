@@ -7,31 +7,33 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
-
 #include "NewickIO.hpp"
-
-#include "../utils/Log.hpp"
-#include "../utils/StringTools.hpp"
+#include <QFileInfo>
+#include <QFile>
+#include <QTextStream>
+#include <QRegularExpression>
 
 using namespace pygmy;
 using namespace utils;
 using namespace std;
 
-bool NewickIO::Read(Tree<NodePhylo>::Ptr tree, const wstring& filename)
+bool NewickIO::Read(Tree<NodePhylo>::Ptr tree, const QString& filename)
 {
 	// Set name of tree to the filename
-	wstring file = utils::StringTools::ReplaceChar(filename, _T('\\'), _T('/'));
-	wstring::size_type slashPos = file.rfind(_T('/'));
-	wstring::size_type dotPos = file.rfind(_T('.'));
-	if(dotPos > slashPos)
-		tree->SetName(file.substr(slashPos+1, dotPos-slashPos-1));
-	else
-		tree->SetName(_T(""));
+    QFileInfo file(filename);
+    tree->SetName(file.baseName());
+
 
 	// Parse Newick file
-	wifstream input(file.c_str(), std::ios::in);
-	bool bLoaded = Read(tree, input);
+    QFile input(filename);
+    if (!input.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        //TODO: Put in error dialog
+        return false;
+    }
+
+    QTextStream instream(&input);
+    bool bLoaded = Read(tree, instream);
 	input.close();
 
 	if(bLoaded)
@@ -40,65 +42,61 @@ bool NewickIO::Read(Tree<NodePhylo>::Ptr tree, const wstring& filename)
 	return bLoaded;
 }
 
-bool NewickIO::Read(Tree<NodePhylo>::Ptr tree, wistream & in)
+bool NewickIO::Read(Tree<NodePhylo>::Ptr tree, QTextStream & in)
 {	
-	// Checking the existence of specified input stream
-	if(!in)
-		return false;
 	
 	// We concatenate all line in file till we reach the ending semi colon:
-	wstring temp, newickStr;
+    QString temp, newickStr;
 
 	// Read entire input stream
-	while (!in.eof())
-  {
-		getline(in, temp, _T('\n'));  // Copy current line in temporary string
-    wstring::size_type index = temp.find(_T(";"));
-		if(index != string::npos)
-    {
-			newickStr += temp.substr(0, index + 1);
-			break;
-		}
-    else newickStr += temp;
-	}
+    do {
+        temp = in.readLine();
+        QString::size_type index = temp.indexOf(";");
+        if(index == -1)
+        {
+            newickStr += temp.mid(0, index + 1);
+            break;
+        }
+    }
+    while (!temp.isNull());
 
-	newickStr = utils::StringTools::RemoveSubstrings(newickStr, _T('['), _T(']'));
+    QString newickStr2 = newickStr.remove(QRegularExpression("\\[.*\\]"));
 
-	return ParseNewickString(tree, newickStr);
+    return ParseNewickString(tree, newickStr2);
 }
 
-void NewickIO::ParseNodeInfo(NodePhylo* node, wstring& nodeInfo, bool bLeafNode)
+void NewickIO::ParseNodeInfo(NodePhylo* node, QString& nodeInfo, bool bLeafNode)
 {
-	wstring length;
-	wstring name;
-	wstring supportValue;
+    QString length;
+    QString name;
+    QString supportValue;
 
 	// check if this element has length
-	int colon = nodeInfo.find_last_of(':');
+    int colon = nodeInfo.lastIndexOf(':');
   if(colon != -1)
   {
-		length = StringTools::RemoveSurroundingWhiteSpaces(nodeInfo.substr(colon + 1));
-		nodeInfo = StringTools::RemoveSurroundingWhiteSpaces(nodeInfo.substr(0, colon));
+        length = nodeInfo.mid(colon + 1).simplified();
+        nodeInfo = nodeInfo.mid(0, colon).simplified();
   }
 
 	// check for name and/or support value
-	int lastP = nodeInfo.find_last_of('\'');
-	int firstP = nodeInfo.find_first_of('\'');
+    int lastP = nodeInfo.lastIndexOf('\'');
+    int firstP = nodeInfo.indexOf('\'');
 	if(firstP != -1)
 	{
-		name = nodeInfo.substr(firstP+1, lastP-firstP-1);
-		StringTools::ReplaceChar(name, '_', ' ');
-		supportValue = StringTools::RemoveSurroundingWhiteSpaces(nodeInfo.substr(lastP+1));
+        name = nodeInfo.mid(firstP+1, lastP-firstP-1);
+        name = name.replace( '_', ' ');
+        supportValue = nodeInfo.mid(lastP+1).simplified();
 	}
 	else
 	{
-		int spacePos = nodeInfo.find_first_of(' ');
+        int spacePos = nodeInfo.indexOf(' ');
 		if(spacePos != -1)
 		{
 			// parse the name and support value
-			name = nodeInfo.substr(0, spacePos-1);	
-			StringTools::ReplaceChar(name, '_', ' ');
-			supportValue = StringTools::RemoveSurroundingWhiteSpaces(nodeInfo.substr(spacePos+1));
+            name = nodeInfo.mid(0, spacePos-1);
+            name = name.replace('_', ' ');
+            supportValue = nodeInfo.mid(spacePos+1).simplified();
 		}
 		else
 		{
@@ -106,25 +104,25 @@ void NewickIO::ParseNodeInfo(NodePhylo* node, wstring& nodeInfo, bool bLeafNode)
 			// on whether this is a leaf or internal node.
 			if(bLeafNode)
 			{
-				name = StringTools::RemoveSurroundingWhiteSpaces(nodeInfo);
-				StringTools::ReplaceChar(name, '_', ' ');
+                name = nodeInfo.simplified();
+                name = name.replace( '_', ' ');
 			}
 			else
-				supportValue = StringTools::RemoveSurroundingWhiteSpaces(nodeInfo);
+                supportValue = nodeInfo.simplified();
 		}
 	}	
 
-	if(!name.empty())
+    if(!name.isEmpty())
 		node->SetName(name);
 
-	if(!length.empty())
-		node->SetDistanceToParent(StringTools::ToDouble(length));
+    if(!length.isEmpty())
+        node->SetDistanceToParent(length.toDouble());
 
-	if(!supportValue.empty())
-		node->SetBootstrapToParent(StringTools::ToInt(supportValue));
+    if(!supportValue.isEmpty())
+        node->SetBootstrapToParent(supportValue.toInt());
 }
 
-bool NewickIO::ParseNewickString(Tree<NodePhylo>::Ptr tree, const wstring& newickStr)
+bool NewickIO::ParseNewickString(Tree<NodePhylo>::Ptr tree, const QString& newickStr)
 {
 	// create root node
 	uint processedElement = 0;
@@ -132,23 +130,23 @@ bool NewickIO::ParseNewickString(Tree<NodePhylo>::Ptr tree, const wstring& newic
 	tree->SetRootNode(root);
 	root->SetDistanceToParent(0.0f);
 
-	int lastP  = newickStr.find_last_of(')');
-	int firstP = newickStr.find_first_of('(');
-  int semi = newickStr.find_last_of(';');
+    int lastP  = newickStr.lastIndexOf(')');
+    int firstP = newickStr.indexOf('(');
+    int semi = newickStr.lastIndexOf(';');
 
-	wstring content = newickStr.substr(firstP + 1, lastP - firstP);
-  wstring rootElements = newickStr.substr(lastP + 1, semi - lastP - 1);
+    QString content = newickStr.mid(firstP + 1, lastP - firstP);
+    QString rootElements = newickStr.mid(lastP + 1, semi - lastP - 1);
   
 	ParseNodeInfo(root, rootElements, false);
 
 	// parse newick string
 	std::stack<NodePhylo*> nodeStack;
 	nodeStack.push(root);
-	wstring nodeInfo;
+    QString nodeInfo;
 	NodePhylo* activeNode = NULL;
 	for(uint i = 0; i < content.size(); ++i)
 	{
-		char ch = content.at(i);
+        QChar ch = content.at(i);
 
 		if(ch == '(')
 		{
@@ -181,7 +179,7 @@ bool NewickIO::ParseNewickString(Tree<NodePhylo>::Ptr tree, const wstring& newic
 			activeNode = nodeStack.top();
 			nodeStack.pop();
 
-			nodeInfo = _T("");
+            nodeInfo = "";
 		}
 		else if(ch == ',')
 		{
@@ -191,7 +189,7 @@ bool NewickIO::ParseNewickString(Tree<NodePhylo>::Ptr tree, const wstring& newic
 				// processing an internal node
 				ParseNodeInfo(activeNode, nodeInfo, false);
 				activeNode = NULL;
-				nodeInfo = _T("");
+                nodeInfo = "";
 			}
 			else
 			{
@@ -201,7 +199,7 @@ bool NewickIO::ParseNewickString(Tree<NodePhylo>::Ptr tree, const wstring& newic
 				nodeStack.top()->AddChild(node);
 
 				ParseNodeInfo(node, nodeInfo, true);
-				nodeInfo = _T("");
+                nodeInfo = "";
 			}
 		}
 		else
@@ -220,10 +218,8 @@ bool NewickIO::ParseNewickString(Tree<NodePhylo>::Ptr tree, const wstring& newic
 	return true; 
 }
 
-void NewickIO::Write(Tree<NodePhylo>::Ptr tree, wostream& out) const
+void NewickIO::Write(Tree<NodePhylo>::Ptr tree, QTextStream &out) const
 {
-	// Checking the existence of specified file, and possibility to open it in write mode
-	assert(out != NULL);
 
 	out << "(";
 
@@ -231,7 +227,7 @@ void NewickIO::Write(Tree<NodePhylo>::Ptr tree, wostream& out) const
 	
   if(tree->GetNumberOfLeaves() == 0)
   {
-    out << "'" << root->GetName().c_str() << "'";
+    out << "'" << root->GetName() << "'";
 
 		float dist = root->GetDistanceToParent();
 		if(dist != NodePhylo::NO_DISTANCE)
@@ -244,13 +240,13 @@ void NewickIO::Write(Tree<NodePhylo>::Ptr tree, wostream& out) const
 	out << ")";
 	
 	// Output the name of the root if it has one
-	if(!utils::StringTools::IsEmpty(root->GetName()))
-		out << "'" << root->GetName().c_str() << "'";
+    if(!(root->GetName().isEmpty()))
+        out << "'" << root->GetName() << "'";
 	
 	out << ";" << endl;
 }
 
-void NewickIO::WriteNodes(Tree<NodePhylo>::Ptr tree, wostream& out, NodePhylo* parent) const
+void NewickIO::WriteNodes(Tree<NodePhylo>::Ptr tree, QTextStream& out, NodePhylo* parent) const
 {
 	vector<unsigned int> childrenId = parent->GetChildrenIds();
 	assert(childrenId.size() > 0);
@@ -263,7 +259,7 @@ void NewickIO::WriteNodes(Tree<NodePhylo>::Ptr tree, wostream& out, NodePhylo* p
 	}
 }
 
-void NewickIO::WriteElements(Tree<NodePhylo>::Ptr tree, wostream& out, NodePhylo* parent, NodePhylo* child) const
+void NewickIO::WriteElements(Tree<NodePhylo>::Ptr tree, QTextStream& out, NodePhylo* parent, NodePhylo* child) const
 {	
   if(child->GetNumberOfChildren() != 0)
   {
@@ -272,8 +268,8 @@ void NewickIO::WriteElements(Tree<NodePhylo>::Ptr tree, wostream& out, NodePhylo
     out << ")";
   }
 
-	if(!utils::StringTools::IsEmpty(child->GetName()))
-		out << "'" << child->GetName().c_str() << "'";
+    if(!child->GetName().isEmpty())
+        out << "'" << child->GetName() << "'";
 	
 	if(child->GetBootstrapToParent() != NodePhylo::NO_DISTANCE)
 		out << " " << ((NodePhylo*)child)->GetBootstrapToParent();

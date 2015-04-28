@@ -9,11 +9,9 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
 
 #include "Node.hpp"
-
-#include "../utils/StringTools.hpp"
+#include "Error.hpp"
 
 using namespace utils;
 using namespace std;

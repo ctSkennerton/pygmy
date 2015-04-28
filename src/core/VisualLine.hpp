@@ -10,8 +10,6 @@
 #ifndef _VISUAL_LINE_
 #define _VISUAL_LINE_
 
-#include "../core/Precompiled.hpp"
-
 #include "../core/VisualObject.hpp"
 
 #include "../utils/Line.hpp"

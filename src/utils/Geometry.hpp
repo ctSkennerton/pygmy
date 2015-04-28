@@ -10,7 +10,6 @@
 #ifndef _GEOMETRY_H_
 #define _GEOMETRY_H_
 
-#include "../core/Precompiled.hpp"
 
 #include "../utils/Point.hpp"
 #include "../utils/Line.hpp"

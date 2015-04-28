@@ -7,7 +7,6 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
 #include "../utils/Colour.hpp"
 #include "assert.h"
 
@@ -32,12 +31,12 @@ Colour::Colour( int r, int g, int b, int alpha )
   m_alpha = alpha / 255.0f;
 }
 
-Colour::Colour( const wxColour& colour )
+Colour::Colour(const QColor &colour )
 {
-	m_red = colour.Red() / 255.0f;
-  m_green = colour.Green()  / 255.0f;
-  m_blue = colour.Blue()  / 255.0f;
-	m_alpha = colour.Alpha()  / 255.0f;
+    m_red = colour.red() / 255.0f;
+  m_green = colour.green()  / 255.0f;
+  m_blue = colour.blue()  / 255.0f;
+    m_alpha = colour.alpha()  / 255.0f;
 }
 
 Colour::Colour() 

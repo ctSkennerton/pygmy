@@ -10,7 +10,6 @@
 #ifndef _VISUAL_MARKER_
 #define _VISUAL_MARKER_
 
-#include "../core/Precompiled.hpp"
 
 #include "../core/VisualObject.hpp"
 

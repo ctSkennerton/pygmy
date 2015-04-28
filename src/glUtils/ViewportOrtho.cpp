@@ -67,6 +67,7 @@ void ViewportOrtho::DisconnectEvents()
 	this->Disconnect( wxEVT_MOUSEWHEEL, wxMouseEventHandler( ViewportOrtho::OnMouseWheel ) );
 }
 
+//this function is equivelent to the initializeGL function in Qt
 void ViewportOrtho::InitCanvas()
 {
 	m_contextGL->SetCurrent(*this);
@@ -115,6 +116,7 @@ void ViewportOrtho::InitCanvas()
 	glUtils::ErrorGL::Check();
 }
 
+// This function is equivelent to the resizeGL function from Qt
 void ViewportOrtho::OnSize(wxSizeEvent& event)
 {
 	m_contextGL->SetCurrent(*this);

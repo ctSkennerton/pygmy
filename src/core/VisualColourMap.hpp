@@ -10,7 +10,6 @@
 #ifndef _VISUAL_COLOUR_MAP_
 #define _VISUAL_COLOUR_MAP_
 
-#include "../core/Precompiled.hpp"
 
 namespace pygmy
 {

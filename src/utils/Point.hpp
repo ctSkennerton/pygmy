@@ -10,7 +10,7 @@
 #ifndef _POINT_HPP_
 #define _POINT_HPP_
 
-#include "../core/Precompiled.hpp"
+#include <cmath>
 
 namespace utils
 {

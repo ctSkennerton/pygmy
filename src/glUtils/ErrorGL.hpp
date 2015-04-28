@@ -10,8 +10,8 @@
 #ifndef _ERROR_GL_
 #define _ERROR_GL_
 
-#include "../core/Precompiled.hpp"
-
+#include <glu.h>
+#include "../utils/Error.hpp"
 namespace glUtils
 {
 

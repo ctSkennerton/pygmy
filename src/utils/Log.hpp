@@ -10,10 +10,6 @@
 #ifndef _LOG_
 #define _LOG_
 
-#include "../core/Precompiled.hpp"
-
-#include "../core/App.hpp"
-
 namespace utils
 {
 
@@ -27,7 +23,7 @@ public:
 	/** Destructor */
 	~Log()
 	{
-		foreach(std::wstring str, m_logData)
+        for(QString str : m_logData)
 		{
 			m_log << str.c_str() << std::endl;
 		}
@@ -43,13 +39,7 @@ public:
 	}
 
 	/** Add text to log file. */
-	void Add(const wchar_t* text)
-	{
-		m_logData.push_back(text);
-	}
-
-	/** Add text to log file. */
-	void Add(const std::wstring text)
+    void Add(const QString text)
 	{
 		m_logData.push_back(text);
 	}
@@ -69,7 +59,7 @@ public:
 	}
 
 	/** Add text to log file. */
-	void Write(const std::wstring text)
+    void Write(const QString text)
 	{
 		Write(text.c_str());
 	}
@@ -97,7 +87,7 @@ public:
 	}
 
 	/** Add text to log file. */
-	void Warning(const std::wstring text)
+    void Warning(const QString text)
 	{
 		Warning(text.c_str());
 	}
@@ -125,7 +115,7 @@ public:
 	}
 
 	/** Add text to log file. */
-	void Error(const std::wstring text)
+    void Error(const QString text)
 	{
 		Error(text.c_str());
 	}
@@ -156,7 +146,7 @@ private:
 	std::ofstream m_log;
 
 	/** Vector of log data. */
-	std::vector<std::wstring> m_logData;
+    std::vector<QString> m_logData;
 
 	/** Console to output messages to. */
 	wxRichTextCtrl* m_console;

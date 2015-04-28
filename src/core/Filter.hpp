@@ -10,7 +10,6 @@
 #ifndef _FILTER_H_
 #define _FILTER_H_
 
-#include "../core/Precompiled.hpp"
 
 #include "../core/NodePhylo.hpp"
 

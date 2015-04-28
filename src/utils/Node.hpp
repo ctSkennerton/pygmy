@@ -9,9 +9,9 @@
 
 #ifndef _NODE_H_
 #define _NODE_H_
-
-#include "../core/Precompiled.hpp"
-
+#include "../utils/Common.hpp"
+#include "../core/DataTypes.hpp"
+#include <QString>
 namespace utils
 {
 
@@ -29,14 +29,14 @@ public:
 	 * @brief Constructor.
 	 * @param id Unique id identifying node.
 	 */
-	Node(NodeId id) : m_id(id), m_name(_T("")), m_parent(NULL), m_distanceToParent(NO_DISTANCE) {}
+    Node(NodeId id) : m_id(id), m_name(""), m_parent(NULL), m_distanceToParent(NO_DISTANCE) {}
 
 	/**
 	 * @brief Constructor.
 	 * @param id Unique id identifying node.
 	 * @param name Name of node.
 	 */
-	Node(NodeId id,  const std::wstring & name) : m_id(id), m_name(name), m_parent(NULL), m_distanceToParent(NO_DISTANCE) {}
+    Node(NodeId id,  const QString & name) : m_id(id), m_name(name), m_parent(NULL), m_distanceToParent(NO_DISTANCE) {}
 
 	/** Destructor. */
 	virtual ~Node() {}
@@ -69,13 +69,13 @@ public:
 	virtual std::vector<NodeId> GetChildrenIds() const;
 	  
 	/** Get the name associated to this node. */
-	virtual const std::wstring& GetName() const	{	return m_name; }
+    virtual const QString& GetName() const	{	return m_name; }
 	    
 	/**
 	 * @brief Set name of node.
 	 * @param name Name to give node.
 	 */
-	virtual void SetName(const std::wstring& name)	{	m_name = name; }
+    virtual void SetName(const QString& name)	{	m_name = name; }
 
 	/** Get the distance to the parent node.	 */     
 	virtual float GetDistanceToParent() const { return m_distanceToParent; }
@@ -201,7 +201,7 @@ protected:
   NodeId m_id;
 
 	/** Name of node. */
-  std::wstring m_name;
+  QString m_name;
 
 	/** Children of node. */
   std::vector<Node*> m_children;

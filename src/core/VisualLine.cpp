@@ -7,11 +7,8 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
 
 #include "../core/VisualLine.hpp"
-#include "../core/App.hpp"
-
 #include "../glUtils/ErrorGL.hpp"
 
 using namespace pygmy;

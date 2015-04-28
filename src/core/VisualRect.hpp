@@ -10,7 +10,6 @@
 #ifndef _VISUAL_RECT_
 #define _VISUAL_RECT_
 
-#include "../core/Precompiled.hpp"
 
 #include "../core/VisualObject.hpp"
 

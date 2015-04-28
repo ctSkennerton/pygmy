@@ -11,11 +11,10 @@
 
 #ifndef _TREE_TOOLS_
 #define _TREE_TOOLS_
-
-#include "../core/Precompiled.hpp"
-
+#include "Error.hpp"
 #include "Node.hpp"
-
+#include <vector>
+#include <QString>
 namespace utils
 {
 
@@ -67,7 +66,7 @@ public:
 	 * @param name The name of the node.
 	 * @param id The id of the node.
 	 */
-	static void SearchLeaf(const N* node,  const std::wstring & name, unsigned int * & id);
+    static void SearchLeaf(const N* node,  const QString & name, unsigned int * & id);
 
 	/**
 	 * @brief Retrieve all son nodes from a subtree.
@@ -105,7 +104,7 @@ public:
 	 * @param name  The name to search for.
 	 * @param nodes Vector of nodes with the specified name.
 	 */
-	static std::vector<N*> SearchNodeWithName(N* node, const std::wstring & name);
+    static std::vector<N*> SearchNodeWithName(N* node, const QString & name);
 
 	/**
 	 * @brief Determine if subtree contains a node with a given name.
@@ -113,7 +112,7 @@ public:
 	 * @param name Name to search for.
 	 * @return True if the subtree contains a node with the specified name.
 	 */
-	static bool HasNodeWithName(const N* node, const std::wstring & name);
+    static bool HasNodeWithName(const N* node, const QString & name);
 
 	/**
 	 * @brief Tell if a particular node is the root of a tree
@@ -141,7 +140,7 @@ public:
 	 * @param node Node defining the subtree to check.
 	 * @return Vector of all leaves names.
 	 */
-	static std::vector<std::wstring> GetLeafNames(const N* node);
+    static std::vector<QString> GetLeafNames(const N* node);
 
 	/**
 	 * @brief Get the depth of the subtree (i.e. the maximum number of children 'generations').
@@ -257,7 +256,7 @@ private:
 	 * @param name  The name to search for.
 	 * @param nodes Vector of nodes with the specified name.
 	 */
-	static void SearchNodeWithName(N* node, const std::wstring& name, std::vector<N*>& nodes);
+    static void SearchNodeWithName(N* node, const QString& name, std::vector<N*>& nodes);
 };
 
 
@@ -322,9 +321,9 @@ unsigned int TreeTools<N>::GetNumberOfNodes(const N* node)
 }
 
 template <class N>
-std::vector<std::wstring> TreeTools<N>::GetLeafNames(const N* node)
+std::vector<QString> TreeTools<N>::GetLeafNames(const N* node)
 {
-	std::vector<std::wstring> names;
+    std::vector<QString> names;
 
   if(node->IsLeaf())
   {
@@ -332,8 +331,8 @@ std::vector<std::wstring> TreeTools<N>::GetLeafNames(const N* node)
   }
   for(unsigned int i = 0; i < node->GetNumberOfChildren(); i++)
   {
-		std::vector<std::wstring> subNames = GetLeafNames(node->GetChild(i));
-		foreach(std::wstring& subName, subNames)
+        std::vector<QString> subNames = GetLeafNames(node->GetChild(i));
+        for(QString& subName : subNames)
 		{
 			names.push_back(subName);
 		}
@@ -509,7 +508,7 @@ float TreeTools<N>::GetDistanceBetweenAnyTwoNodes(const N* node1, const N* node2
 {
   std::vector<N*> path = GetPathBetweenAnyTwoNodes(node1, node2, false);
   float d = 0;
-	foreach(N* n, path)
+    for(N* n: path)
   {
 		d += n->GetDistanceToParent();
   }
@@ -558,7 +557,7 @@ void TreeTools<N>::GetLeafIds(const N* node, std::vector<unsigned int> & ids)
 }
 
 template <class N>
-void TreeTools<N>::SearchLeaf(const N* node,  const std::wstring & name, unsigned int * & id)
+void TreeTools<N>::SearchLeaf(const N* node,  const QString & name, unsigned int * & id)
 {
 	if(node->IsLeaf())
 	{
@@ -647,7 +646,7 @@ void TreeTools<N>::SearchNodeWithId(const N* node, unsigned int id, std::vector<
 }
 
 template <class N>
-std::vector<N*> TreeTools<N>::SearchNodeWithName(N* node, const std::wstring & name)
+std::vector<N*> TreeTools<N>::SearchNodeWithName(N* node, const QString & name)
 {
 	std::vector<N*> nodes;
 	SearchNodeWithName(node, name, nodes);
@@ -655,7 +654,7 @@ std::vector<N*> TreeTools<N>::SearchNodeWithName(N* node, const std::wstring & n
 }
 
 template <class N>
-void TreeTools<N>::SearchNodeWithName(N* node, const std::wstring& name, std::vector<N*>& nodes)
+void TreeTools<N>::SearchNodeWithName(N* node, const QString& name, std::vector<N*>& nodes)
 {
 	for(unsigned int i = 0; i < node->GetNumberOfChildren(); i++)
 	{
@@ -667,7 +666,7 @@ void TreeTools<N>::SearchNodeWithName(N* node, const std::wstring& name, std::ve
 }
 
 template <class N>
-bool TreeTools<N>::HasNodeWithName(const N* node, const std::wstring & name)
+bool TreeTools<N>::HasNodeWithName(const N* node, const QString & name)
 {
 	if(node->GetName() == name) 
 	{
