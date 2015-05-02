@@ -81,6 +81,7 @@ void MainWindow::open()
         QMessageBox::critical(this, tr("Pygmy: Error"), tr("Failed to read Newick file or the file was empty"));
         return;
     }
+    setWindowTitle(tree->GetName());
     m_glTreeWidget->setTree(tree);
 }
 
