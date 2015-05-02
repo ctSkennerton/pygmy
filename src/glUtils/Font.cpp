@@ -22,8 +22,6 @@ using namespace utils;
 Font::Font(const QString& fontFile): m_fontFile(fontFile)
 		
 {
-    qDebug() << "Fontfile: "<<fontFile;
-
     //glDisable(GL_LINE_SMOOTH);
     QFile font_file(fontFile);
     if (!font_file.open(QIODevice::ReadOnly))

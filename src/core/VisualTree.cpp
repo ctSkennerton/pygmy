@@ -27,11 +27,17 @@
 
 #include "../utils/ParsimonyCalculator.hpp"
 
+#include <QtDebug>
+#include <QOpenGLContext>
+
 using namespace pygmy;
 using namespace utils;
 
 VisualTree::VisualTree(utils::Tree<NodePhylo>::Ptr tree)
-	: m_originalTree(tree), m_activeNode(VisualNode(VisualMarker(), NULL)), m_colourMapSpacing(10), m_branchStyle(CLADOGRAM_BRANCHES)
+    : m_originalTree(tree),
+      m_activeNode(VisualNode(VisualMarker(), NULL)),
+      m_colourMapSpacing(10),
+      m_branchStyle(CLADOGRAM_BRANCHES)
 {	
 	m_tree = m_originalTree->Clone();
 
@@ -155,14 +161,12 @@ void VisualTree::CalculateTreeDimensions(uint width, uint height, float zoom)
 void VisualTree::Render(int width, int height, float translation, float zoom)
 {
 	glUtils::ErrorGL::Check();
-
 	CalculateTreeDimensions(width, height, zoom);
-
 	// *** Render tree. ***
 	RenderTree(translation, zoom);
 
 	// *** Render any label selection heighlights. ***
-	RenderTextSearch(translation, zoom);
+    //RenderTextSearch(translation, zoom);
 	
 	// *** Render leaf node labels ***
 	RenderLeafNodeLabels(translation, zoom);
@@ -182,7 +186,6 @@ void VisualTree::RenderTree(float translation, float zoom)
 
 	// Get size of border (in pixels)
 	Point border = State::Inst().GetBorderSize();
-
 	glPushMatrix();
 	{
 		glDisable(GL_LINE_SMOOTH);

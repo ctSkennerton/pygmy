@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegularExpression>
+#include <QtDebug>
 
 using namespace pygmy;
 using namespace utils;
@@ -52,10 +53,14 @@ bool NewickIO::Read(Tree<NodePhylo>::Ptr tree, QTextStream & in)
     do {
         temp = in.readLine();
         QString::size_type index = temp.indexOf(";");
-        if(index == -1)
+        if(index != -1)
         {
             newickStr += temp.mid(0, index + 1);
             break;
+        }
+        else
+        {
+            newickStr += temp;
         }
     }
     while (!temp.isNull());

@@ -58,7 +58,7 @@ using namespace pygmy;
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
-class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
+class GLWidget : public QOpenGLWidget
 {
     Q_OBJECT
 

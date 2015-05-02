@@ -43,6 +43,7 @@
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
 #include <math.h>
+#include <QtDebug>
 
 #include "utils/Point.hpp"
 #include "core/State.hpp"
@@ -56,6 +57,7 @@ GLWidget::GLWidget(QWidget *parent)
       m_yRot(0),
       m_zRot(0),
       m_program(0)
+
 {
     m_core = QCoreApplication::arguments().contains(QStringLiteral("--coreprofile"));
     // --transparent causes the clear color to be transparent. Therefore, on systems that
@@ -63,6 +65,12 @@ GLWidget::GLWidget(QWidget *parent)
     m_transparent = QCoreApplication::arguments().contains(QStringLiteral("--transparent"));
     if (m_transparent)
         setAttribute(Qt::WA_TranslucentBackground);
+
+    m_zoomMin = 1.0f;
+    m_zoomMax = 6.0f; //State::Inst().GetZoomMax();
+    m_translateMin = 0.0f;
+    m_translateMax = 0.0f;
+    m_translate = 0.0f;
 }
 
 GLWidget::~GLWidget()
@@ -193,10 +201,10 @@ void GLWidget::initializeGL()
     // can recreate all resources.
     connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &GLWidget::cleanup);
 
-    initializeOpenGLFunctions();
+    //initializeOpenGLFunctions();
 
 
-
+#if 1
     // The below sets the openGL context to be current
     // according to Qt documentation this is not required
     // as it happens automatically under Qt API as long as
@@ -238,9 +246,7 @@ void GLWidget::initializeGL()
 
     glUtils::ErrorGL::Check();
 
-
-
-/*
+#else
 
 
     glClearColor(0, 0, 0, m_transparent ? 0 : 1);
@@ -281,7 +287,8 @@ void GLWidget::initializeGL()
     m_program->setUniformValue(m_lightPosLoc, QVector3D(0, 0, 70));
 
     m_program->release();
-    */
+
+#endif
 }
 
 void GLWidget::setupVertexAttribs()
@@ -297,6 +304,7 @@ void GLWidget::setupVertexAttribs()
 
 void GLWidget::paintGL()
 {
+#if 1
     glUtils::ErrorGL::Check();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -306,6 +314,7 @@ void GLWidget::paintGL()
 
     if(m_visualTree)
     {
+        qDebug() << size().width() <<" "<< size().height()<< " "<<m_translate << " "<<m_zoom;
         m_visualTree->Render(size().width(), size().height(), m_translate, m_zoom);
 
         /*if(m_overview)
@@ -318,8 +327,7 @@ void GLWidget::paintGL()
     }
 
     glUtils::ErrorGL::Check();
-
-    /*
+#else
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -340,11 +348,12 @@ void GLWidget::paintGL()
     glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 
     m_program->release();
-    */
+#endif
 }
 
 void GLWidget::resizeGL(int w, int h)
 {
+#if 1
     glUtils::ErrorGL::Check();
 
     if(isVisible())
@@ -372,13 +381,10 @@ void GLWidget::resizeGL(int w, int h)
 
     glUtils::ErrorGL::Check();
 
-
-
-
-/*
+#else
     m_proj.setToIdentity();
     m_proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 100.0f);
-*/
+#endif
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -409,8 +415,9 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
     // calculate bounding boxes for all leaf node labels
     m_visualTree->LabelBoundingBoxes();
     m_visualTree->CalculateTreeDimensions(size().width(), size().height(), m_zoom);
-
     // set min/max values for zoom
+    SetDefaultZoom();
+
     ZoomExtents();
 
     // set initial zoom:
@@ -465,6 +472,8 @@ void GLWidget::ScaleView(int dx, int dy)
 
 void GLWidget::SetZoom(float zoom)
 {
+    qDebug() << __FILE__ << ":"<<__LINE__<<" "<<m_zoom<<" "<<m_translate << " "<<zoom << " "<<m_zoomMin << " "<<m_zoomMax;
+
     float previousZoom = m_zoom;
     float previousTranslation = m_translate;
 
@@ -481,6 +490,7 @@ void GLWidget::SetZoom(float zoom)
     // modify translation so the middle line does not move during zooming
     SetTranslation(previousTranslation + (previousTranslation+size().height()*0.5)*(m_zoom-previousZoom)/previousZoom);
 
+    qDebug() << __FILE__ << " "<<__LINE__<<" "<<m_zoom<<" "<<m_translate << " "<<zoom << " "<<m_zoomMin << " "<<m_zoomMax;
     update();
 }
 
@@ -488,6 +498,7 @@ void GLWidget::SetDefaultZoom()
 {
     // reset zooming factor to default value
     float targetZoom;
+    qDebug() <<__FILE__<<" "<<__LINE__<<" "<< size().height() << " "<< State::Inst().GetBorderSize().y <<" "<< m_visualTree->GetTreeHeight();
     if((size().height()-2*State::Inst().GetBorderSize().y) > m_visualTree->GetTreeHeight())
         targetZoom = (size().height()-2*State::Inst().GetBorderSize().y)/m_visualTree->GetTreeHeight();
     else
@@ -520,6 +531,7 @@ void GLWidget::ZoomExtents()
         // calculate extents of zoom
         m_zoomMin = 1.0f;
         m_zoomMax = m_zoomMin*State::Inst().GetZoomMax();
+        qDebug() <<__FILE__<<":"<<__LINE__<<" "<<m_zoom <<" "<<m_zoomMin << " "<< m_zoomMax << " "<<size().height() << " "<< 2*State::Inst().GetBorderSize().y << " "<< m_visualTree->GetTreeHeight();
         if(m_zoomMax < (size().height()-2*State::Inst().GetBorderSize().y)/m_visualTree->GetTreeHeight())
         {
             // make sure the maximum zoom is large enough to allow

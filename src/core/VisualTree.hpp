@@ -62,7 +62,7 @@ public:
 	 * @brief Constructor. 
 	 * @param tree Tree to visualize.
 	 */
-	VisualTree(utils::Tree<NodePhylo>::Ptr tree);
+    VisualTree(utils::Tree<NodePhylo>::Ptr tree);
 
 	/** Destructor. */
 	virtual ~VisualTree() {}
