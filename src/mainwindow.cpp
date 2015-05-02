@@ -75,7 +75,12 @@ void MainWindow::open()
                                             );
     pygmy::NewickIO newickIO;
     utils::Tree<pygmy::NodePhylo>::Ptr tree(new utils::Tree<pygmy::NodePhylo>());
-    newickIO.Read(tree, fileName);
+    bool readOk = newickIO.Read(tree, fileName);
+    if(! readOk || tree->GetNumberOfLeaves() == 0)
+    {
+        QMessageBox::critical(this, tr("Pygmy: Error"), tr("Failed to read Newick file or the file was empty"));
+        return;
+    }
     m_glTreeWidget->setTree(tree);
 }
 
