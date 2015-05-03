@@ -73,6 +73,11 @@ void MainWindow::open()
                                             "/",
                                             tr("Tree Files (*.tree *.tre);;All Files (*)")
                                             );
+    // The user did not choose a file - clicked cancel
+    if(fileName.isNull())
+    {
+        return;
+    }
     pygmy::NewickIO newickIO;
     utils::Tree<pygmy::NodePhylo>::Ptr tree(new utils::Tree<pygmy::NodePhylo>());
     bool readOk = newickIO.Read(tree, fileName);
