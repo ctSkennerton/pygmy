@@ -31,7 +31,7 @@ public:
 	/** Get the one and only instance of the state class. */
 	static State& Inst();
 
-	/** OpenGL font to use for rendering text in application. */
+	/** GL font to use for rendering text in application. */
 	const glUtils::FontPtr GetFont() const { return m_font; }
 
 	/** TrueType font to use in application (i.e., times.ttf, arial.ttf) */
@@ -293,7 +293,7 @@ private:
 	/** Font to use in project. */
     QString m_fontFile;
 
-	/** Pointer to font class used to render TrueType fonts on an OpenGL canvas. */
+	/** Pointer to font class used to render TrueType fonts on an GL canvas. */
 	glUtils::FontPtr m_font;
 
 	/** Size of tree font. */

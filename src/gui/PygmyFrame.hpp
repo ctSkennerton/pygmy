@@ -280,10 +280,10 @@ private:
 	/** Tree to display in viewports. */
 	VisualTreePtr m_visualTree;
 
-	/** Main canvas which supports OpenGL orthographic rendering linked to an overview tree. */
+	/** Main canvas which supports GL orthographic rendering linked to an overview tree. */
 	ViewportMainPtr m_viewport;
 
-	/** OpenGL canvas for rendering an overview tree. */
+	/** GL canvas for rendering an overview tree. */
 	ViewportOverviewPtr m_overview;
 
 	/** Performs text search on leaf node labels of tree. */

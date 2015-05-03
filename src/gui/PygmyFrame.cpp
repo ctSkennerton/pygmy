@@ -206,8 +206,8 @@ void PygmyFrame::OnFileOpenTree(wxCommandEvent& event)
 		return;
   }
 
-  wstring path = openDlg->GetDirectory();
-  wstring filename = openDlg->GetFilename();
+  wstring path = openDlg->GetDirectory().wc_str();
+  wstring filename = openDlg->GetFilename().wc_str();
 
 	openDlg->Destroy();
 
@@ -256,11 +256,11 @@ void PygmyFrame::OpenTree(const wstring& filename)
 	}
 	
 	// *** Inform viewport and overview canvas of the new tree
-	if(m_cboBranchStyle->GetStringSelection() == "Cladogram")
+	if(m_cboBranchStyle->GetStringSelection() == L"Cladogram")
 		m_visualTree->SetBranchStyle(VisualTree::CLADOGRAM_BRANCHES);
-	else if(m_cboBranchStyle->GetStringSelection() == "Equal")
+	else if(m_cboBranchStyle->GetStringSelection() == L"Equal")
 		m_visualTree->SetBranchStyle(VisualTree::EQUAL_BRANCHES);
-	else if(m_cboBranchStyle->GetStringSelection() == "Phylogram")
+	else if(m_cboBranchStyle->GetStringSelection() == L"Phylogram")
 		m_visualTree->SetBranchStyle(VisualTree::PHYLOGRAM_BRANCHES);
 
 	m_visualTree->SetSearchFilter(m_textSearch->DataFilter());
@@ -294,8 +294,8 @@ void PygmyFrame::OnFileOpenMetadata( wxCommandEvent& event )
 		return;
   }
 
-  wstring path = openDlg->GetDirectory();
-  wstring filename = openDlg->GetFilename();
+  wstring path = openDlg->GetDirectory().wc_str();
+  wstring filename = openDlg->GetFilename().wc_str();
 
 	openDlg->Destroy();
 
@@ -322,7 +322,8 @@ void PygmyFrame::OnFileOpenMetadata( wxCommandEvent& event )
 	m_cboField->Thaw();
 
 	m_cboField->SetSelection(0);
-	OnChangeField(wxCommandEvent());
+	wxCommandEvent tmp;
+	OnChangeField(tmp);
 }
 
 void PygmyFrame::PopulateSearchList(std::vector<std::wstring>& words)
@@ -363,7 +364,7 @@ void PygmyFrame::OnChangeSearchType( wxCommandEvent& event )
 
 void PygmyFrame::OnSearchClick( wxCommandEvent& event )
 {
-	std::wstring selection = m_lstSearch->GetStringSelection();
+	std::wstring selection = m_lstSearch->GetStringSelection().wc_str();
 
 	uint id;
 	if(m_textSearch->Data(selection, id))
@@ -383,8 +384,8 @@ void PygmyFrame::OnFileSaveOverview( wxCommandEvent& event )
       return;
   }
 
-  wstring path = saveDlg.GetDirectory();
-  wstring filename = saveDlg.GetFilename();
+  wstring path = saveDlg.GetDirectory().wc_str();
+  wstring filename = saveDlg.GetFilename().wc_str();
 
 	m_overview->SaveImage(path + _T("\\") + filename);
 }
@@ -400,8 +401,8 @@ void PygmyFrame::OnFileSaveImage( wxCommandEvent& event )
       return;
   }
 
-  wstring path = saveDlg.GetDirectory();
-  wstring filename = saveDlg.GetFilename();
+  wstring path = saveDlg.GetDirectory().wc_str();
+  wstring filename = saveDlg.GetFilename().wc_str();
 
 	m_viewport->SaveImage(path + _T("\\") + filename);
 }
@@ -417,8 +418,8 @@ void PygmyFrame::OnFileExportTree( wxCommandEvent& event )
       return;
   }
 
-  wstring path = saveDlg.GetDirectory();
-  wstring filename = saveDlg.GetFilename();
+  wstring path = saveDlg.GetDirectory().wc_str();
+  wstring filename = saveDlg.GetFilename().wc_str();
 
 	if(m_visualTree)
 	{
@@ -440,8 +441,8 @@ void PygmyFrame::OnFileExportSubtree( wxCommandEvent& event )
       return;
   }
 
-  wstring path = saveDlg.GetDirectory();
-  wstring filename = saveDlg.GetFilename();
+  wstring path = saveDlg.GetDirectory().wc_str();
+  wstring filename = saveDlg.GetFilename().wc_str();
 
 	if(m_visualTree)
 	{
@@ -454,11 +455,11 @@ void PygmyFrame::OnFileExportSubtree( wxCommandEvent& event )
 
 void PygmyFrame::OnBranchStyleChanged( wxCommandEvent& event )
 {
-	if(m_cboBranchStyle->GetStringSelection() == "Cladogram")
+	if(m_cboBranchStyle->GetStringSelection() == L"Cladogram")
 		m_visualTree->SetBranchStyle(VisualTree::CLADOGRAM_BRANCHES);
-	else if(m_cboBranchStyle->GetStringSelection() == "Equal")
+	else if(m_cboBranchStyle->GetStringSelection() == L"Equal")
 		m_visualTree->SetBranchStyle(VisualTree::EQUAL_BRANCHES);
-	else if(m_cboBranchStyle->GetStringSelection() == "Phylogram")
+	else if(m_cboBranchStyle->GetStringSelection() == L"Phylogram")
 		m_visualTree->SetBranchStyle(VisualTree::PHYLOGRAM_BRANCHES);
 
 	m_visualTree->LayoutBranchStyle();
@@ -583,7 +584,7 @@ void PygmyFrame::OnViewColourMapTb( wxCommandEvent& event )
 
 void PygmyFrame::OnLeafFontTypeface( wxCommandEvent& event )
 {
-	std::wstring fontFile = m_choiceLeafFont->GetStringSelection();
+	std::wstring fontFile = m_choiceLeafFont->GetStringSelection().wc_str();
 	State::Inst().SetFontFile(_T("fonts/") + fontFile + _T(".ttf"));
 	State::Inst().GetFont()->SetTypeface(pygmy::App::Inst().GetExeDir() + _T("fonts/") + fontFile + _T(".ttf"));
 
@@ -660,7 +661,8 @@ void PygmyFrame::OnChangeField( wxCommandEvent& event )
 
 	m_statusBar->SetStatusText(_T("Unique field values = ") + utils::StringTools::ToString(fieldInfo.values.size()), 2);
 
-	OnTreatDataAs(wxCommandEvent());
+	wxCommandEvent tmp;
+	OnTreatDataAs(tmp);
 }
 
 void PygmyFrame::OnTreatDataAs( wxCommandEvent& event )
@@ -716,7 +718,8 @@ void PygmyFrame::OnTreatDataAs( wxCommandEvent& event )
 	else if(m_cboTreatDataAs->GetStringSelection() == _T("Discrete"))
 		m_cboColourMap->SetValue(m_colourMapManager->GetLastSelectedDiscrete());
 
-	OnChangeColourMap(wxCommandEvent());
+	wxCommandEvent tmp;
+	OnChangeColourMap(tmp);
 }
 
 void PygmyFrame::OnChangeColourMap( wxCommandEvent& event )
@@ -1093,8 +1096,8 @@ void PygmyFrame::OnAnalysisParsimony( wxCommandEvent& event )
 		FieldInfo fieldInfo = m_visualTree->GetMetadataInfo()->GetInfo(m_cboField->GetValue().wc_str());	
 		uint minTransitions = fieldInfo.values.size() - 1;
 
-		wxString message = "Parsimony score = " + utils::StringTools::ToString(score) + "\n\n";
-		message += "Consistency index = " + utils::StringTools::ToString(minTransitions / float(score), 3);
+		wxString message = L"Parsimony score = " + utils::StringTools::ToString(score) + L"\n\n";
+		message += L"Consistency index = " + utils::StringTools::ToString(minTransitions / float(score), 3);
 		
 		wxMessageBox(message, _T("Parsimony Analysis Info"), wxOK | wxICON_INFORMATION);
 	}

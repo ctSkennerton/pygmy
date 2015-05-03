@@ -29,21 +29,21 @@ void VisualRect::RenderRect(const Colour& startColour, const Colour& endColour, 
 		glLineWidth(width);
 
 		glBegin(GL_LINES); 		
-			startColour.SetColourOpenGL();
+			startColour.SetColourGL();
 			glVertex2i(rect.ll.x, rect.ll.y);
 
-			endColour.SetColourOpenGL();
+			endColour.SetColourGL();
 			glVertex2i(rect.lr.x, rect.lr.y);
 		glEnd();	
 	}
 	else
 	{
 		glBegin(GL_QUADS);
-			startColour.SetColourOpenGL();
+			startColour.SetColourGL();
 			glVertex2i(rect.ll.x, rect.ll.y);
 			glVertex2i(rect.ul.x, rect.ul.y);
 
-			endColour.SetColourOpenGL();
+			endColour.SetColourGL();
 			glVertex2i(rect.ur.x, rect.ur.y);
 			glVertex2i(rect.lr.x, rect.lr.y);						
 		glEnd();

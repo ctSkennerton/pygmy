@@ -16,7 +16,7 @@ namespace glUtils
 {
 
 /**
- * @brief OpenGL error checking routines.
+ * @brief GL error checking routines.
  */
 class ErrorGL
 {
@@ -34,13 +34,13 @@ public:
 			const GLubyte *errString = gluErrorString(errCode);
 			
 			char strBuffer[MAX_STRING_LEN];
-			sprintf(strBuffer, "(OpenGL Error) %s", errString);
+			sprintf(strBuffer, "(GL Error) %s", errString);
 			
 			utils::Error::Assert(errCode == GL_NO_ERROR);
 		#endif
 	}
 
-	/** Clear all OpenGL errors. */
+	/** Clear all GL errors. */
 	static void Clear()
 	{
 		GLenum errCode;

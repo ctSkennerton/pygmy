@@ -20,7 +20,6 @@ using namespace glUtils;
 using namespace utils;
 
 Font::Font(const QString& fontFile): m_fontFile(fontFile)
-		
 {
     //glDisable(GL_LINE_SMOOTH);
     QFile font_file(fontFile);
@@ -46,7 +45,7 @@ Font::Font(const QString& fontFile): m_fontFile(fontFile)
 	m_font->UseDisplayList(true);
 }
 
-Font::~Font()
+glUtils::Font::~Font()
 {
 	if(m_font != NULL)
 	{
@@ -77,7 +76,7 @@ void Font::Render(const QString& text, uint x, uint y)
 	glUtils::ErrorGL::Check();
 }
 
-void Font::SetSize(uint size)
+void glUtils::Font::SetSize(uint size)
 {
 	bool rtn = m_font->FaceSize(size);
 	utils::Error::Assert(rtn);

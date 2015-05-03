@@ -18,7 +18,7 @@ namespace glUtils
 class ContextGL;
 
 /**
- * @brief Virtual base class for an OpenGL canvas.
+ * @brief Virtual base class for an GL canvas.
  */
 class Viewport : public wxGLCanvas
 {
@@ -34,13 +34,13 @@ public:
 	virtual ~Viewport();
 
 	/** 
-	 * @brief Render the OpenGL scene. 
+	 * @brief Render the GL scene. 
 	 */
 	void Render();
 
 	/** 
 	 * @brief Reconstruct display lists. 
-	 * @param bRender True if OpenGL scene should be rendered.
+	 * @param bRender True if GL scene should be rendered.
 	 */
 	virtual void Redraw(bool bRender) = 0;
 
@@ -71,12 +71,12 @@ public:
 	
 protected:
 	/** 
-	 * @brief Render the OpenGL scene. Called by Render() and OnPaint() which 
+	 * @brief Render the GL scene. Called by Render() and OnPaint() which 
 	 *				set up the appropriate device context. 
 	 */
 	virtual void RenderScene() = 0;
 
-	/** Setup OpenGL canvas */
+	/** Setup GL canvas */
 	virtual void InitCanvas() = 0;
 
 	/** Connect all events handled by the viewport. */
@@ -108,7 +108,7 @@ protected:
 	/** Flag indicating if viewport is disabled. */
 	bool m_bDisabled;
 
-	/** OpenGL context for viewport. */
+	/** GL context for viewport. */
 	wxGLContext* m_contextGL;
 };
 

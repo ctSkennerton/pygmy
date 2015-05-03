@@ -93,8 +93,8 @@ public:
 	/** Get alpha channel (0 to 255). */
   int GetAlphaInt() const;
 
-	/** Get OpenGL colour. */
-	void SetColourOpenGL() const { glColor4f(m_red, m_green, m_blue, m_alpha); }
+	/** Get GL colour. */
+	void SetColourGL() const { glColor4f(m_red, m_green, m_blue, m_alpha); }
 
 
 	/** Create a random colour with alpha = 1. */

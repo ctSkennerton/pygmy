@@ -56,15 +56,15 @@
 #include <boost/filesystem.hpp>
 #include <boost/dynamic_bitset.hpp>
 
-// OpenGL includes
+// GL includes
 #if defined(_WIN32)
 	#define NOMINMAX
 	#include <windows.h>
 	#include <GL/gl.h>
 	#include <GL/glu.h>
 #else
-	#include <OpenGL/gl.h>
-	#include <OpenGL/glu.h>
+	#include <GL/gl.h>
+	#include <GL/glu.h>
 #endif
 
 // wxWidgets includes
