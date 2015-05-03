@@ -70,7 +70,7 @@ void MainWindow::open()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
                                             tr("Open Tree file"),
-                                            "/",
+                                            (State::Inst().GetPreviousDirectory().isEmpty()) ? QDir::homePath() : State::Inst().GetPreviousDirectory(),
                                             tr("Tree Files (*.tree *.tre);;All Files (*)")
                                             );
     // The user did not choose a file - clicked cancel
@@ -78,6 +78,8 @@ void MainWindow::open()
     {
         return;
     }
+    QFileInfo file_info(fileName);
+    State::Inst().SetPreviousDirectory(file_info.absoluteDir().absolutePath());
     pygmy::NewickIO newickIO;
     utils::Tree<pygmy::NodePhylo>::Ptr tree(new utils::Tree<pygmy::NodePhylo>());
     bool readOk = newickIO.Read(tree, fileName);

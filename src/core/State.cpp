@@ -12,6 +12,7 @@
 
 #include <QCoreApplication>
 #include <QSettings>
+#include <QDir>
 
 using namespace pygmy;
 using namespace utils;
@@ -111,6 +112,7 @@ void State::Load()
 
 
     m_font.reset(new glUtils::Font(GetFontFile()));
+    m_prevOpenedDir = settings.value("MainWindow/PreviousDir", QDir::homePath()).toString();
 }
 
 void State::Save()

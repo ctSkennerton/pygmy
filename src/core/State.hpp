@@ -262,6 +262,10 @@ public:
 	/** Get flag indicating if ordering of leaf nodes should be optimized. */
 	bool GetOptimizeLeafNodeOrdering() { return m_bOptimizeLeafNodes; }
 
+    void SetPreviousDirectory(QString dir) { m_prevOpenedDir = dir; }
+
+    QString GetPreviousDirectory() {return m_prevOpenedDir; }
+
 	/**
 	 * @brief Load project settings from file.
 	 * @param filename XML file containing project settings.
@@ -399,6 +403,10 @@ private:
 
 	/** Flag indicating if ordering of leaf nodes should be optimized. */
 	bool m_bOptimizeLeafNodes;
+
+    /** The directory of the previously opened file.
+     *  This directory will be opened again for the next file open*/
+    QString m_prevOpenedDir;
 };
 
 }
