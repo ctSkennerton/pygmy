@@ -48,8 +48,6 @@
 #include <QMatrix4x4>
 #include <QSize>
 
-#include "logo.h"
-
 #include "core/DataTypes.hpp"
 #include "core/VisualTree.hpp"
 #include "glUtils/ErrorGL.hpp"
