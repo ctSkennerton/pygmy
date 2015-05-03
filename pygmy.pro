@@ -21,7 +21,6 @@ LIBS += -L/usr/local/lib -lftgl
 
 SOURCES +=\
     src/glwidget.cpp \
-    src/logo.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/window.cpp \
@@ -42,7 +41,6 @@ SOURCES +=\
 HEADERS  += \
     src/mainwindow.h \
     src/glwidget.h \
-    src/logo.h \
     src/window.h \
     src/core/NewickIO.hpp \
     src/utils/Tree.hpp \
