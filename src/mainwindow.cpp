@@ -78,7 +78,7 @@ void MainWindow::open()
     bool readOk = newickIO.Read(tree, fileName);
     if(! readOk || tree->GetNumberOfLeaves() == 0)
     {
-        QMessageBox::critical(this, tr("Pygmy: Error"), tr("Failed to read Newick file or the file was empty"));
+        QMessageBox::critical(this, tr("Pygmy: Error"), tr("Failed to read Newick file, or the file was empty"));
         return;
     }
     setWindowTitle(tree->GetName());
