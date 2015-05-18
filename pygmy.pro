@@ -3,7 +3,6 @@
 # Project created by QtCreator 2015-04-20T18:36:00
 #
 #-------------------------------------------------
-
 QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -36,7 +35,8 @@ SOURCES +=\
     src/glUtils/Font.cpp \
     src/core/State.cpp \
     src/core/MetadataInfo.cpp \
-    src/utils/ParsimonyCalculator.cpp
+    src/utils/ParsimonyCalculator.cpp \
+    src/glscrollwrapper.cpp
 
 HEADERS  += \
     src/mainwindow.h \
@@ -62,7 +62,8 @@ HEADERS  += \
     src/core/State.hpp \
     src/core/MetadataInfo.hpp \
     src/core/Filter.hpp \
-    src/utils/ParsimonyCalculator.hpp
+    src/utils/ParsimonyCalculator.hpp \
+    src/glscrollwrapper.h
 
 FORMS    += mainwindow.ui
 
