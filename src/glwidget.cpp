@@ -253,7 +253,7 @@ void GLWidget::SetTranslation(float translation)
 
 void GLWidget::translate(int position)
 {
-    SetTranslation(position);
+    SetTranslation(m_translateMax - position);
     update();
 }
 
