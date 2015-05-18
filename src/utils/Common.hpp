@@ -10,8 +10,6 @@
 #ifndef _PYGMY_COMMON_
 #define _PYGMY_COMMON_
 
-#pragma message("*** Compiling Common.hpp: This should happen once on a full build if precompiled headers are setup properly. ***\n")
-
 #include "../utils/Point.hpp"
 
 namespace utils
