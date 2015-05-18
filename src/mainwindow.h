@@ -42,6 +42,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "glscrollwrapper.h"
 #include "glwidget.h"
 
 class MainWindow : public QMainWindow
@@ -62,6 +63,10 @@ protected:
     void closeEvent(QCloseEvent * event);
 
 private:
+    void createDocks();
+    void createMenus();
+
+    GLScrollWrapper * m_glTreeWidgetCanvas;
     GLWidget * m_glTreeWidget;
 };
 

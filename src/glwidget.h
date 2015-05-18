@@ -42,10 +42,6 @@
 #define GLWIDGET_H
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLBuffer>
-#include <QMatrix4x4>
 #include <QSize>
 
 #include "core/DataTypes.hpp"
@@ -56,9 +52,21 @@ using namespace pygmy;
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
+class GLScrollWrapper;
+
 class GLWidget : public QOpenGLWidget
 {
     Q_OBJECT
+
+signals:
+    void treeSizeChanged(float treeHeight);
+
+    // emits the current position of the view
+    void TranslationChanged(int position);
+
+public slots:
+    void setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree);
+    void translate(int position);
 
 public:
     GLWidget(QWidget *parent = 0);
@@ -67,7 +75,6 @@ public:
     QSize minimumSizeHint() const Q_DECL_OVERRIDE;
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
-    void setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree);
     void TranslateView(int dx, int dy);
     void ScaleView(int dx, int dy);
 
@@ -107,13 +114,22 @@ public:
     void SetBranchStyle(VisualTree::BRANCH_STYLE branchStyle);
     void SetColourMap(VisualColourMapPtr visualColourMap);
 
-    /** Called whenever translation changes. */
-    void TranslationChanged() {}
-
 
 protected:
+    /** Sets up the OpenGL resources and state.
+      * Gets called once before the first time resizeGL() or paintGL() is called.
+      */
     void initializeGL() Q_DECL_OVERRIDE;
+
+    /** Renders the OpenGL scene. Gets called whenever the widget needs to be updated.
+      */
     void paintGL() Q_DECL_OVERRIDE;
+
+    /** Sets up the OpenGL viewport, projection, etc.
+      * Gets called whenever the widget has been resized
+      * (and also when it is shown for the first time because
+      * all newly created widgets get a resize event automatically).
+      */
     void resizeGL(int width, int height) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
@@ -154,6 +170,8 @@ private:
 
     /** Limit maximum translation to a reasonable level. */
     float m_translateMax;
+
+    friend class GLScrollWrapper;
 };
 
 #endif

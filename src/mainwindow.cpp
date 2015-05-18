@@ -49,8 +49,11 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDockWidget>
+#include <QStackedLayout>
+#include <QScrollBar>
 
-MainWindow::MainWindow()
+void MainWindow::createMenus()
 {
     QMenuBar *menuBar = new QMenuBar;
     QMenu *menuFile = menuBar->addMenu(tr("&File"));
@@ -59,8 +62,47 @@ MainWindow::MainWindow()
     menuFile->addAction(openAct);
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
     setMenuBar(menuBar);
+}
+
+
+void MainWindow::createDocks()
+{
+    // Make a dock for the search dialog
+    QDockWidget *searchDockWidget = new QDockWidget(tr("Search"), this);
+    searchDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea |
+                                      Qt::RightDockWidgetArea);
+    //searchDockWidget->setWidget(dockWidgetContents);
+    addDockWidget(Qt::RightDockWidgetArea, searchDockWidget);
+
+
+    // Make a dock that will show the information of the currently selected record
+    QDockWidget *recordDockWidget = new QDockWidget(tr("Current Record"), this);
+    recordDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea |
+                                      Qt::RightDockWidgetArea);
+    //recordDockWidget->setWidget(dockWidgetContents);
+    addDockWidget(Qt::RightDockWidgetArea, recordDockWidget);
+}
+
+MainWindow::MainWindow()
+{
+    createMenus();
+    m_glTreeWidgetCanvas = new GLScrollWrapper(this);
     m_glTreeWidget = new GLWidget(this);
-    setCentralWidget(m_glTreeWidget);
+    m_glTreeWidgetCanvas->setViewport(m_glTreeWidget);
+
+    //QStackedLayout *stackedLayout = new QStackedLayout;
+    //stackedLayout->addWidget(m_glTreeWidget);
+    //stackedLayout->addWidget(m_glTreeWidgetCanvas);
+    //stackedLayout->setStackingMode(QStackedLayout::StackAll);
+    //setLayout(stackedLayout);
+
+    setCentralWidget(m_glTreeWidgetCanvas);
+
+    connect(m_glTreeWidget, &GLWidget::treeSizeChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::canvasHeight);
+    //connect(m_glTreeWidget, &GLWidget::TranslationChanged, m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::setValue);
+    connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::valueChanged, m_glTreeWidget, &GLWidget::translate);
+
+    createDocks();
 
     readSettings();
 
