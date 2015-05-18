@@ -64,6 +64,7 @@ signals:
     // emits the current position of the view
     void TranslationChanged(int position);
 
+
 public slots:
     void setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree);
     void translate(int position);
@@ -98,6 +99,10 @@ public:
     void AdjustViewport();
 
     void ZoomChanged();
+
+    // the height (in pixels) that is currently visible in the viewport
+    // m_translate * m_zoom
+    float VisibleHeight() {return m_zoom * size().height();}
 
     /**
      * @brief Ensure specified node is within the viewport. If it is
