@@ -6,12 +6,6 @@
 
 GLScrollWrapper::GLScrollWrapper(QWidget * parent) : QAbstractScrollArea(parent)
 {
-
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-
-
 }
 
 GLScrollWrapper::~GLScrollWrapper()
@@ -26,28 +20,26 @@ QSize GLScrollWrapper::sizeHint() const
 
 void GLScrollWrapper::resizeEvent(QResizeEvent * event)
 {
-    qDebug() << "resizing"<<event->size().width()<<" "<<event->size().height()<<" "<<event->oldSize().width()<<" "<<event->oldSize().height();
-    //QAbstractScrollArea::resizeEvent(event);
     GLWidget * glw = dynamic_cast<GLWidget *>(viewport());
+
+    // When we update the size of the window we also change the translation
+    // and how much is visible. Therefore we must also pass these new values
+    // along to the scrollbar to keep it in sync
+    verticalScrollBar()->setPageStep(glw->VisibleHeight());
+    verticalScrollBar()->setMaximum(glw->GetTranslationMax());
+
     glw->resizeEvent(event);
-    //glWidget->resizeGL(event->size().width(), event->size().height());
 }
 
 void GLScrollWrapper::paintEvent(QPaintEvent *event)
 {
-
-
-    //QAbstractScrollArea::paintEvent(event);
-    //glWidget->updateGL();
     GLWidget * glw = dynamic_cast<GLWidget *>(viewport());
-
     glw->paintEvent(event);
 }
 
 void GLScrollWrapper::canvasHeight(float height)
 {
-    //qDebug() << __FILE__ <<" "<< __LINE__ << " "<<__PRETTY_FUNCTION__<< " "<<height;
+    GLWidget * glw = dynamic_cast<GLWidget *>(viewport());
+    verticalScrollBar()->setPageStep(glw->VisibleHeight());
     verticalScrollBar()->setRange(0, height);
-    //qDebug() << __FILE__ <<" "<< __LINE__ << " "<<__PRETTY_FUNCTION__<< " "<<verticalScrollBar()->maximum();
-
 }

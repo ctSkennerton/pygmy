@@ -95,6 +95,7 @@ public:
 
     /** Set min/max values for translation. */
     void TranslationExtents();
+    float GetTranslationMax() {return m_translateMax;}
 
     void AdjustViewport();
 

@@ -233,7 +233,7 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
     }
 
     // signal other widgets about the size of the tree
-    emit treeSizeChanged(m_visualTree->GetTreeHeight() * m_zoom);
+    emit treeSizeChanged(m_translateMax);
 
     // Rebuild any display lists and render the scene
     QOpenGLWidget::update();
