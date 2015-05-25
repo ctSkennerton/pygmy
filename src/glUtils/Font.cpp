@@ -21,6 +21,9 @@ using namespace utils;
 
 Font::Font(const QString& fontFile): m_fontFile(fontFile)
 {
+    // FIXME: Had to comment this out to prevent seq fault
+    // In the current code this is called before the openGL
+    // context is initialized
     //glDisable(GL_LINE_SMOOTH);
     QFile font_file(fontFile);
     if (!font_file.open(QIODevice::ReadOnly))
