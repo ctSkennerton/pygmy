@@ -54,12 +54,13 @@ public:
 
 private slots:
     void open();
+    void about();
+
 
 
 protected:
     void readSettings();
     void writeSettings();
-    void about();
     void closeEvent(QCloseEvent * event);
 
 private:

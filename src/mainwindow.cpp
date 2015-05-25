@@ -62,6 +62,11 @@ void MainWindow::createMenus()
     menuFile->addAction(openAct);
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
     setMenuBar(menuBar);
+
+    QMenu *helpMenu = new QMenu(tr("&Help"), this);
+    QAction *aboutAction = helpMenu->addAction(tr("&About"));
+    connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
+    menuBar->addMenu(helpMenu);
 }
 
 
@@ -148,7 +153,7 @@ void MainWindow::readSettings()
 void MainWindow::about()
 {
    QMessageBox::about(this, tr("Pygmy"),
-            tr("Copyright (c) 2009, Donovan Parks (donovan.parks@gmail.com) "
+            tr("Copyright (c) 2009, Donovan Parks (donovan.parks@gmail.com) \n"
                "              2015, Donovan Parks, Connor Skennerton (c.skennerton@gmail.com) "
                ));
 }
