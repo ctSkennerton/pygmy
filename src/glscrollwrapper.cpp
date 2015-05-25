@@ -43,3 +43,9 @@ void GLScrollWrapper::canvasHeight(float height)
     verticalScrollBar()->setPageStep(glw->VisibleHeight());
     verticalScrollBar()->setRange(0, height);
 }
+
+void GLScrollWrapper::mousePressEvent(QMouseEvent * event)
+{
+    GLWidget * glw = dynamic_cast<GLWidget *>(viewport());
+    glw->mousePressEvent(event);
+}

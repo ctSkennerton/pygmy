@@ -192,7 +192,7 @@ void VisualTree::RenderTree(float translation, float zoom)
 
 		int thicknessMajor = int((1 + State::Inst().GetLineWidth())*0.5);
 		int thicknessMinor = int(State::Inst().GetLineWidth()*0.5);
-		int pointSize = State::Inst().GetLineWidth()+4;
+        int pointSize = State::Inst().GetLineWidth()+10;
 
 		// scale factor for tree (Note: glScalef() is not used as we want lines to be pixel aligned)
 		float sx = m_treeWidth;
@@ -540,7 +540,7 @@ void VisualTree::RenderInternalLabels(float translation, float zoom)
 
 void VisualTree::RenderActiveNode(float translation, float zoom)
 {
-	/*
+    /*
 	glUtils::ErrorGL::Check();
 
 	if(m_activeNode.node != NULL)
@@ -621,7 +621,7 @@ void VisualTree::RenderActiveNode(float translation, float zoom)
 	}
 
 	glUtils::ErrorGL::Check();
-	*/
+    */
 }
 
 void VisualTree::LabelBoundingBoxes()
@@ -937,7 +937,7 @@ bool VisualTree::MouseLeftDown(const utils::Point& mousePt)
 		visNode.visualMarker.SetVisibility(true);
 		if(visNode.visualMarker.MouseLeftDown(mousePt))
 		{
-			bSelected = true;
+            bSelected = true;
 			visNode.node->SetSelected(true);
 			m_activeNode = visNode;
 

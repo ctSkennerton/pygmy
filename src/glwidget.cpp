@@ -197,7 +197,22 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-    m_lastPos = event->pos();
+    qDebug() << __FILE__ << __LINE__ << event;
+    m_lastMousePos = event->pos();
+    // do nothing if the tree has yet to be set
+    if(m_visualTree == NULL) {
+        return;
+    }
+    if(event->button() == Qt::LeftButton) {
+        // We need to minus the height of the widget from the position
+        // of the mouse click as the coordinate system for Qt and the
+        // openGL viewport are inverted on the y-axis
+        m_visualTree->MouseLeftDown(utils::Point(event->x(), size().height() - event->y()));
+        update();
+
+    } else if (event->button() == Qt::RightButton) {
+        // right button pressed
+    }
 }
 
 

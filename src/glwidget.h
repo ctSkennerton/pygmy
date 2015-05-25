@@ -149,6 +149,9 @@ protected:
     /** Overview associated with this viewport. */
     ViewportOverviewPtr m_overview;
 
+    /** previous position of the mouse. */
+    QPoint m_lastMousePos;
+
 private:
 
     bool m_core;

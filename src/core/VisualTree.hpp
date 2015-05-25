@@ -165,6 +165,7 @@ public:
 	 */
 	utils::Tree<NodePhylo>::Ptr GetOriginalTree() { return m_originalTree; }
 
+    VisualNode * GetActiveNode() { return &m_activeNode;}
 	/** 
 	 * @brief Calculate grid positions of all nodes in tree for a given branch style. 
 	 * @param layout Desired layout style.
