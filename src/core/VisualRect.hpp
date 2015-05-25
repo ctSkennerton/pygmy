@@ -31,7 +31,7 @@ public:
 	VisualRect(const utils::Colour& startColour = utils::Colour(1.0f, 1.0f, 1.0f), 
 							const utils::Colour& endColour = utils::Colour(1.0f, 1.0f, 1.0f),
 							const utils::Rect& rect = utils::Rect(), RECT_TYPE type = SLANTED)
-							: m_startColour(startColour), m_endColour(endColour), m_rect(rect), m_type(type)  
+                            : m_rect(rect), m_startColour(startColour), m_endColour(endColour), m_type(type)
 	{
 	
 	}

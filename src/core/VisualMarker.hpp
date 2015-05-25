@@ -49,7 +49,7 @@ public:
 	void SetColour(const utils::Colour& colour) { m_colour = colour; }
 
 	/** Get size of marker. */
-	const float GetSize() const { return m_size; }
+    float GetSize() const { return m_size; }
 
 	/** Set size of marker. */
 	void SetSize(float size) { m_size = size; }

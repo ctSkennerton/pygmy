@@ -22,7 +22,7 @@ VisualMarker::VisualMarker()
 }
 
 VisualMarker::VisualMarker(Colour colour, float size, MARKER_SHAPE shape, SELECTION_STYLE style, const Point& position)
-		: m_colour(colour), m_size(size), m_shape(shape), m_position(position), m_selectionStyle(style)
+        : m_position(position), m_shape(shape), m_colour(colour), m_size(size), m_selectionStyle(style)
 {
 
 }
@@ -33,7 +33,6 @@ void VisualMarker::Render()
 		return;
 
 	glUtils::ErrorGL::Check();
-
 	glPushMatrix();	
 
 		glTranslated(m_position.x, m_position.y, 0.0f);
