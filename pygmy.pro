@@ -12,6 +12,8 @@ TEMPLATE = app
 CONFIG += c++11
 
 RC_ICONS = resources/images/pygmy.ico
+
+QMAKE_INFO_PLIST = $$_PRO_FILE_PWD_/resources/osx/Info.plist
 ICON = resources/images/pygmy.icns
 
 INCLUDEPATH += /usr/local/include /usr/local/include/freetype2
