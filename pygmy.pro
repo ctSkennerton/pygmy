@@ -21,10 +21,9 @@ INCLUDEPATH += /usr/local/include /usr/local/include/freetype2
 LIBS += -L/usr/local/lib -lftgl
 
 SOURCES +=\
-    src/glwidget.cpp \
+    src/gui/GlWidget.cpp \
     src/main.cpp \
-    src/mainwindow.cpp \
-    src/window.cpp \
+    src/gui/MainWindow.cpp \
     src/core/NewickIO.cpp \
     src/utils/Colour.cpp \
     src/utils/Node.cpp \
@@ -38,12 +37,11 @@ SOURCES +=\
     src/core/State.cpp \
     src/core/MetadataInfo.cpp \
     src/utils/ParsimonyCalculator.cpp \
-    src/glscrollwrapper.cpp
+    src/gui/GlScrollWrapper.cpp
 
 HEADERS  += \
-    src/mainwindow.h \
-    src/glwidget.h \
-    src/window.h \
+    src/gui/MainWindow.hpp \
+    src/gui/GlWidget.hpp \
     src/core/NewickIO.hpp \
     src/utils/Tree.hpp \
     src/utils/TreeTools.hpp \
@@ -65,9 +63,7 @@ HEADERS  += \
     src/core/MetadataInfo.hpp \
     src/core/Filter.hpp \
     src/utils/ParsimonyCalculator.hpp \
-    src/glscrollwrapper.h
-
-FORMS    += mainwindow.ui
+    src/gui/GlScrollWrapper.hpp
 
 RESOURCES += \
     resources.qrc

@@ -42,7 +42,7 @@
 #include <QDesktopWidget>
 #include <QSurfaceFormat>
 
-#include "mainwindow.h"
+#include "gui/MainWindow.hpp"
 
 int main(int argc, char *argv[])
 {

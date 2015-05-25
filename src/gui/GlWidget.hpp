@@ -44,9 +44,9 @@
 #include <QOpenGLWidget>
 #include <QSize>
 
-#include "core/DataTypes.hpp"
-#include "core/VisualTree.hpp"
-#include "glUtils/ErrorGL.hpp"
+#include "../core/DataTypes.hpp"
+#include "../core/VisualTree.hpp"
+#include "../glUtils/ErrorGL.hpp"
 
 using namespace pygmy;
 

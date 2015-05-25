@@ -38,41 +38,37 @@
 **
 ****************************************************************************/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include <QWidget>
+#include <QMainWindow>
+#include "GlScrollWrapper.hpp"
+#include "GlWidget.hpp"
 
-QT_BEGIN_NAMESPACE
-class QSlider;
-class QPushButton;
-QT_END_NAMESPACE
-
-class GLWidget;
-class MainWindow;
-
-class Window : public QWidget
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    Window(MainWindow *mw);
-
-protected:
-    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    MainWindow();
 
 private slots:
-    void dockUndock();
+    void open();
+    void about();
+
+
+
+protected:
+    void readSettings();
+    void writeSettings();
+    void closeEvent(QCloseEvent * event);
 
 private:
-    QSlider *createSlider();
+    void createDocks();
+    void createMenus();
 
-    GLWidget *glWidget;
-    QSlider *xSlider;
-    QSlider *ySlider;
-    QSlider *zSlider;
-    QPushButton *dockBtn;
-    MainWindow *mainWindow;
+    GLScrollWrapper * m_glTreeWidgetCanvas;
+    GLWidget * m_glTreeWidget;
 };
 
 #endif
