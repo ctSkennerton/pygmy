@@ -117,4 +117,43 @@ void State::Load()
 
 void State::Save()
 { 
+    QSettings settings;
+    settings.setValue("Font/file", m_fontFile);
+    settings.setValue("Font/size", m_treeFontSize);
+    settings.setValue("Font/red", m_treeFontColour.GetRed());
+    settings.setValue("Font/green", m_treeFontColour.GetGreen());
+    settings.setValue("Font/blue", m_treeFontColour.GetBlue());
+    settings.setValue("Labels/showLeafLabels", m_bShowLeafLabels);
+    settings.setValue("Labels/showMetadataLabels", m_bShowMetadataLabels);
+    settings.setValue("Zoom/default", m_zoomDefault);
+    settings.setValue("Zoom/max", m_zoomMax);
+    settings.setValue("Layout/borderX", m_border.x);
+    settings.setValue("Layout/borderY", m_border.y);
+    settings.setValue("Layout/labelOffset", m_labelOffset);
+    settings.setValue("Layout/distanceOffsetX", m_distanceOffsetX);
+    settings.setValue("Layout/distanceOffsetY", m_distanceOffsetY);
+    settings.setValue("Tree/lineWidth", m_lineWidth);
+    settings.setValue("Tree/optimizeLeafOrdering", m_bOptimizeLeafNodes);
+    settings.setValue("InternalLabels/showLabels", m_bShowInternalLabels);
+    settings.setValue("InternalLabels/field", m_internalLabelField);
+    settings.setValue("InternalLabels/position", m_internalLabelPos);
+    settings.setValue("InternalLabels/fontSize", m_internalLabelSize);
+    settings.setValue("InternalLabels/scientific", m_bInternalLabelScientific);
+    settings.setValue("InternalLabels/fontPrecision", m_internalLabelPrecision);
+    settings.setValue("InternalLabels/red", m_internalLabelColour.GetRed());
+    settings.setValue("InternalLabels/green", m_internalLabelColour.GetGreen());
+    settings.setValue("InternalLabels/blue", m_internalLabelColour.GetBlue());
+    settings.setValue("Overview/lineWidth", m_overviewLineWidth);
+    settings.setValue("Overview/colourTree", m_bColourOverviewTree);
+    settings.setValue("Overview/showPositionOverlay", m_bOverviewPosOverlay);
+    settings.setValue("MissingDataColour/red", m_missingDataColour.GetRed());
+    settings.setValue("MissingDataColour/green", m_missingDataColour.GetGreen());
+    settings.setValue("MissingDataColour/blue", m_missingDataColour.GetBlue());
+    settings.setValue("DefaultTreeColour/red", m_defaultTreeColour.GetRed());
+    settings.setValue("DefaultTreeColour/green", m_defaultTreeColour.GetGreen());
+    settings.setValue("DefaultTreeColour/blue", m_defaultTreeColour.GetBlue());
+    settings.setValue("Mouse/scrollSensitivity", m_scrollSensitivity);
+    settings.setValue("Mouse/translationSensitivity", m_translationSensitivity);
+    settings.setValue("Mouse/zoomSensitivity", m_zoomSensitivity);
+    settings.setValue("MainWindow/PreviousDir", m_prevOpenedDir);
 }
