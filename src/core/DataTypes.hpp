@@ -28,8 +28,8 @@ namespace pygmy
 	class MetadataInfo;
     typedef QSharedPointer<MetadataInfo> MetadataInfoPtr;
 
-	class ViewportOverview;
-	typedef ViewportOverview* ViewportOverviewPtr;
+    class GLWidgetOverview;
+    typedef QSharedPointer<GLWidgetOverview> ViewportOverviewPtr;
 
 	class ViewportTree;
 	typedef ViewportTree* ViewportTreePtr;
