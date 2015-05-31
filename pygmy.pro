@@ -37,7 +37,9 @@ SOURCES +=\
     src/core/State.cpp \
     src/core/MetadataInfo.cpp \
     src/utils/ParsimonyCalculator.cpp \
-    src/gui/GlScrollWrapper.cpp
+    src/gui/GlScrollWrapper.cpp \
+    src/gui/GlWidgetBase.cpp \
+    src/gui/GlWidgetOverview.cpp
 
 HEADERS  += \
     src/gui/MainWindow.hpp \
@@ -63,7 +65,9 @@ HEADERS  += \
     src/core/MetadataInfo.hpp \
     src/core/Filter.hpp \
     src/utils/ParsimonyCalculator.hpp \
-    src/gui/GlScrollWrapper.hpp
+    src/gui/GlScrollWrapper.hpp \
+    src/gui/GlWidgetBase.hpp \
+    src/gui/GlWidgetOverview.hpp
 
 RESOURCES += \
     resources.qrc
