@@ -1,5 +1,5 @@
-#include "glscrollwrapper.h"
-#include "glwidget.h"
+#include "GlScrollWrapper.hpp"
+#include "GlWidget.hpp"
 #include <QResizeEvent>
 #include <QtDebug>
 #include <QScrollBar>
