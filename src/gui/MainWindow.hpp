@@ -44,6 +44,7 @@
 #include <QMainWindow>
 #include "GlScrollWrapper.hpp"
 #include "GlWidget.hpp"
+#include "GlWidgetOverview.hpp"
 
 class MainWindow : public QMainWindow
 {

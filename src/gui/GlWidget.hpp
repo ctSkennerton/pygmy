@@ -41,12 +41,8 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-#include <QOpenGLWidget>
-#include <QSize>
-
-#include "../core/DataTypes.hpp"
-#include "../core/VisualTree.hpp"
-#include "../glUtils/ErrorGL.hpp"
+#include "GlWidgetBase.hpp"
+#include "GlWidgetOverview.hpp"
 
 using namespace pygmy;
 
@@ -54,7 +50,7 @@ QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
 class GLScrollWrapper;
 
-class GLWidget : public QOpenGLWidget
+class GLWidget : public GLWidgetBase
 {
     Q_OBJECT
 
@@ -90,20 +86,7 @@ public:
             dependent on the font should be recalculated. */
     void ModifiedFont();
 
-    /** Set min/max values for zooming. */
-    void ZoomExtents();
-
-    /** Set min/max values for translation. */
-    void TranslationExtents();
-    float GetTranslationMax() {return m_translateMax;}
-
     void AdjustViewport();
-
-    void ZoomChanged();
-
-    // the height (in pixels) that is currently visible in the viewport
-    // m_translate * m_zoom
-    float VisibleHeight() {return m_zoom * size().height();}
 
     /**
      * @brief Ensure specified node is within the viewport. If it is
@@ -120,6 +103,10 @@ public:
     void SetBranchStyle(VisualTree::BRANCH_STYLE branchStyle);
     void SetColourMap(VisualColourMapPtr visualColourMap);
 
+    void setOverview(GLWidgetOverview * overview)
+    {
+        m_overview.reset(overview);
+    }
 
 protected:
     /** Sets up the OpenGL resources and state.
@@ -138,6 +125,10 @@ protected:
       */
     void resizeGL(int width, int height) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    void ZoomChanged();
+    void ZoomExtents();
+    void TranslationExtents();
 
 protected:
     /** Tree to be displayed in viewport. */
@@ -159,26 +150,9 @@ private:
     QPoint m_lastPos;
     bool m_transparent;
 
-    /** Current zoom factor to apply to viewport. */
-    float m_zoom;
-
-    /** Current translation to apply to viewport. */
-    float m_translate;
-
     /** Previous size of the widget*/
     QSize m_previousSize;
 
-    /** Limit minimum zoom factor to a reasonable level. */
-    float m_zoomMin;
-
-    /** Limit maximum zoom factor to a reasonable level. */
-    float m_zoomMax;
-
-    /** Limit minimum translation to a reasonable level. */
-    float m_translateMin;
-
-    /** Limit maximum translation to a reasonable level. */
-    float m_translateMax;
 
     friend class GLScrollWrapper;
 };

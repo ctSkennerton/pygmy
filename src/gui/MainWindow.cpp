@@ -38,20 +38,21 @@
 **
 ****************************************************************************/
 
-#include "mainwindow.h"
-#include "core/NewickIO.hpp"
-#include "core/NodePhylo.hpp"
-#include "utils/Tree.hpp"
-#include "core/VisualTree.hpp"
-#include "core/State.hpp"
+#include "MainWindow.hpp"
+#include "../core/NewickIO.hpp"
+#include "../core/NodePhylo.hpp"
+#include "../utils/Tree.hpp"
+#include "../core/VisualTree.hpp"
+#include "../core/State.hpp"
 
 #include <QMenuBar>
 #include <QMenu>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDockWidget>
-#include <QStackedLayout>
+#include <QHBoxLayout>
 #include <QScrollBar>
+#include <QPushButton>
 
 void MainWindow::createMenus()
 {
@@ -94,18 +95,22 @@ MainWindow::MainWindow()
     m_glTreeWidgetCanvas = new GLScrollWrapper(this);
     m_glTreeWidget = new GLWidget(this);
     m_glTreeWidgetCanvas->setViewport(m_glTreeWidget);
+    GLWidgetOverview * gl_overview = new GLWidgetOverview(this);
+    m_glTreeWidget->setOverview(gl_overview);
 
-    //QStackedLayout *stackedLayout = new QStackedLayout;
-    //stackedLayout->addWidget(m_glTreeWidget);
-    //stackedLayout->addWidget(m_glTreeWidgetCanvas);
-    //stackedLayout->setStackingMode(QStackedLayout::StackAll);
-    //setLayout(stackedLayout);
+    QWidget * window = new QWidget;
+    QHBoxLayout *main_window_layout = new QHBoxLayout;
+    main_window_layout->setContentsMargins(0,0,0,0);
+    //QWidget * dummy_overview = new QPushButton("dummy");
+    //main_window_layout->addWidget(dummy_overview);
+    main_window_layout->addWidget(gl_overview);
+    main_window_layout->addWidget(m_glTreeWidgetCanvas);
 
-    setCentralWidget(m_glTreeWidgetCanvas);
+    window->setLayout(main_window_layout);
+    setCentralWidget(window);
 
     connect(m_glTreeWidget, &GLWidget::treeSizeChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::canvasHeight);
     connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::valueChanged, m_glTreeWidget, &GLWidget::translate);
-    //connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::setPageStep, m_glTreeWidget, &GLWidget::);
 
     createDocks();
 

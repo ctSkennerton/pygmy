@@ -7,46 +7,42 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
-
-
-#include "../core/VisualTree.hpp"
-#include "../core/ViewportOverview.hpp"
-#include "../core/ViewportMain.hpp"
+#include "GlWidgetOverview.hpp"
 #include "../core/State.hpp"
-#include "../core/Filter.hpp"
+#include <QDebug>
+#include <QMouseEvent>
 
-#include "../glUtils/ErrorGL.hpp"
-
-#include "../utils/StringTools.hpp"
 
 using namespace pygmy;
 using namespace utils;
 
 //*** Member Functions***
 
-ViewportOverview::ViewportOverview(wxWindow *parent, wxWindowID id,
-    const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-    : ViewportOrtho(parent, id, pos, size, style, name), m_borderX(5), m_borderY(5)
+GLWidgetOverview::GLWidgetOverview(QWidget * parent)
+    : GLWidgetBase(parent)
 {
-	m_treeList = glGenLists(1);
-	m_textSearchList = glGenLists(1);
 }
 
-ViewportOverview::~ViewportOverview()
+GLWidgetOverview::~GLWidgetOverview()
 {
-
 }
 
-void ViewportOverview::SetTree(VisualTreePtr visualTree)
+void GLWidgetOverview::initializeGL()
+{
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);		// White Background
+    m_treeList = glGenLists(1);
+    m_textSearchList = glGenLists(1);
+}
+
+void GLWidgetOverview::SetTree(VisualTreePtr visualTree)
 {
 	m_visualTree = visualTree;
 	
 	// draw the new graph
-	Redraw(true);
+    update();
 }
 
-void ViewportOverview::TranslateView(int dx, int dy)
+/*void GLWidgetOverview::TranslateView(int dx, int dy)
 {
 	// move viewport window in accordance with the amount of mouse movement
 	float curTransFrac = m_viewport->TranslationFraction();
@@ -57,27 +53,33 @@ void ViewportOverview::TranslateView(int dx, int dy)
 	if(newFrac > 1.0f) newFrac = 1.0f;
 
 	m_viewport->TranslationFraction(newFrac);
+}*/
+
+void GLWidgetOverview::mousePressEvent(QMouseEvent *event)
+{
+    qDebug() << __FILE__ << __LINE__ << event;
+    //m_lastMousePos = event->pos();
+    // do nothing if the tree has yet to be set
+    if(m_visualTree == NULL) {
+        return;
+    }
+    if(event->button() == Qt::LeftButton) {
+        // We need to minus the height of the widget from the position
+        // of the mouse click as the coordinate system for Qt and the
+        // openGL viewport are inverted on the y-axis
+        // Note: Mouse (window) have 0,0 at the top, left
+        // whereas the viewport has 0,0 at the bottom, left
+        LeftClick(utils::Point(event->x(), size().height() - event->y()));
+
+    } else if (event->button() == Qt::RightButton) {
+        // right button pressed
+    }
 }
 
-void ViewportOverview::TranslateViewWheel(int dWheel)
+void GLWidgetOverview::LeftClick(const utils::Point& mousePt)
 {
-	const float OVERVIEW_WHEEL_SENSITIVITY = 0.25;
-
-	// move viewport window a set fraction of its height
-	float curTransFrac = m_viewport->TranslationFraction();
-	float transFrac = curTransFrac + OVERVIEW_WHEEL_SENSITIVITY*m_viewportHeightFrac*dWheel;
-
-	m_viewport->TranslationFraction(transFrac);
-}
-
-void ViewportOverview::LeftClick(const utils::Point& mousePt)
-{
-	// Note: Mouse (window) have 0,0 at the top, left
-	// whereas the viewport has 0,0 at the bottom, left
-	float y = m_height - mousePt.y;
-
 	// determine where mouse is on tree
-	float frac = (y- m_borderY) / (m_height - 2*m_borderY);
+    float frac = (size().height() - m_borderY) / (size().height() - 2*m_borderY);
 
 	// center the viewport at this point
 	frac -= 0.5*m_viewportHeightFrac;
@@ -86,24 +88,25 @@ void ViewportOverview::LeftClick(const utils::Point& mousePt)
 	if(frac < 0.0f) frac = 0.0f;
 	if(frac > 1.0f) frac = 1.0f;
 
-	m_viewport->TranslationFraction(frac);
+    // send a signal to the other widgets that the main viewport
+    // should change its position to this fraction of the length
+    // of the tree
+    emit newTranslationFraction(frac);
 }
 
-void ViewportOverview::Redraw(bool bRender)
+void GLWidgetOverview::Redraw()
 {
-	if(!m_visualTree || m_bDisabled)
+    if(!m_visualTree)
 		return;
 
-	RedrawTree(false);
-	RedrawTextSearch(false);
+    RedrawTree();
+    RedrawTextSearch();
 
-	if(bRender)
-		Refresh(false);
+    update();
 }
 
-void ViewportOverview::RedrawTree(bool bRender)
+void GLWidgetOverview::RedrawTree()
 {
-	m_contextGL->SetCurrent(*this);
 	glUtils::ErrorGL::Check();
 
 	if(!m_visualTree)
@@ -119,8 +122,8 @@ void ViewportOverview::RedrawTree(bool bRender)
 		int thicknessMinor = int((State::Inst().GetOverviewLineWidth()-0.5)*0.5);
 
 		// scale factor for tree (Note: glScalef() is not used as we want lines to be pixel aligned)
-		float sx = m_width - 2*m_borderX;
-		float sy = m_height - 2*m_borderY;
+        float sx = size().width() - 2*m_borderX;
+        float sy = size().height() - 2*m_borderY;
 
 		// translation factor for tree (Note: glTranslatef() is not used as we want lines to be pixel aligned)
 		float dx = m_borderX + 0.5;
@@ -128,7 +131,7 @@ void ViewportOverview::RedrawTree(bool bRender)
 		
 		// *** Draw overview tree
 		std::vector<NodePhylo*> nodes = m_visualTree->GetTree()->GetNodes();
-		foreach(NodePhylo* node, nodes)
+        for(NodePhylo* node : nodes)
 		{			
 			// adjust position of nodes based on desired orientation
 			Point parentPos = node->GetPosition();
@@ -136,7 +139,7 @@ void ViewportOverview::RedrawTree(bool bRender)
 			// Draw branches
 			float yMin = 1000.0f, yMax = 0.0f;
 			std::vector<NodePhylo*> children = node->GetChildren();
-			foreach(NodePhylo* child, children)
+            for(NodePhylo* child : children)
 			{				
 				Point childPos = child->GetPosition();
 				
@@ -199,9 +202,8 @@ void ViewportOverview::RedrawTree(bool bRender)
 	glUtils::ErrorGL::Check();
 }
 
-void ViewportOverview::RedrawTextSearch(bool bRender)
+void GLWidgetOverview::RedrawTextSearch()
 {
-	m_contextGL->SetCurrent(*this);
 	glUtils::ErrorGL::Check();
 
 	if(!m_visualTree)
@@ -209,10 +211,10 @@ void ViewportOverview::RedrawTextSearch(bool bRender)
 
 	glNewList(m_textSearchList, GL_COMPILE);
 	{
-		float adjHeight = m_height-2*m_borderY;
+        float adjHeight = size().height() - 2*m_borderY;
 		
 		std::vector<NodePhylo*> nodes = m_visualTree->GetTree()->GetNodes();
-		foreach(NodePhylo* node, nodes)
+        for(NodePhylo* node: nodes)
 		{
 			if(m_searchFilter->Filtered(node->GetId()))
 			{
@@ -222,10 +224,10 @@ void ViewportOverview::RedrawTextSearch(bool bRender)
 
 				float yPos = parentPos.y*adjHeight + m_borderY;					
 				glBegin(GL_QUADS);
-					glVertex2f(m_width-m_borderX, yPos - 2);
-					glVertex2f(m_width, yPos - 2);
-					glVertex2f(m_width, yPos + 2);
-					glVertex2f(m_width-m_borderX, yPos + 2);
+                    glVertex2f(size().width() - m_borderX, yPos - 2);
+                    glVertex2f(size().width(), yPos - 2);
+                    glVertex2f(size().width(), yPos + 2);
+                    glVertex2f(size().width() - m_borderX, yPos + 2);
 				glEnd();		
 			
 			}
@@ -233,16 +235,14 @@ void ViewportOverview::RedrawTextSearch(bool bRender)
 	}
   glEndList();
 
-	if(bRender)
-		Refresh(false);
+    update();
 
 	glUtils::ErrorGL::Check();
 }
 
-void ViewportOverview::RenderScene()
+void GLWidgetOverview::paintGL()
 {
 	const float MIN_POS_INDICATOR_HEIGHT = 5.0f;
-	m_contextGL->SetCurrent(*this);
 
 	glUtils::ErrorGL::Check();
 
@@ -271,12 +271,12 @@ void ViewportOverview::RenderScene()
 			glPushMatrix();	
 			{
 				glTranslatef(0.0f, m_borderY, 0.0f);
-				glScalef(m_width-m_borderX, m_height - 2*m_borderY, 1.0f);
+                glScalef(size().width() - m_borderX, size().height() - 2*m_borderY, 1.0f);
 
 				glColor4f(0.6f, 0.8f, 0.8f, 0.5f);
 
 				// ensure position indicator is always visible
-				if(m_viewportHeightFrac*(m_height - 2*m_borderY) >= MIN_POS_INDICATOR_HEIGHT)
+                if(m_viewportHeightFrac*(size().height() - 2*m_borderY) >= MIN_POS_INDICATOR_HEIGHT)
 				{
 					glBegin(GL_QUADS);
 						glVertex2f(0.0f, m_translationFrac);
@@ -288,7 +288,7 @@ void ViewportOverview::RenderScene()
 				else
 				{
 					// determine height that is equivalent to the desired minimum height
-					float height = MIN_POS_INDICATOR_HEIGHT / (m_height - 2*m_borderY);
+                    float height = MIN_POS_INDICATOR_HEIGHT / (size().height() - 2*m_borderY);
 					float midPoint = m_translationFrac + 0.5*m_viewportHeightFrac;
 					glBegin(GL_QUADS);
 						glVertex2f(0.0f, midPoint - 0.5*height);
@@ -301,8 +301,6 @@ void ViewportOverview::RenderScene()
 			glPopMatrix();
 		}
 	}
-
-  SwapBuffers();
 
 	glUtils::ErrorGL::Check();
 }

@@ -1,12 +1,11 @@
 #include "GlWidgetBase.hpp"
 
-GlWidgetBase::GlWidgetBase()
+GLWidgetBase::GLWidgetBase(QWidget *parent) : QOpenGLWidget(parent)
 {
 
 }
 
-GlWidgetBase::~GlWidgetBase()
+GLWidgetBase::~GLWidgetBase()
 {
 
 }
-

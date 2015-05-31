@@ -38,20 +38,21 @@
 **
 ****************************************************************************/
 
-#include "glwidget.h"
+#include "GlWidget.hpp"
+#include "GlWidgetOverview.hpp"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
 #include <math.h>
 #include <QtDebug>
 
-#include "utils/Point.hpp"
-#include "core/State.hpp"
+#include "../utils/Point.hpp"
+#include "../core/State.hpp"
 
 using namespace utils;
 using namespace pygmy;
 
-GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
+GLWidget::GLWidget(QWidget *parent) : GLWidgetBase(parent)
 {
     m_core = QCoreApplication::arguments().contains(QStringLiteral("--coreprofile"));
     // --transparent causes the clear color to be transparent. Therefore, on systems that
@@ -64,7 +65,7 @@ GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
     m_zoomMax = 6.0f; //State::Inst().GetZoomMax();
     m_translateMin = 0.0f;
     m_translateMax = 0.0f;
-    m_translate = 0.0f;
+    SetTranslation(0.0f);
 }
 
 GLWidget::~GLWidget()
@@ -72,7 +73,7 @@ GLWidget::~GLWidget()
 
 QSize GLWidget::minimumSizeHint() const
 {
-    return QSize(300, 200);
+    return QSize(500, 400);
 }
 
 QSize GLWidget::sizeHint() const
@@ -147,16 +148,16 @@ void GLWidget::paintGL()
 
     if(m_visualTree)
     {
-        qDebug() << QOpenGLWidget::size().width() <<" "<< QOpenGLWidget::size().height()<< " "<<m_translate << " "<<m_zoom;
-        m_visualTree->Render(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), m_translate, m_zoom);
+        qDebug() << QOpenGLWidget::size().width() <<" "<< QOpenGLWidget::size().height()<< " "<<GetTranslation() << " "<<GetZoom();
+        m_visualTree->Render(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), GetTranslation(), GetZoom());
 
-        /*if(m_overview)
+        if(m_overview)
         {
             // render the overview scene to reflect changes in the viewport
             m_overview->TranslationFraction(TranslationFraction());
             m_overview->ViewportHeightFraction(m_visualTree->GetViewportHeightFraction());
-            m_overview->Render();
-        }*/
+            m_overview->update();
+        }
     }
 
     glUtils::ErrorGL::Check();
@@ -181,7 +182,7 @@ void GLWidget::resizeGL(int w, int h)
         AdjustViewport();
         ZoomExtents();
         TranslationExtents();
-        qDebug() <<__FILE__<<" "<<__LINE__<<" "<<__PRETTY_FUNCTION__<< " "<<m_translate<< " "<< m_zoom;
+        qDebug() <<__FILE__<<" "<<__LINE__<<" "<<__PRETTY_FUNCTION__<< " "<<GetTranslation()<< " "<< GetZoom();
 
         // save dimensions
         m_previousSize.setWidth(w);
@@ -223,7 +224,7 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
 
     // calculate bounding boxes for all leaf node labels
     m_visualTree->LabelBoundingBoxes();
-    m_visualTree->CalculateTreeDimensions(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), m_zoom);
+    m_visualTree->CalculateTreeDimensions(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), GetZoom());
     // set min/max values for zoom
     SetDefaultZoom();
 
@@ -244,7 +245,7 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
         // zoom factor to the default value and place the node of the graph
         // at the center of the viewport.
         SetZoom(m_zoomMin*State::Inst().GetZoomDefault());
-        SetTranslation((m_visualTree->GetTreeHeight() + border.x) * m_zoom/2 - QOpenGLWidget::size().height()/2);
+        SetTranslation((m_visualTree->GetTreeHeight() + border.x) * GetZoom()/2 - QOpenGLWidget::size().height()/2);
     }
 
     // signal other widgets about the size of the tree
@@ -256,14 +257,15 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
 
 void GLWidget::SetTranslation(float translation)
 {
+
+    if(translation > m_translateMax)
+        translation = m_translateMax;
+    else if(translation < m_translateMin)
+        translation = m_translateMin;
+
     m_translate = translation;
 
-    if(m_translate > m_translateMax)
-        m_translate = m_translateMax;
-    else if(m_translate < m_translateMin)
-        m_translate = m_translateMin;
-
-    emit TranslationChanged(static_cast<int>(m_translate));
+    emit TranslationChanged(static_cast<int>(translation));
 }
 
 void GLWidget::translate(int position)
@@ -275,7 +277,7 @@ void GLWidget::translate(int position)
 void GLWidget::TranslateView(int dx, int dy)
 {
     // translate view
-    SetTranslation(m_translate + State::Inst().GetTranslationSensitivity()*dy);
+    SetTranslation(GetTranslation() + State::Inst().GetTranslationSensitivity()*dy);
 
     QOpenGLWidget::update();
 }
@@ -283,7 +285,7 @@ void GLWidget::TranslateView(int dx, int dy)
 void GLWidget::ScaleView(int dx, int dy)
 {
     float zoomSensitivity = State::Inst().GetZoomSensitivity();
-    SetZoom(m_zoom + zoomSensitivity*(dy)*m_zoom);
+    SetZoom(GetZoom() + zoomSensitivity*(dy)*GetZoom());
 
     QOpenGLWidget::update();
 }
@@ -292,21 +294,18 @@ void GLWidget::SetZoom(float zoom)
 {
     //qDebug() << __FILE__ << ":"<<__LINE__<<" "<<m_zoom<<" "<<m_translate << " "<<zoom << " "<<m_zoomMin << " "<<m_zoomMax;
 
-    float previousZoom = m_zoom;
-    float previousTranslation = m_translate;
+    float previousZoom = GetZoom();
+    float previousTranslation = GetTranslation();
 
-    // bounds check and update any quantities dependent on the zoom
+    if(zoom > m_zoomMax)
+        zoom = m_zoomMax;
+    else if(zoom < m_zoomMin)
+        zoom = m_zoomMin;
     m_zoom = zoom;
-
-    if(m_zoom > m_zoomMax)
-        m_zoom = m_zoomMax;
-    else if(m_zoom < m_zoomMin)
-        m_zoom = m_zoomMin;
-
     ZoomChanged();
 
     // modify translation so the middle line does not move during zooming
-    SetTranslation(previousTranslation + (previousTranslation+QOpenGLWidget::size().height()*0.5)*(m_zoom-previousZoom)/previousZoom);
+    SetTranslation(previousTranslation + (previousTranslation+QOpenGLWidget::size().height()*0.5)*(GetZoom()-previousZoom)/previousZoom);
 
     //qDebug() << __FILE__ << " "<<__LINE__<<" "<<m_zoom<<" "<<m_translate << " "<<zoom << " "<<m_zoomMin << " "<<m_zoomMax;
     QOpenGLWidget::update();
@@ -327,7 +326,7 @@ void GLWidget::SetDefaultZoom()
 
 void GLWidget::TranslateViewWheel(int dWheel)
 {
-    SetTranslation(m_translate + State::Inst().GetScrollSensitivity()*dWheel);
+    SetTranslation(GetTranslation() + State::Inst().GetScrollSensitivity()*dWheel);
 
     QOpenGLWidget::update();
 }
@@ -358,7 +357,7 @@ void GLWidget::ZoomExtents()
         }
 
         // make sure zoom factor is within allowable range
-        SetZoom(m_zoom);
+        //SetZoom(m_zoom);
 
         QOpenGLWidget::update();
     }
@@ -372,12 +371,12 @@ void GLWidget::TranslationExtents()
     // calculate extents of translation
     m_translateMin = 0;	// negative translations are not allowed
 
-    m_translateMax = m_visualTree->GetTreeHeight()*m_zoom + 2*State::Inst().GetBorderSize().y - QOpenGLWidget::size().height();
+    m_translateMax = m_visualTree->GetTreeHeight()*GetZoom() + 2*State::Inst().GetBorderSize().y - QOpenGLWidget::size().height();
     if(m_translateMax < 0)
         m_translateMax = 0;
 
     // make sure translation factor is within allowable range
-    SetTranslation(m_translate);
+    SetTranslation(GetTranslation());
 
     QOpenGLWidget::update();
 }
@@ -388,7 +387,7 @@ void GLWidget::AdjustViewport()
         return;
 
     // adjust translation so mid-line of the viewport is unchanged
-    SetTranslation(m_translate + 0.5f*(m_previousSize.height() - QOpenGLWidget::size().height()));
+    SetTranslation(GetTranslation() + 0.5f*(m_previousSize.height() - QOpenGLWidget::size().height()));
 
     QOpenGLWidget::update();
 }
@@ -398,7 +397,7 @@ void GLWidget::ZoomChanged()
     if(!m_visualTree)
         return;
 
-    m_visualTree->CalculateTreeDimensions(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), m_zoom);
+    m_visualTree->CalculateTreeDimensions(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), GetZoom());
     TranslationExtents();
 }
 
@@ -416,8 +415,8 @@ void GLWidget::CenterNode(uint id)
         }
     }
 
-    float posY = node->GetPosition().y * m_visualTree->GetTreeHeight() * m_zoom + State::Inst().GetBorderSize().y;
-    float translatedY = posY-m_translate;
+    float posY = node->GetPosition().y * m_visualTree->GetTreeHeight() * GetZoom() + State::Inst().GetBorderSize().y;
+    float translatedY = posY-GetTranslation();
 
     if(translatedY < 0 || translatedY > QOpenGLWidget::size().height())
     {
@@ -430,7 +429,7 @@ void GLWidget::CenterNode(uint id)
 
 void GLWidget::TranslationFraction(float frac)
 {
-    SetTranslation(frac*(m_visualTree->GetTreeHeight()*m_zoom
+    SetTranslation(frac*(m_visualTree->GetTreeHeight()*GetZoom()
                                         + 2*State::Inst().GetBorderSize().y) + State::Inst().GetBorderSize().y);
 
     QOpenGLWidget::update();
@@ -441,8 +440,8 @@ float GLWidget::TranslationFraction()
     if(!m_visualTree)
         return 0.0f;
 
-    float frac = (m_translate - State::Inst().GetBorderSize().y)
-                                    / (m_visualTree->GetTreeHeight()*m_zoom + State::Inst().GetBorderSize().y);
+    float frac = (GetTranslation() - State::Inst().GetBorderSize().y)
+                                    / (m_visualTree->GetTreeHeight()*GetZoom() + State::Inst().GetBorderSize().y);
     if(frac < 0.0f)
         frac = 0.0f;
 

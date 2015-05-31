@@ -10,13 +10,10 @@
 #ifndef _OVERVIEW_TREE_H_
 #define _OVERVIEW_TREE_H_
 
-#include "../core/Precompiled.hpp"
-
 #include "../core/NodePhylo.hpp"
 
-#include "../glUtils/ViewportOrtho.hpp"
 
-#include "../utils/Tree.hpp"
+#include "GlWidgetBase.hpp"
 
 namespace pygmy
 {
@@ -24,25 +21,25 @@ namespace pygmy
 /**
  * @brief Overview tree.
  */
-class ViewportOverview : public glUtils::ViewportOrtho
+class GLWidgetOverview : public GLWidgetBase
 {
+    Q_OBJECT
 public:
 	/** Constructor. */
-	ViewportOverview(wxWindow *parent, const wxWindowID id = -1, 
-								const wxPoint& pos = wxDefaultPosition,
-								const wxSize& size = wxDefaultSize, 
-								long style = wxFULL_REPAINT_ON_RESIZE, 
-								const wxString& name = _T("ViewportOverview"));
+    GLWidgetOverview(QWidget * parent);
 
 	/** Destructor. */
-	virtual ~ViewportOverview();
+    ~GLWidgetOverview();
 
-	/** 
-	 * @brief Reconstruct display lists. 
-	 * @param refresh True if GL scene should be re-rendered.
-	 */
-	virtual void Redraw(bool bRender);
+    QSize sizeHint() const
+    {
+        return QSize(200, 600);
+    }
 
+    QSize minimumSizeHint() const
+    {
+        return QSize(200, 400);
+    }
 	/**
 	 * @brief Set phylogenetic tree to be displayed.
 	 *
@@ -63,12 +60,6 @@ public:
 	 */
 	virtual void SearchFilter(FilterPtr filter) { m_searchFilter = filter; }
 
-	/**
-	 * @brief Set main viewport associated with this overview. 
-	 * @param viewport Viewport of interest.
-	 */
-	void MainViewport(ViewportMainPtr viewport) { m_viewport = viewport; }
-
 	/** 
 	 * @brief Set fraction of tree height below the translation.
 	 * @param frac Fraction translated.
@@ -86,19 +77,24 @@ protected:
 	 * @brief Render the GL scene. Called by Render() and OnPaint() which 
 	 *				set up the appropriate device context. 
 	 */
-	virtual void RenderScene();
+     void paintGL();
+
+     //void resizeGL(int w, int h);
+
+     void initializeGL();
 	
+     void Redraw();
 	/** 
 	 * @brief Reconstruct tree display lists.
 	 * @param refresh True if GL scene should be re-rendered.
 	 */
-	virtual void RedrawTree(bool bRender);
+    virtual void RedrawTree();
 
 	/** 
 	 * @brief Reconstruct text search display lists.
 	 * @param refresh True if GL scene should be re-rendered.
 	 */
-	virtual void RedrawTextSearch(bool bRender);
+    virtual void RedrawTextSearch();
 	
 	/** Set min/max values for zooming. */
 	virtual void ZoomExtents() { m_zoomMin = 1.0f; m_zoomMax = 1.0f; }
@@ -119,19 +115,22 @@ protected:
 	virtual void TranslationChanged() {}
 
 	// ** Window size has changed, so adjust the viewport size. */
-	virtual void AdjustViewport() { Redraw(true); }
+    virtual void AdjustViewport() { update(); }
 
 	// ** Translate viewport. */
-	virtual void TranslateView(int dx, int dy);
+//	virtual void TranslateView(int dx, int dy);
 
 	// ** Translate viewport due to scroll wheel. */
-	virtual void TranslateViewWheel(int dWheel);
+    //virtual void TranslateViewWheel(int dWheel);
+
+     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
 
 	/** 
 	 * @brief A left mouse button click has occured.
 	 * @param mousePt Mouse position in window when button was clicked.
 	 */
-	virtual void LeftClick(const utils::Point& mousePt);
+    void LeftClick(const utils::Point& mousePt);
 
 protected:
 	/** Fraction of tree's height below the translation. */
@@ -139,9 +138,6 @@ protected:
 
 	/** Fraction of a tree's height visible in the viewport. */
 	float m_viewportHeightFrac;
-
-	/** Viewport associated with this overview. */
-	ViewportMainPtr m_viewport;
 
 	/** Filter for text search. */
 	FilterPtr m_searchFilter;
@@ -157,6 +153,9 @@ protected:
 
 	/** Display list used to render results of text search. */
 	uint m_textSearchList;
+
+signals:
+    void newTranslationFraction(float);
 };
 
 }
