@@ -63,6 +63,7 @@ signals:
 
 public slots:
     void setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree);
+
     void translate(int position);
 
 public:
@@ -81,6 +82,8 @@ public:
     void SetDefaultZoom();
 
     void TranslateViewWheel(int dWheel);
+
+    VisualTreePtr GetVisualTree() {return m_visualTree;}
 
     /** Indicate that the font size or style has been modified and that any values
             dependent on the font should be recalculated. */

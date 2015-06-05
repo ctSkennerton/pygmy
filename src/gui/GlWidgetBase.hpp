@@ -22,6 +22,8 @@ public:
 
     void SetTranslation(float translation);
 
+
+
 protected:
     virtual void ZoomChanged() {}
     /** Set min/max values for zooming. */

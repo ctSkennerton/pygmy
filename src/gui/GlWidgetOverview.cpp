@@ -29,7 +29,53 @@ GLWidgetOverview::~GLWidgetOverview()
 
 void GLWidgetOverview::initializeGL()
 {
+    //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);		// White Background
+    // In this example the widget's corresponding top-level window can change
+    // several times during the widget's lifetime. Whenever this happens, the
+    // QOpenGLWidget's associated context is destroyed and a new one is created.
+    // Therefore we have to be prepared to clean up the resources on the
+    // aboutToBeDestroyed() signal, instead of the destructor. The emission of
+    // the signal will be followed by an invocation of initializeGL() where we
+    // can recreate all resources.
+
+    //initializeOpenGLFunctions();
+    qDebug() <<__FILE__<<" "<<__LINE__<<" "<<__PRETTY_FUNCTION__;
+
+    glUtils::ErrorGL::Check();
+
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);		// White Background
+
+    // setup antialiasing and blending to optimize appearance
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+    glEnable(GL_LINE_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+    // setup how depth testing will be performed
+    glDisable(GL_DEPTH_TEST);	// disable depth testing since we are using a single 2D plane
+    glDepthMask(GL_FALSE);		// disable depth mask to improve visual quality of lines
+
+    // setup desired default point size and line width
+    glPointSize(1.0);
+    glLineWidth(1.0f);
+    glEnable(GL_LINE_STIPPLE);
+
+    // setup texture filtering
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // adjust orthographic projection settings
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, (GLint) QOpenGLWidget::size().width(), 0, (GLint) QOpenGLWidget::size().height());
+    glMatrixMode(GL_MODELVIEW);
+    glViewport(0, 0, (GLint) QOpenGLWidget::size().width(), (GLint) QOpenGLWidget::size().height());
+    glLoadIdentity();
+
+    glUtils::ErrorGL::Check();
     m_treeList = glGenLists(1);
     m_textSearchList = glGenLists(1);
 }
@@ -37,9 +83,6 @@ void GLWidgetOverview::initializeGL()
 void GLWidgetOverview::SetTree(VisualTreePtr visualTree)
 {
 	m_visualTree = visualTree;
-	
-	// draw the new graph
-    update();
 }
 
 /*void GLWidgetOverview::TranslateView(int dx, int dy)
@@ -102,7 +145,7 @@ void GLWidgetOverview::Redraw()
     RedrawTree();
     RedrawTextSearch();
 
-    update();
+    //update();
 }
 
 void GLWidgetOverview::RedrawTree()
@@ -112,6 +155,7 @@ void GLWidgetOverview::RedrawTree()
 	if(!m_visualTree)
 		return;
 
+    qDebug() << __FILE__ << __LINE__ <<__PRETTY_FUNCTION__<< "drawing tree";
 	// *** Draw the tree. ***
 	glNewList(m_treeList, GL_COMPILE);
 	{
@@ -251,7 +295,8 @@ void GLWidgetOverview::paintGL()
 	// ------------------ render the tree ---------------
 	if(m_visualTree)
 	{		
-		// *** Render overview tree. ***
+        RedrawTree();
+        // *** Render overview tree. ***
 		glPushMatrix();	
 		{			
 			glCallList(m_treeList);

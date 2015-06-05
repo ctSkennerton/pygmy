@@ -70,6 +70,7 @@ private:
 
     GLScrollWrapper * m_glTreeWidgetCanvas;
     GLWidget * m_glTreeWidget;
+    GLWidgetOverview * m_glTreeWidgetOverview;
 };
 
 #endif

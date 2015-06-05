@@ -95,15 +95,15 @@ MainWindow::MainWindow()
     m_glTreeWidgetCanvas = new GLScrollWrapper(this);
     m_glTreeWidget = new GLWidget(this);
     m_glTreeWidgetCanvas->setViewport(m_glTreeWidget);
-    GLWidgetOverview * gl_overview = new GLWidgetOverview(this);
-    m_glTreeWidget->setOverview(gl_overview);
+    m_glTreeWidgetOverview = new GLWidgetOverview(this);
+    //m_glTreeWidget->setOverview(m_glTreeWidgetOverview);
 
     QWidget * window = new QWidget;
     QHBoxLayout *main_window_layout = new QHBoxLayout;
     main_window_layout->setContentsMargins(0,0,0,0);
     //QWidget * dummy_overview = new QPushButton("dummy");
     //main_window_layout->addWidget(dummy_overview);
-    main_window_layout->addWidget(gl_overview);
+    main_window_layout->addWidget(m_glTreeWidgetOverview);
     main_window_layout->addWidget(m_glTreeWidgetCanvas);
 
     window->setLayout(main_window_layout);
@@ -142,6 +142,8 @@ void MainWindow::open()
     }
     setWindowTitle(tree->GetName());
     m_glTreeWidget->setTree(tree);
+    VisualTreePtr ptr = m_glTreeWidget->GetVisualTree();
+    m_glTreeWidgetOverview->SetTree(ptr);
 }
 
 void MainWindow::writeSettings()
