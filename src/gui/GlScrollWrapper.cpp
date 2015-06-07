@@ -56,3 +56,9 @@ void GLScrollWrapper::SetVerticalPosition(int position)
 
     verticalScrollBar()->setValue(position);
 }
+
+void GLScrollWrapper::GoToViewportFraction(float fraction)
+{
+    verticalScrollBar()->setValue(verticalScrollBar()->maximum() * fraction);
+}
+

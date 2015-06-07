@@ -119,6 +119,8 @@ MainWindow::MainWindow()
     connect(m_glTreeWidget, &GLWidget::TranslationChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::SetVerticalPosition);
     connect(m_glTreeWidget, &GLWidget::TranslationFractionChanged, m_glTreeWidgetOverview, &GLWidgetOverview::TranslationFraction);
     connect(m_glTreeWidget, &GLWidget::ViewportHeightFraction, m_glTreeWidgetOverview, &GLWidgetOverview::ViewportHeightFraction);
+    connect(m_glTreeWidgetOverview, &GLWidgetOverview::newTranslationFraction, m_glTreeWidgetCanvas, &GLScrollWrapper::GoToViewportFraction);
+
     createDocks();
 
     readSettings();

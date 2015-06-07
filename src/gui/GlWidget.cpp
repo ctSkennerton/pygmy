@@ -450,6 +450,7 @@ float GLWidget::TranslationFraction()
     if(!m_visualTree)
         return 0.0f;
 
+    //qDebug() << __FILE__<<__LINE__<<__PRETTY_FUNCTION__<<GetTranslation() << m_visualTree->GetTreeHeight() << GetZoom();
     float frac = (GetTranslation() - State::Inst().GetBorderSize().y)
                                     / (m_visualTree->GetTreeHeight()*GetZoom() + State::Inst().GetBorderSize().y);
     if(frac < 0.0f)

@@ -59,8 +59,8 @@ void GLWidgetOverview::initializeGL()
     glDepthMask(GL_FALSE);		// disable depth mask to improve visual quality of lines
 
     // setup desired default point size and line width
-    //glPointSize(1.0);
-    //glLineWidth(1.0f);
+    glPointSize(1.0);
+    glLineWidth(1.0f);
     glEnable(GL_LINE_STIPPLE);
 
     // setup texture filtering
@@ -113,7 +113,7 @@ void GLWidgetOverview::mousePressEvent(QMouseEvent *event)
         // openGL viewport are inverted on the y-axis
         // Note: Mouse (window) have 0,0 at the top, left
         // whereas the viewport has 0,0 at the bottom, left
-        LeftClick(utils::Point(event->x(), size().height() - event->y()));
+        LeftClick(utils::Point(event->x(), event->y()));
 
     } else if (event->button() == Qt::RightButton) {
         // right button pressed
@@ -122,8 +122,8 @@ void GLWidgetOverview::mousePressEvent(QMouseEvent *event)
 
 void GLWidgetOverview::LeftClick(const utils::Point& mousePt)
 {
-	// determine where mouse is on tree
-    float frac = (size().height() - m_borderY) / (size().height() - 2*m_borderY);
+    // determine where mouse is on tree
+    float frac = (mousePt.y - m_borderY) / (size().height() - 2*m_borderY);
 
 	// center the viewport at this point
 	frac -= 0.5*m_viewportHeightFrac;
@@ -163,8 +163,8 @@ void GLWidgetOverview::RedrawTree()
 		glDisable(GL_LINE_SMOOTH);
 
 		glLineWidth(State::Inst().GetOverviewLineWidth());
-		int thicknessMajor = int(1 + State::Inst().GetOverviewLineWidth()*0.5);
-		int thicknessMinor = int((State::Inst().GetOverviewLineWidth()-0.5)*0.5);
+        int thicknessMajor = static_cast<int>(1 + State::Inst().GetOverviewLineWidth()*0.5);
+        int thicknessMinor = static_cast<int>((State::Inst().GetOverviewLineWidth()-0.5)*0.5);
 
 		// scale factor for tree (Note: glScalef() is not used as we want lines to be pixel aligned)
         float sx = size().width() - 2*m_borderX;
