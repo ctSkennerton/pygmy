@@ -24,6 +24,20 @@ namespace pygmy
 class GLWidgetOverview : public GLWidgetBase
 {
     Q_OBJECT
+
+public slots:
+    /**
+     * @brief Set fraction of tree height below the translation.
+     * @param frac Fraction translated.
+     */
+    virtual void TranslationFraction(float frac) { m_translationFrac = frac; }
+
+    /**
+     * @brief Set fraction of tree height visible in the viewport.
+     * @param frac Fraction visible.
+     */
+    virtual void ViewportHeightFraction(float frac) { m_viewportHeightFrac = frac; }
+
 public:
 	/** Constructor. */
     GLWidgetOverview(QWidget * parent);
@@ -60,17 +74,6 @@ public:
 	 */
 	virtual void SearchFilter(FilterPtr filter) { m_searchFilter = filter; }
 
-	/** 
-	 * @brief Set fraction of tree height below the translation.
-	 * @param frac Fraction translated.
-	 */
-	virtual void TranslationFraction(float frac) { m_translationFrac = frac; }
-
-	/** 
-	 * @brief Set fraction of tree height visible in the viewport. 
-	 * @param frac Fraction visible.
-	 */
-	virtual void ViewportHeightFraction(float frac) { m_viewportHeightFrac = frac; }
     
 protected:
 	/** 

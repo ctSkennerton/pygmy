@@ -109,10 +109,16 @@ MainWindow::MainWindow()
     window->setLayout(main_window_layout);
     setCentralWidget(window);
 
+    //NOTE: For some reason this connection needs to be written this way, while all the other
+    //connections below can be written the other way. I'm sure there is something about Qt that
+    //I'm just not understanding
+    connect(m_glTreeWidget, SIGNAL(ShouldUpdateOverview()), m_glTreeWidgetOverview, SLOT(update()));
+
     connect(m_glTreeWidget, &GLWidget::treeSizeChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::canvasHeight);
     connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::valueChanged, m_glTreeWidget, &GLWidget::translate);
     connect(m_glTreeWidget, &GLWidget::TranslationChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::SetVerticalPosition);
-
+    connect(m_glTreeWidget, &GLWidget::TranslationFractionChanged, m_glTreeWidgetOverview, &GLWidgetOverview::TranslationFraction);
+    connect(m_glTreeWidget, &GLWidget::ViewportHeightFraction, m_glTreeWidgetOverview, &GLWidgetOverview::ViewportHeightFraction);
     createDocks();
 
     readSettings();

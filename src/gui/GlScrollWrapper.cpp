@@ -52,5 +52,7 @@ void GLScrollWrapper::mousePressEvent(QMouseEvent * event)
 
 void GLScrollWrapper::SetVerticalPosition(int position)
 {
+    qDebug()<<__FILE__<<__LINE__<<__PRETTY_FUNCTION__<<position;
+
     verticalScrollBar()->setValue(position);
 }

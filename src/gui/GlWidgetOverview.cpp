@@ -59,8 +59,8 @@ void GLWidgetOverview::initializeGL()
     glDepthMask(GL_FALSE);		// disable depth mask to improve visual quality of lines
 
     // setup desired default point size and line width
-    glPointSize(1.0);
-    glLineWidth(1.0f);
+    //glPointSize(1.0);
+    //glLineWidth(1.0f);
     glEnable(GL_LINE_STIPPLE);
 
     // setup texture filtering
@@ -78,6 +78,7 @@ void GLWidgetOverview::initializeGL()
     glUtils::ErrorGL::Check();
     m_treeList = glGenLists(1);
     m_textSearchList = glGenLists(1);
+
 }
 
 void GLWidgetOverview::SetTree(VisualTreePtr visualTree)

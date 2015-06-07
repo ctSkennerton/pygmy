@@ -148,16 +148,21 @@ void GLWidget::paintGL()
 
     if(m_visualTree)
     {
-        qDebug() << QOpenGLWidget::size().width() <<" "<< QOpenGLWidget::size().height()<< " "<<GetTranslation() << " "<<GetZoom();
+        qDebug() << __FILE__<<__LINE__<<__PRETTY_FUNCTION__<<QOpenGLWidget::size().width() <<" "<< QOpenGLWidget::size().height()<< " "<<GetTranslation() << " "<<GetZoom();
         m_visualTree->Render(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), GetTranslation(), GetZoom());
 
-        if(m_overview)
-        {
+        //if(m_overview)
+        //{
             // render the overview scene to reflect changes in the viewport
-            m_overview->TranslationFraction(TranslationFraction());
-            m_overview->ViewportHeightFraction(m_visualTree->GetViewportHeightFraction());
-            m_overview->update();
-        }
+            //m_overview->TranslationFraction(TranslationFraction());
+            //m_overview->ViewportHeightFraction(m_visualTree->GetViewportHeightFraction());
+           // m_overview->update();
+       // }
+        emit TranslationFractionChanged(TranslationFraction());
+        emit ViewportHeightFraction(m_visualTree->GetViewportHeightFraction());
+        emit ShouldUpdateOverview();
+        qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__<< TranslationFraction() << m_visualTree->GetViewportHeightFraction();
+
     }
 
     glUtils::ErrorGL::Check();
@@ -187,6 +192,7 @@ void GLWidget::resizeGL(int w, int h)
         // save dimensions
         m_previousSize.setWidth(w);
         m_previousSize.setHeight(h);
+
 
         // repaint viewport
         QOpenGLWidget::update();
@@ -245,11 +251,11 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
         // zoom factor to the default value and place the node of the graph
         // at the center of the viewport.
         SetZoom(m_zoomMin*State::Inst().GetZoomDefault());
-        //SetTranslation(0);
         SetTranslation((m_visualTree->GetTreeHeight() + border.x) * GetZoom()/2 - QOpenGLWidget::size().height()/2);
     }
 
-    emit treeSizeChanged(m_translateMax);
+    //emit treeSizeChanged(m_translateMax);
+    qDebug()<<__FILE__<<__LINE__<<__PRETTY_FUNCTION__<<GetTranslation();
     emit TranslationChanged(static_cast<int>(GetTranslation()));
     // Rebuild any display lists and render the scene
     QOpenGLWidget::update();
@@ -378,6 +384,7 @@ void GLWidget::TranslationExtents()
     if(m_translateMax < 0)
         m_translateMax = 0;
 
+    emit treeSizeChanged(static_cast<int>(m_translateMax));
     // make sure translation factor is within allowable range
     SetTranslation(GetTranslation());
 

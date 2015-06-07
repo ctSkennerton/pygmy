@@ -60,6 +60,10 @@ signals:
     // emits the current position of the view
     void TranslationChanged(int position);
 
+    void TranslationFractionChanged(float frac);
+    void ViewportHeightFraction(float frac);
+    void ShouldUpdateOverview();
+
 
 public slots:
     void setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree);
