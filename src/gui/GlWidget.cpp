@@ -245,12 +245,12 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
         // zoom factor to the default value and place the node of the graph
         // at the center of the viewport.
         SetZoom(m_zoomMin*State::Inst().GetZoomDefault());
+        //SetTranslation(0);
         SetTranslation((m_visualTree->GetTreeHeight() + border.x) * GetZoom()/2 - QOpenGLWidget::size().height()/2);
     }
 
-    // signal other widgets about the size of the tree
     emit treeSizeChanged(m_translateMax);
-
+    emit TranslationChanged(static_cast<int>(GetTranslation()));
     // Rebuild any display lists and render the scene
     QOpenGLWidget::update();
 }
@@ -265,7 +265,10 @@ void GLWidget::SetTranslation(float translation)
 
     m_translate = translation;
 
-    emit TranslationChanged(static_cast<int>(translation));
+    // NOTE: You do not want to emit this signal here as it
+    // creates a circular signal with the scrollbar and
+    // causes a seqfault
+    //emit TranslationChanged(static_cast<int>(translation));
 }
 
 void GLWidget::translate(int position)

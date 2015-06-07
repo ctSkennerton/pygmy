@@ -16,6 +16,8 @@ public:
 
 public slots:
     void canvasHeight(float height);
+    /** Sets the position of the vertical scrollbar*/
+    void SetVerticalPosition(int position);
 
 protected:
     void resizeEvent(QResizeEvent *);

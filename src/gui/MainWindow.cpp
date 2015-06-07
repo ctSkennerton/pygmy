@@ -111,6 +111,7 @@ MainWindow::MainWindow()
 
     connect(m_glTreeWidget, &GLWidget::treeSizeChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::canvasHeight);
     connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::valueChanged, m_glTreeWidget, &GLWidget::translate);
+    connect(m_glTreeWidget, &GLWidget::TranslationChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::SetVerticalPosition);
 
     createDocks();
 

@@ -49,3 +49,8 @@ void GLScrollWrapper::mousePressEvent(QMouseEvent * event)
     GLWidget * glw = dynamic_cast<GLWidget *>(viewport());
     glw->mousePressEvent(event);
 }
+
+void GLScrollWrapper::SetVerticalPosition(int position)
+{
+    verticalScrollBar()->setValue(position);
+}
