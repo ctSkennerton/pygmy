@@ -18,6 +18,11 @@ QSize GLScrollWrapper::sizeHint() const
     return QSize(800, 600);
 }
 
+QSize GLScrollWrapper::minimumSizeHint() const
+{
+    return QSize(500, 300);
+}
+
 void GLScrollWrapper::resizeEvent(QResizeEvent * event)
 {
     GLWidget * glw = dynamic_cast<GLWidget *>(viewport());

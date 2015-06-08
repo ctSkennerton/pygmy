@@ -53,6 +53,9 @@ protected:
     float m_zoom;
 
     float m_translate;
+
+    /** Previous size of the widget*/
+    QSize m_previousSize;
 };
 
 #endif // GLWIDGETBASE_HPP

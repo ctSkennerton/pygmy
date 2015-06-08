@@ -12,6 +12,8 @@ public:
     GLScrollWrapper(QWidget *parent);
     ~GLScrollWrapper();
     QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
+
     void update();
 
 public slots:

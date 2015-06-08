@@ -157,9 +157,6 @@ private:
     QPoint m_lastPos;
     bool m_transparent;
 
-    /** Previous size of the widget*/
-    QSize m_previousSize;
-
 
     friend class GLScrollWrapper;
 };

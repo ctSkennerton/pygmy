@@ -82,7 +82,7 @@ protected:
 	 */
      void paintGL();
 
-     //void resizeGL(int w, int h);
+     void resizeGL(int w, int h);
 
      void initializeGL();
 	

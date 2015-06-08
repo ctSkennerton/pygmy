@@ -19,7 +19,7 @@ using namespace utils;
 //*** Member Functions***
 
 GLWidgetOverview::GLWidgetOverview(QWidget * parent)
-    : GLWidgetBase(parent)
+    : GLWidgetBase(parent), m_borderX(5), m_borderY(5)
 {
 }
 
@@ -349,4 +349,37 @@ void GLWidgetOverview::paintGL()
 	}
 
 	glUtils::ErrorGL::Check();
+}
+
+void GLWidgetOverview::resizeGL(int w, int h)
+{
+    glUtils::ErrorGL::Check();
+
+    if(isVisible())
+    {
+        // adjust orthographic projection settings
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluOrtho2D(0, (GLint) w, 0, (GLint) h);
+        glMatrixMode(GL_MODELVIEW);
+        glViewport(0, 0, (GLint) w, (GLint) h);
+        glLoadIdentity();
+
+        // indicate that the viewport dimensions have changed
+        AdjustViewport();
+        ZoomExtents();
+        TranslationExtents();
+        qDebug() <<__FILE__<<" "<<__LINE__<<" "<<__PRETTY_FUNCTION__<< " "<<GetTranslation()<< " "<< GetZoom();
+
+        // save dimensions
+        m_previousSize.setWidth(w);
+        m_previousSize.setHeight(h);
+
+
+        // repaint viewport
+        QOpenGLWidget::update();
+    }
+
+    glUtils::ErrorGL::Check();
+
 }
