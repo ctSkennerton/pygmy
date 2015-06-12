@@ -148,20 +148,12 @@ void GLWidget::paintGL()
 
     if(m_visualTree)
     {
-        qDebug() << __FILE__<<__LINE__<<__PRETTY_FUNCTION__<<QOpenGLWidget::size().width() <<" "<< QOpenGLWidget::size().height()<< " "<<GetTranslation() << " "<<GetZoom();
         m_visualTree->Render(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), GetTranslation(), GetZoom());
 
-        //if(m_overview)
-        //{
-            // render the overview scene to reflect changes in the viewport
-            //m_overview->TranslationFraction(TranslationFraction());
-            //m_overview->ViewportHeightFraction(m_visualTree->GetViewportHeightFraction());
-           // m_overview->update();
-       // }
+
         emit TranslationFractionChanged(TranslationFraction());
         emit ViewportHeightFraction(m_visualTree->GetViewportHeightFraction());
         emit ShouldUpdateOverview();
-        qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__<< TranslationFraction() << m_visualTree->GetViewportHeightFraction();
 
     }
 
@@ -192,7 +184,6 @@ void GLWidget::resizeGL(int w, int h)
         // save dimensions
         m_previousSize.setWidth(w);
         m_previousSize.setHeight(h);
-
 
         // repaint viewport
         QOpenGLWidget::update();

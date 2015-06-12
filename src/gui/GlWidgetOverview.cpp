@@ -125,8 +125,11 @@ void GLWidgetOverview::LeftClick(const utils::Point& mousePt)
     // determine where mouse is on tree
     float frac = (mousePt.y - m_borderY) / (size().height() - 2*m_borderY);
 
-	// center the viewport at this point
-	frac -= 0.5*m_viewportHeightFrac;
+    // NOTE: The following line was commented to fix a bug where clicking
+    // towards the bottom of the overview never resulted in the viewport
+    // actually going there. This is a partial fix for Issue #4 in github.
+    // center the viewport at this point
+    //frac -= 0.5*m_viewportHeightFrac;
 	
 	// bound position
 	if(frac < 0.0f) frac = 0.0f;
@@ -156,7 +159,6 @@ void GLWidgetOverview::RedrawTree()
 	if(!m_visualTree)
 		return;
 
-    qDebug() << __FILE__ << __LINE__ <<__PRETTY_FUNCTION__<< "drawing tree";
 	// *** Draw the tree. ***
 	glNewList(m_treeList, GL_COMPILE);
 	{
@@ -324,7 +326,7 @@ void GLWidgetOverview::paintGL()
 				// ensure position indicator is always visible
                 if(m_viewportHeightFrac*(size().height() - 2*m_borderY) >= MIN_POS_INDICATOR_HEIGHT)
 				{
-					glBegin(GL_QUADS);
+                    glBegin(GL_QUADS);
 						glVertex2f(0.0f, m_translationFrac);
 						glVertex2f(1.0f, m_translationFrac);
 						glVertex2f(1.0f, m_translationFrac + m_viewportHeightFrac);
