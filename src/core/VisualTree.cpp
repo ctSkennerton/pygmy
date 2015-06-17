@@ -80,7 +80,7 @@ void VisualTree::LayoutY()
 	std::queue<NodePhylo*> queue;
 	queue.push(m_tree->GetRootNode());
 
-	while(!queue.empty())
+    while(!queue.empty())
 	{
 		NodePhylo* curNode = queue.front();
 		queue.pop();
@@ -951,6 +951,7 @@ bool VisualTree::MouseLeftDown(const utils::Point& mousePt)
 void VisualTree::Reroot()
 {
 	m_tree->Reroot(m_activeNode.node);
+    m_tree->CalculateStatistics();
 
 	// There is a bit of a complication here. If the root of a tree is changed,
 	// some bootstrap values may be lost (i.e., because the split induced by the
