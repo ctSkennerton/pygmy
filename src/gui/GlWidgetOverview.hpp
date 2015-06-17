@@ -157,6 +157,7 @@ protected:
 	/** Display list used to render results of text search. */
 	uint m_textSearchList;
 
+
 signals:
     void newTranslationFraction(float);
 };

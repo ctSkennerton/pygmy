@@ -21,6 +21,10 @@ using namespace utils;
 GLWidgetOverview::GLWidgetOverview(QWidget * parent)
     : GLWidgetBase(parent), m_borderX(5), m_borderY(5)
 {
+    m_zoomMin = 1.0f;
+    m_zoomMax = 1.0f;
+    m_translateMin = 0.0f;
+    m_translateMax = 0.0f;
 }
 
 GLWidgetOverview::~GLWidgetOverview()
@@ -29,15 +33,6 @@ GLWidgetOverview::~GLWidgetOverview()
 
 void GLWidgetOverview::initializeGL()
 {
-    //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);		// White Background
-    // In this example the widget's corresponding top-level window can change
-    // several times during the widget's lifetime. Whenever this happens, the
-    // QOpenGLWidget's associated context is destroyed and a new one is created.
-    // Therefore we have to be prepared to clean up the resources on the
-    // aboutToBeDestroyed() signal, instead of the destructor. The emission of
-    // the signal will be followed by an invocation of initializeGL() where we
-    // can recreate all resources.
-
     //initializeOpenGLFunctions();
     qDebug() <<__FILE__<<" "<<__LINE__<<" "<<__PRETTY_FUNCTION__;
 
@@ -70,9 +65,9 @@ void GLWidgetOverview::initializeGL()
     // adjust orthographic projection settings
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, (GLint) QOpenGLWidget::size().width(), 0, (GLint) QOpenGLWidget::size().height());
+    gluOrtho2D(0, (GLint) size().width(), 0, (GLint) size().height());
     glMatrixMode(GL_MODELVIEW);
-    glViewport(0, 0, (GLint) QOpenGLWidget::size().width(), (GLint) QOpenGLWidget::size().height());
+    glViewport(0, 0, (GLint) size().width(), (GLint) size().height());
     glLoadIdentity();
 
     glUtils::ErrorGL::Check();
@@ -182,7 +177,7 @@ void GLWidgetOverview::RedrawTree()
 		{			
 			// adjust position of nodes based on desired orientation
 			Point parentPos = node->GetPosition();
-			
+
 			// Draw branches
 			float yMin = 1000.0f, yMax = 0.0f;
 			std::vector<NodePhylo*> children = node->GetChildren();
@@ -298,6 +293,7 @@ void GLWidgetOverview::paintGL()
 	// ------------------ render the tree ---------------
 	if(m_visualTree)
 	{		
+        qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__;
         RedrawTree();
         // *** Render overview tree. ***
 		glPushMatrix();	
@@ -351,6 +347,7 @@ void GLWidgetOverview::paintGL()
 	}
 
 	glUtils::ErrorGL::Check();
+
 }
 
 void GLWidgetOverview::resizeGL(int w, int h)
@@ -359,6 +356,8 @@ void GLWidgetOverview::resizeGL(int w, int h)
 
     if(isVisible())
     {
+        qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__;
+
         // adjust orthographic projection settings
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -367,19 +366,11 @@ void GLWidgetOverview::resizeGL(int w, int h)
         glViewport(0, 0, (GLint) w, (GLint) h);
         glLoadIdentity();
 
-        // indicate that the viewport dimensions have changed
-        AdjustViewport();
-        ZoomExtents();
-        TranslationExtents();
-        qDebug() <<__FILE__<<" "<<__LINE__<<" "<<__PRETTY_FUNCTION__<< " "<<GetTranslation()<< " "<< GetZoom();
 
         // save dimensions
         m_previousSize.setWidth(w);
         m_previousSize.setHeight(h);
 
-
-        // repaint viewport
-        QOpenGLWidget::update();
     }
 
     glUtils::ErrorGL::Check();
