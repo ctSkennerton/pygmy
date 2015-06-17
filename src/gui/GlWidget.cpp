@@ -45,6 +45,7 @@
 #include <QCoreApplication>
 #include <math.h>
 #include <QtDebug>
+#include <QMenu>
 
 #include "../utils/Point.hpp"
 #include "../core/State.hpp"
@@ -167,6 +168,7 @@ void GLWidget::resizeGL(int w, int h)
 
     if(QOpenGLWidget::isVisible())
     {
+
         // adjust orthographic projection settings
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -210,9 +212,34 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
     } else if (event->button() == Qt::RightButton) {
         // right button pressed
+        m_visualTree->MouseLeftDown(utils::Point(event->x(), size().height() - event->y()));
+        update();
+
+        ShowContextMenu(event->pos());
     }
 }
 
+void GLWidget::ShowContextMenu(const QPoint& pos) // this is a slot
+{
+    // for most widgets
+    QPoint globalPos = this->mapToGlobal(pos);
+    // for QAbstractScrollArea and derived classes you would use:
+    //QPoint globalPos = viewport()->mapToGlobal(pos);
+
+    QMenu myMenu;
+    QAction * rerootAct = myMenu.addAction(tr("&Reroot"));
+
+    QAction* selectedItem = myMenu.exec(globalPos);
+    if (selectedItem == rerootAct)
+    {
+        m_visualTree->Reroot();
+        update();
+    }
+    else
+    {
+        // nothing was chosen
+    }
+}
 
 void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
 {
@@ -245,8 +272,6 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
         SetTranslation((m_visualTree->GetTreeHeight() + border.x) * GetZoom()/2 - QOpenGLWidget::size().height()/2);
     }
 
-    //emit treeSizeChanged(m_translateMax);
-    qDebug()<<__FILE__<<__LINE__<<__PRETTY_FUNCTION__<<GetTranslation();
     emit TranslationChanged(static_cast<int>(GetTranslation()));
     // Rebuild any display lists and render the scene
     QOpenGLWidget::update();
