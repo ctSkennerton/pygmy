@@ -79,7 +79,7 @@ public:
 	const Point operator-(const Point& pt) const { return Point(x - pt.x, y - pt.y); }
 
 	/** Inner dot product. */
-	const float operator*(const Point& pt) const { return x * pt.x + y * pt.y; }
+    float operator*(const Point& pt) const { return x * pt.x + y * pt.y; }
 
 	/** Scalar multiplication. */
 	friend Point operator*(float c, Point pt) { return Point(c*pt.x, c*pt.y); }

@@ -188,7 +188,7 @@ void GLWidget::resizeGL(int w, int h)
         m_previousSize.setHeight(h);
 
         // repaint viewport
-        QOpenGLWidget::update();
+        //QOpenGLWidget::update();
     }
 
     glUtils::ErrorGL::Check();
@@ -333,7 +333,7 @@ void GLWidget::SetZoom(float zoom)
     SetTranslation(previousTranslation + (previousTranslation+QOpenGLWidget::size().height()*0.5)*(GetZoom()-previousZoom)/previousZoom);
 
     //qDebug() << __FILE__ << " "<<__LINE__<<" "<<m_zoom<<" "<<m_translate << " "<<zoom << " "<<m_zoomMin << " "<<m_zoomMax;
-    QOpenGLWidget::update();
+    //QOpenGLWidget::update();
 }
 
 void GLWidget::SetDefaultZoom()
@@ -384,7 +384,7 @@ void GLWidget::ZoomExtents()
         // make sure zoom factor is within allowable range
         //SetZoom(m_zoom);
 
-        QOpenGLWidget::update();
+        //QOpenGLWidget::update();
     }
 }
 
@@ -404,7 +404,7 @@ void GLWidget::TranslationExtents()
     // make sure translation factor is within allowable range
     SetTranslation(GetTranslation());
 
-    QOpenGLWidget::update();
+    //QOpenGLWidget::update();
 }
 
 void GLWidget::AdjustViewport()
@@ -447,10 +447,11 @@ void GLWidget::CenterNode(uint id)
     if(translatedY < 0 || translatedY > QOpenGLWidget::size().height())
     {
         // Node is currently outside the viewport.
-        SetTranslation(posY-0.5*QOpenGLWidget::size().height());
+        emit TranslationChanged(posY-0.5*QOpenGLWidget::size().height());
+        //SetTranslation(posY-0.5*QOpenGLWidget::size().height());
     }
 
-    QOpenGLWidget::update();
+    //update();
 }
 
 void GLWidget::TranslationFraction(float frac)
@@ -458,7 +459,7 @@ void GLWidget::TranslationFraction(float frac)
     SetTranslation(frac*(m_visualTree->GetTreeHeight()*GetZoom()
                                         + 2*State::Inst().GetBorderSize().y) + State::Inst().GetBorderSize().y);
 
-    QOpenGLWidget::update();
+    update();
 }
 
 float GLWidget::TranslationFraction()
@@ -483,7 +484,7 @@ void GLWidget::SetBranchStyle(VisualTree::BRANCH_STYLE branchStyle)
     if(m_visualTree->GetBranchStyle() != branchStyle)
     {
         m_visualTree->SetBranchStyle(branchStyle);
-        QOpenGLWidget::update();
+        update();
     }
 }
 
@@ -493,5 +494,5 @@ void GLWidget::SetColourMap(VisualColourMapPtr visualColourMap)
     m_visualColourMap = visualColourMap;
 
     // Rebuild any display lists and render the scene
-    QOpenGLWidget::update();
+    update();
 }

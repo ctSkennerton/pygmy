@@ -29,7 +29,7 @@ public:
 	 */
 	NodePhylo(NodeId id): utils::Node(id), m_bootstrap(NO_DISTANCE), m_pos(utils::Point()), 
 												m_colour(utils::Colour(0,0,0)), m_bProcessed(false), m_bMissingData(false),
-												m_crossings(0), m_baryCenter(0), m_layoutPos(0), m_bSelected(false) {}
+                                                m_baryCenter(0), m_layoutPos(0), m_crossings(0), m_bSelected(false) {}
 
 	/**
 	 * @brief Constructor.
@@ -38,7 +38,7 @@ public:
 	 */
     NodePhylo(NodeId id,  const QString & name): Node(id, name), m_bootstrap(NO_DISTANCE), m_pos(utils::Point()),
 												m_colour(utils::Colour(0,0,0)), m_bProcessed(false), m_bMissingData(false),
-												m_crossings(0), m_baryCenter(0), m_layoutPos(0), m_bSelected(false) {}
+                                                m_baryCenter(0), m_layoutPos(0), m_crossings(0), m_bSelected(false) {}
 
 	/** Destructor. */
 	virtual ~NodePhylo() {}

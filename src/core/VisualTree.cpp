@@ -36,8 +36,8 @@ using namespace utils;
 VisualTree::VisualTree(utils::Tree<NodePhylo>::Ptr tree)
     : m_originalTree(tree),
       m_activeNode(VisualNode(VisualMarker(), NULL)),
-      m_colourMapSpacing(10),
-      m_branchStyle(CLADOGRAM_BRANCHES)
+      m_branchStyle(CLADOGRAM_BRANCHES),
+      m_colourMapSpacing(10)
 {	
 	m_tree = m_originalTree->Clone();
 
@@ -524,7 +524,8 @@ void VisualTree::RenderInternalLabels(float translation, float zoom)
 				fontY = int(border.y + pos.y * m_treeHeight * zoom  - 0.2f * (height-descender));
 				fontX = int(border.x + pos.x * m_treeWidth + State::Inst().GetLineWidth() + 1.5);
 			}
-            else if(State::Inst().GetInternalLabelPos() == "Above Left")
+            // for now lets assume that if it is not right then it is above left
+            else /*if(State::Inst().GetInternalLabelPos() == "Above Left")*/
 			{				
 				fontY = int(border.y + pos.y * m_treeHeight * zoom - 0.2f * (height-descender) + bb.Height()*0.5 + State::Inst().GetLineWidth() + 0.5);	
 				fontX = int(border.x + pos.x * m_treeWidth - bb.Width() - State::Inst().GetLineWidth() + 0.5);
