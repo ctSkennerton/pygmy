@@ -39,7 +39,8 @@ SOURCES +=\
     src/utils/ParsimonyCalculator.cpp \
     src/gui/GlScrollWrapper.cpp \
     src/gui/GlWidgetBase.cpp \
-    src/gui/GlWidgetOverview.cpp
+    src/gui/GlWidgetOverview.cpp \
+    src/gui/SimpleSearch.cpp
 
 HEADERS  += \
     src/gui/MainWindow.hpp \
@@ -67,8 +68,13 @@ HEADERS  += \
     src/utils/ParsimonyCalculator.hpp \
     src/gui/GlScrollWrapper.hpp \
     src/gui/GlWidgetBase.hpp \
-    src/gui/GlWidgetOverview.hpp
+    src/gui/GlWidgetOverview.hpp \
+    src/gui/SimpleSearch.hpp \
+    src/core/TextSearch.hpp
 
 RESOURCES += \
     resources.qrc
+
+FORMS += \
+    src/gui/SimpleSearch.ui
 
