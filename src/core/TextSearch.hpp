@@ -10,12 +10,10 @@
 #ifndef _TEXTSEARCH_H_
 #define _TEXTSEARCH_H_
 
-#include "../core/Precompiled.hpp"
 
-#include "../core/NodePhylo.hpp"
-#include "../core/Filter.hpp"
-
-#include "../utils/StringTools.hpp"
+#include "NodePhylo.hpp"
+#include "Filter.hpp"
+#include <QRegularExpression>
 
 namespace pygmy
 {
@@ -39,7 +37,7 @@ public:
 	 * @param word Word to add to the list.
 	 * @param id Node id to associate with the given word.
 	 */
-	void Add(const std::wstring& word, uint id) { m_words.insert(std::pair<std::wstring, uint>(word, id)); }
+    void Add(const QString& word, uint id) { m_words.insert(std::pair<QString, uint>(word, id)); }
 
 	/**
 	 * @brief Get a vector of all words which match the specified search.
@@ -47,64 +45,37 @@ public:
 	 * @param searchStr String to search for.
 	 * @param searchType Type of search to perform (i.e., starts with, contains, ends with, matches)
 	 */
-	std::vector<std::wstring>& FilterData(const std::wstring& searchStr, const std::wstring& searchType)
+    std::vector<QString>& FilterData(const QString& searchStr, const bool regularExpression, const bool caseInsensitive)
 	{
 		m_wordFilter.clear();
 		m_dataFilter->Clear();
-
-		std::wstring searchLower = utils::StringTools::ToLower(searchStr);
-
+        QRegularExpression re;
+        if(regularExpression)
+        {
+            re.setPattern(searchStr);
+            if(caseInsensitive)
+            {
+                re.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
+            }
+        }
 		// Add in all text that match the specified search.
-		std::map<std::wstring, uint>::iterator it;
+        std::map<QString, uint>::iterator it;
 		for (it = m_words.begin() ; it != m_words.end(); ++it)
 		{
-			std::wstring strLower = utils::StringTools::ToLower(it->first);
-
-			bool match = true;
-
-			if(searchType == _T("matches"))
-			{
-				if(searchLower.size() != strLower.size())
-				{
-					match = false;
-				}
-				else
-				{
-					uint pos = strLower.find(searchLower);
-					if(pos != 0)
-						match = false;
-				}
-			}
-			else if(searchType == _T("starts with"))
-			{
-				uint pos = strLower.find(searchLower);
-				if(pos != 0)
-					match = false;
-			}
-			else if(searchType == _T("ends with"))
-			{
-				for(uint j = 0; j < strLower.size(); ++j)
-				{
-					if(searchLower[searchLower.size()-j-1] != strLower[strLower.size()-j-1])
-					{
-						match = false;
-						break;
-					}
-				}
-			}
-			else if(searchType == _T("contains"))
-			{
-				if(strLower.find(searchLower) == std::wstring::npos)
-					match = false;
-			}
-
-			if(match)
-			{
-				m_wordFilter.push_back(it->first);
-				
-				if(searchLower != _T(""))
-					m_dataFilter->Add(it->second);
-			}
+            if(regularExpression)
+            {
+                if(it->first.contains(re))
+                {
+                    m_wordFilter.push_back(it->first);
+                }
+            }
+            else
+            {
+                if(it->first.contains(searchStr, caseInsensitive ? Qt::CaseInsensitive : Qt::CaseSensitive))
+                {
+                    m_wordFilter.push_back(it->first);
+                }
+            }
 		}
 
 		return m_wordFilter;		
@@ -116,9 +87,9 @@ public:
 	 * @param id Id associated with the given word.
 	 * @return True if the word was found, else false.
 	 */
-	bool Data(const std::wstring& word, uint& id)
+    bool Data(const QString& word, uint& id)
 	{ 
-		std::map<std::wstring, uint>::iterator it;
+        std::map<QString, uint>::iterator it;
 		
 		it = m_words.find(word);
 		if(it != m_words.end())
@@ -138,10 +109,10 @@ public:
 
 private:
 	/** Map words to associated data. */
-	std::map<std::wstring, uint> m_words;
+    std::map<QString, uint> m_words;
 
 	/** List of filtered words. */
-	std::vector<std::wstring> m_wordFilter;
+    std::vector<QString> m_wordFilter;
 
 	/** Filtered data items. */
 	FilterPtr m_dataFilter;
