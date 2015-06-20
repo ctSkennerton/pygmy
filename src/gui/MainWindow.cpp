@@ -50,24 +50,37 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDockWidget>
-#include <QHBoxLayout>
+#include <QGridLayout>
 #include <QScrollBar>
 #include <QPushButton>
+#include <QKeySequence>
 
 void MainWindow::createMenus()
 {
     QMenuBar *menuBar = new QMenuBar;
     QMenu *menuFile = menuBar->addMenu(tr("&File"));
+    QMenu *menuEdit = menuBar->addMenu(tr("&Edit"));
+
     QAction *openAct = new QAction(menuFile);
     openAct->setText(tr("Open File..."));
+    openAct->setShortcuts(QKeySequence::Open);
     menuFile->addAction(openAct);
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-    setMenuBar(menuBar);
+
+    QAction * findAct = new QAction(tr("&Find"), menuEdit);
+    findAct->setShortcuts(QKeySequence::Find);
+
+    menuEdit->addAction(findAct);
+    connect(findAct, SIGNAL(triggered()), m_simpleSearch, SLOT(show()));
+
 
     QMenu *helpMenu = new QMenu(tr("&Help"), this);
     QAction *aboutAction = helpMenu->addAction(tr("&About"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
     menuBar->addMenu(helpMenu);
+
+    setMenuBar(menuBar);
+
 }
 
 
@@ -91,20 +104,24 @@ void MainWindow::createDocks()
 
 MainWindow::MainWindow()
 {
-    createMenus();
-    m_glTreeWidgetCanvas = new GLScrollWrapper(this);
-    m_glTreeWidget = new GLWidget(this);
+    QWidget * window = new QWidget(this);
+    QGridLayout *main_window_layout = new QGridLayout(window);
+    m_glTreeWidgetCanvas = new GLScrollWrapper(window);
+    m_glTreeWidget = new GLWidget(window);
     m_glTreeWidgetCanvas->setViewport(m_glTreeWidget);
-    m_glTreeWidgetOverview = new GLWidgetOverview(this);
-    //m_glTreeWidget->setOverview(m_glTreeWidgetOverview);
+    m_glTreeWidgetOverview = new GLWidgetOverview(window);
+    m_simpleSearch = new SimpleSearch(window);
+    // hide the find widget untile the user wants to show it by
+    // clicking find from the menu
+    m_simpleSearch->hide();
 
-    QWidget * window = new QWidget;
-    QHBoxLayout *main_window_layout = new QHBoxLayout;
+    createMenus();
+
+
     main_window_layout->setContentsMargins(0,0,0,0);
-    //QWidget * dummy_overview = new QPushButton("dummy");
-    //main_window_layout->addWidget(dummy_overview);
-    main_window_layout->addWidget(m_glTreeWidgetOverview);
-    main_window_layout->addWidget(m_glTreeWidgetCanvas);
+    main_window_layout->addWidget(m_glTreeWidgetOverview, 0, 0, 2, 1);
+    main_window_layout->addWidget(m_glTreeWidgetCanvas, 0, 1);
+    main_window_layout->addWidget(m_simpleSearch, 1, 1);
 
     window->setLayout(main_window_layout);
     setCentralWidget(window);

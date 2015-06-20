@@ -45,6 +45,7 @@
 #include "GlScrollWrapper.hpp"
 #include "GlWidget.hpp"
 #include "GlWidgetOverview.hpp"
+#include "SimpleSearch.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -71,6 +72,7 @@ private:
     GLScrollWrapper * m_glTreeWidgetCanvas;
     GLWidget * m_glTreeWidget;
     GLWidgetOverview * m_glTreeWidgetOverview;
+    SimpleSearch * m_simpleSearch;
 };
 
 #endif
