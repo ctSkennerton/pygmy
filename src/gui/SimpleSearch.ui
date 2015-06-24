@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>801</width>
-     <height>61</height>
+     <height>67</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -64,6 +64,9 @@
       <property name="text">
        <string>Find</string>
       </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
      </widget>
     </item>
     <item row="1" column="1">
@@ -76,6 +79,13 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>findButton</tabstop>
+  <tabstop>caseInsensitiveCheckBox</tabstop>
+  <tabstop>regularExpressionCheckBox</tabstop>
+  <tabstop>advancedButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

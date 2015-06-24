@@ -16,15 +16,9 @@ SimpleSearch::~SimpleSearch()
 void SimpleSearch::on_findButton_clicked()
 {
     QString searchString = ui->lineEdit->text();
+    m_textSearch->FilterData(searchString, ui->regularExpressionCheckBox->isChecked(), ui->caseInsensitiveCheckBox->isChecked() );
     // check for the modifiers for insensitive and regular expression
-    if (ui->regularExpressionCheckBox->isChecked())
-    {
-
-    }
-    if (ui->caseInsensitiveCheckBox->isChecked())
-    {
-
-    }
+    emit SearchResultsChanged();
 }
 
 void SimpleSearch::on_advancedButton_clicked()

@@ -46,6 +46,8 @@
 #include "GlWidget.hpp"
 #include "GlWidgetOverview.hpp"
 #include "SimpleSearch.hpp"
+#include "../core/TextSearch.hpp"
+#include "../core/DataTypes.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -73,6 +75,7 @@ private:
     GLWidget * m_glTreeWidget;
     GLWidgetOverview * m_glTreeWidgetOverview;
     SimpleSearch * m_simpleSearch;
+    TextSearchPtr m_textSearch;
 };
 
 #endif

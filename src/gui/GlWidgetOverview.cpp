@@ -275,9 +275,7 @@ void GLWidgetOverview::RedrawTextSearch()
 			}
 		}
 	}
-  glEndList();
-
-    update();
+    glEndList();
 
 	glUtils::ErrorGL::Check();
 }
@@ -295,6 +293,7 @@ void GLWidgetOverview::paintGL()
 	{		
         qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__;
         RedrawTree();
+        RedrawTextSearch();
         // *** Render overview tree. ***
 		glPushMatrix();	
 		{			

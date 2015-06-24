@@ -45,9 +45,9 @@ public:
 	 * @param searchStr String to search for.
 	 * @param searchType Type of search to perform (i.e., starts with, contains, ends with, matches)
 	 */
-    std::vector<QString>& FilterData(const QString& searchStr, const bool regularExpression, const bool caseInsensitive)
+    /*std::vector<QString>&*/bool FilterData(const QString& searchStr, const bool regularExpression, const bool caseInsensitive)
 	{
-		m_wordFilter.clear();
+        //m_wordFilter.clear();
 		m_dataFilter->Clear();
         QRegularExpression re;
         if(regularExpression)
@@ -66,19 +66,21 @@ public:
             {
                 if(it->first.contains(re))
                 {
-                    m_wordFilter.push_back(it->first);
+                    m_dataFilter->Add(it->second);
+                    //m_wordFilter.push_back(it->first);
                 }
             }
             else
             {
                 if(it->first.contains(searchStr, caseInsensitive ? Qt::CaseInsensitive : Qt::CaseSensitive))
                 {
-                    m_wordFilter.push_back(it->first);
+                    m_dataFilter->Add(it->second);
+                    //m_wordFilter.push_back(it->first);
                 }
             }
 		}
-
-		return m_wordFilter;		
+        return true;
+        //return m_wordFilter;
 	}
 
 	/**

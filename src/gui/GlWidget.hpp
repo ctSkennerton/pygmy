@@ -139,8 +139,6 @@ protected:
     void TranslationExtents();
 
 protected:
-    /** Tree to be displayed in viewport. */
-    VisualTreePtr m_visualTree;
 
     /** Colour map to be displayed in viewport. */
     VisualColourMapPtr m_visualColourMap;

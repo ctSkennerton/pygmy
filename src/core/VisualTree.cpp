@@ -166,7 +166,7 @@ void VisualTree::Render(int width, int height, float translation, float zoom)
 	RenderTree(translation, zoom);
 
 	// *** Render any label selection heighlights. ***
-    //RenderTextSearch(translation, zoom);
+    RenderTextSearch(translation, zoom);
 	
 	// *** Render leaf node labels ***
 	RenderLeafNodeLabels(translation, zoom);

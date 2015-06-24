@@ -102,7 +102,7 @@ void MainWindow::createDocks()
     addDockWidget(Qt::RightDockWidgetArea, recordDockWidget);
 }
 
-MainWindow::MainWindow()
+MainWindow::MainWindow() : m_textSearch(new TextSearch)
 {
     QWidget * window = new QWidget(this);
     QGridLayout *main_window_layout = new QGridLayout(window);
@@ -114,6 +114,8 @@ MainWindow::MainWindow()
     // hide the find widget untile the user wants to show it by
     // clicking find from the menu
     m_simpleSearch->hide();
+
+    m_textSearch->DataFilter()->SetColour(utils::Colour(0.8f, 0.9f, 0.9f, 1.0f));
 
     createMenus();
 
@@ -130,6 +132,7 @@ MainWindow::MainWindow()
     //connections below can be written the other way. I'm sure there is something about Qt that
     //I'm just not understanding
     connect(m_glTreeWidget, SIGNAL(ShouldUpdateOverview()), m_glTreeWidgetOverview, SLOT(update()));
+    connect(m_simpleSearch, SIGNAL(SearchResultsChanged()), m_glTreeWidget, SLOT(update()));
 
     connect(m_glTreeWidget, &GLWidget::treeSizeChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::canvasHeight);
     connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::valueChanged, m_glTreeWidget, &GLWidget::translate);
@@ -167,9 +170,23 @@ void MainWindow::open()
         return;
     }
     setWindowTitle(tree->GetName());
+
+
+    // set up the text search object
+    std::vector<NodePhylo *> leaf_nodes = tree->GetLeaves();
+    m_textSearch->Clear();
+    for(NodePhylo * leaf : leaf_nodes)
+    {
+        m_textSearch->Add(leaf->GetName(), leaf->GetId());
+    }
+
     m_glTreeWidget->setTree(tree);
+    m_glTreeWidget->SetSearchFilter(m_textSearch->DataFilter());
     VisualTreePtr ptr = m_glTreeWidget->GetVisualTree();
     m_glTreeWidgetOverview->SetTree(ptr);
+    m_glTreeWidgetOverview->SetSearchFilter(m_textSearch->DataFilter());
+    m_simpleSearch->SetTextSearch(m_textSearch);
+
 }
 
 void MainWindow::writeSettings()
