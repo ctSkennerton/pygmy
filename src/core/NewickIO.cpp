@@ -90,7 +90,7 @@ void NewickIO::ParseNodeInfo(NodePhylo* node, QString& nodeInfo, bool bLeafNode)
 	if(firstP != -1)
 	{
         name = nodeInfo.mid(firstP+1, lastP-firstP-1);
-        name = name.replace( '_', ' ');
+        //name = name.replace( '_', ' ');
         supportValue = nodeInfo.mid(lastP+1).simplified();
 	}
 	else
@@ -100,7 +100,7 @@ void NewickIO::ParseNodeInfo(NodePhylo* node, QString& nodeInfo, bool bLeafNode)
 		{
 			// parse the name and support value
             name = nodeInfo.mid(0, spacePos-1);
-            name = name.replace('_', ' ');
+            //name = name.replace('_', ' ');
             supportValue = nodeInfo.mid(spacePos+1).simplified();
 		}
 		else
@@ -110,7 +110,7 @@ void NewickIO::ParseNodeInfo(NodePhylo* node, QString& nodeInfo, bool bLeafNode)
 			if(bLeafNode)
 			{
                 name = nodeInfo.simplified();
-                name = name.replace( '_', ' ');
+                //name = name.replace( '_', ' ');
 			}
 			else
                 supportValue = nodeInfo.simplified();
