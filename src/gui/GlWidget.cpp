@@ -277,6 +277,16 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
     QOpenGLWidget::update();
 }
 
+void GLWidget::sortSubtrees(pygmy::VisualTree::SUBTREE_SORT sortStyle)
+{
+    if(m_visualTree->GetSubtreeSortStyle() != sortStyle)
+    {
+        m_visualTree->SetSubtreeSortStyle(sortStyle);
+        m_visualTree->Layout();
+        update();
+    }
+}
+
 void GLWidget::SetTranslation(float translation)
 {
 

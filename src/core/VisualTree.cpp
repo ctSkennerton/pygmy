@@ -37,7 +37,8 @@ VisualTree::VisualTree(utils::Tree<NodePhylo>::Ptr tree)
     : m_originalTree(tree),
       m_activeNode(VisualNode(VisualMarker(), NULL)),
       m_branchStyle(CLADOGRAM_BRANCHES),
-      m_colourMapSpacing(10)
+      m_colourMapSpacing(10),
+      m_subtreeSortStyle(UNSORTED)
 {	
 	m_tree = m_originalTree->Clone();
 
@@ -105,6 +106,14 @@ void VisualTree::LayoutY(NodePhylo* node, uint& yLeafPosition)
 
 		float startInterval = FLT_MAX;
 		float endInterval = 0.0f;
+
+        if(GetSubtreeSortStyle() != UNSORTED)
+        {
+            if(GetSubtreeSortStyle() == ASCENDING)
+                node->sortChildren(true);
+            else
+                node->sortChildren();
+        }
 
 		for(uint i = 0; i < node->GetNumberOfChildren(); ++i)
 		{

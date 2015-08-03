@@ -117,6 +117,26 @@ public:
 		return children; 
 	}
 
+    /**
+     * @brief Sort the child array based on the m_height parameter
+     * @param Sort based on ascending or descending (default)
+     */
+    void sortChildren(bool ascending = false)
+    {
+        if(ascending)
+        {
+            std::sort(m_children.begin(), m_children.end(), [](Node * a, Node * b){
+                return a->GetHeight() < b->GetHeight();
+            });
+        }
+        else
+        {
+            std::sort(m_children.begin(), m_children.end(), [](Node * a, Node * b){
+                return a->GetHeight() > b->GetHeight();
+            });
+        }
+    }
+
 	/** 
 	 * @brief Set child node.
 	 * @param index Index of child node to set.

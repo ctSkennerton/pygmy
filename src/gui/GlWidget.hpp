@@ -69,6 +69,15 @@ public slots:
     void setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree);
 
     void translate(int position);
+    void sortSubtreesAscending()
+    {
+        sortSubtrees(pygmy::VisualTree::ASCENDING);
+    }
+
+    void sortSubtreesDescending()
+    {
+        sortSubtrees(pygmy::VisualTree::DESCENDING);
+    }
 
 public:
     GLWidget(QWidget *parent = 0);
@@ -137,6 +146,7 @@ protected:
     void ZoomChanged();
     void ZoomExtents();
     void TranslationExtents();
+    void sortSubtrees(pygmy::VisualTree::SUBTREE_SORT sortStyle);
 
 protected:
 

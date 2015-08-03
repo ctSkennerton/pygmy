@@ -60,21 +60,34 @@ void MainWindow::createMenus()
     QMenuBar *menuBar = new QMenuBar;
     QMenu *menuFile = menuBar->addMenu(tr("&File"));
     QMenu *menuEdit = menuBar->addMenu(tr("&Edit"));
+    QMenu *menuTree = menuBar->addMenu(tr("&Tree"));
+    QMenu *helpMenu = new QMenu(tr("&Help"), this);
 
+    //menuFile actions
     QAction *openAct = new QAction(menuFile);
     openAct->setText(tr("Open File..."));
     openAct->setShortcuts(QKeySequence::Open);
     menuFile->addAction(openAct);
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
 
+    //menuEdit actions
     QAction * findAct = new QAction(tr("&Find"), menuEdit);
     findAct->setShortcuts(QKeySequence::Find);
-
     menuEdit->addAction(findAct);
     connect(findAct, SIGNAL(triggered()), m_simpleSearch, SLOT(show()));
 
+    //menuTree actions
+    QAction * sortAscendingAct = new QAction(tr("&Sort Ascending"), menuTree);
+    sortAscendingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
+    menuTree->addAction(sortAscendingAct);
+    connect(sortAscendingAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(sortSubtreesAscending()));
 
-    QMenu *helpMenu = new QMenu(tr("&Help"), this);
+    QAction * sortDescendingAct = new QAction(tr("&Sort Descending"), menuTree);
+    sortDescendingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
+    menuTree->addAction(sortDescendingAct);
+    connect(sortDescendingAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(sortSubtreesDescending()));
+
+    //menuHelp actions
     QAction *aboutAction = helpMenu->addAction(tr("&About"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
     menuBar->addMenu(helpMenu);

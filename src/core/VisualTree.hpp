@@ -56,6 +56,7 @@ class VisualTree: public VisualObject
 {
 public:
 	enum BRANCH_STYLE { PHYLOGRAM_BRANCHES, CLADOGRAM_BRANCHES, EQUAL_BRANCHES };
+    enum SUBTREE_SORT { UNSORTED, ASCENDING, DESCENDING };
 
 public:
 	/** 
@@ -175,6 +176,18 @@ public:
 	/** Get current branch style. */
 	BRANCH_STYLE GetBranchStyle() { return m_branchStyle; }
 
+    /**
+     * @brief Set the style of ordering the subrees on the y-axis
+     * @param desired sorting style
+     */
+    void SetSubtreeSortStyle(SUBTREE_SORT sortStyle) { m_subtreeSortStyle = sortStyle; }
+
+    /**
+     * @brief get the style of ordering the subtrees on the y-axis
+     * @return the current style of subtree ordering
+     */
+    SUBTREE_SORT GetSubtreeSortStyle() { return m_subtreeSortStyle; }
+
 	/** Calculate bounding boxes for all leaf node labels. */
 	void LabelBoundingBoxes();
 
@@ -280,6 +293,9 @@ protected:
 	
 	/** Calculate parsimony score and internal entries. */
 	utils::ParsimonyCalculatorPtr m_parsimonyCalculator;
+
+    /** the way that subtrees should be sorted for rendering */
+    SUBTREE_SORT m_subtreeSortStyle;
 };
 
 }
