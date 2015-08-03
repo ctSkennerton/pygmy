@@ -146,6 +146,17 @@ public:
 	 */
 	void Reroot();
 
+    /**
+     * @brief Reroot a tree at node
+     * @param node to reroot tree on
+     */
+    void Reroot(NodePhylo * node);
+
+    /**
+     * @brief Root the tree at the midpoint node
+     */
+    void MidpointRoot();
+
 	/** 
 	 * @brief Restore original tree.
 	 */

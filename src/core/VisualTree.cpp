@@ -1009,6 +1009,101 @@ void VisualTree::Reroot()
 	Layout();
 }
 
+void VisualTree::Reroot(NodePhylo * node)
+{
+    m_tree->Reroot(node);
+    m_tree->CalculateStatistics();
+
+    // There is a bit of a complication here. If the root of a tree is changed,
+    // some bootstrap values may be lost (i.e., because the split induced by the
+    // previous root no longer exists). If the original rooting of the tree is
+    // later restored this data will be missing. As such, we explicitly restore
+    // bootstrap values from the original tree here.
+    std::vector< NodePhylo* > rootChildren = m_tree->GetRootNode()->GetChildren();
+    for(NodePhylo* node : rootChildren)
+    {
+        std::vector< NodePhylo* > children = node->GetChildren();
+
+        std::vector< NodePhylo* > originalNodes = m_originalTree->GetRootNode()->GetChildren();
+        for(NodePhylo* originalNode : originalNodes)
+        {
+            std::vector< NodePhylo* > originalChildren = originalNode->GetChildren();
+
+            bool bIdentical = true;
+            for(NodePhylo* child : children)
+            {
+                bool bMatch = false;
+                for(NodePhylo* originalChild : originalChildren)
+                {
+                    if(child->GetId() == originalChild->GetId())
+                    {
+                        bMatch = true;
+                        break;
+                    }
+                }
+
+                if(!bMatch)
+                {
+                    bIdentical = false;
+                    break;
+                }
+            }
+
+            if(bIdentical)
+            {
+                node->SetBootstrapToParent(originalNode->GetBootstrapToParent());
+                break;
+            }
+        }
+    }
+
+    Layout();
+}
+
+void VisualTree::MidpointRoot()
+{
+    // find the two leaves that have the longest distance
+    std::vector<NodePhylo *> leaves = m_tree->GetLeaves();
+    size_t numberOfLeaves = leaves.size();
+    float maxDistance = 0.0;
+    NodePhylo * a = nullptr;
+    NodePhylo * b = nullptr;
+    for (size_t i = 0; i < numberOfLeaves - 1; ++i)
+    {
+        for(size_t j = i+1; j < numberOfLeaves; ++j)
+        {
+            float distance = utils::TreeTools<NodePhylo>::GetDistanceBetweenAnyTwoNodes(leaves[i], leaves[j]);
+            if(distance > maxDistance)
+            {
+                maxDistance = distance;
+                a = leaves[i];
+                b = leaves[j];
+            }
+        }
+    }
+    // select the middle node as the new root
+    float halfDistance = maxDistance / 2;
+    qDebug() << "Leaves:"<<a->GetName()<<b->GetName();
+    qDebug() << "max idstance:"<<maxDistance<<"midpoint distance:"<< halfDistance;
+    std::vector<NodePhylo *> path = utils::TreeTools<NodePhylo>::GetPathBetweenAnyTwoNodes(a, b, false);
+    float d = 0.0;
+
+    //TODO: This could be improved as going slightly over is better than going well under
+    //      it would be better to implement it as the node whose distance is closest to
+    //      the halfway point
+    for(size_t i = 0; i < path.size(); ++i)
+    {
+        NodePhylo * n = path.at(i);
+        d += n->GetDistanceToParent();
+        qDebug() <<d;
+         if(d > halfDistance)
+         {
+             Reroot(path.at(i - 1));
+             break;
+         }
+    }
+}
+
 uint VisualTree::Parsimony()
 {
     State::Inst().SetInternalNodeField("Parsimony Data");

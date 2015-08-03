@@ -182,7 +182,7 @@ public:
 	 * @param includeAncestor Flag indicating if common ancestor should be included.
 	 * @return A vector with all branch lengths.
 	 */
-	static std::vector<N*> GetPathBetweenAnyTwoNodes(const N* node1, const N* node2, bool includeAncestor = true);
+    static std::vector<N*> GetPathBetweenAnyTwoNodes(N *node1, N *node2, bool includeAncestor = true);
 
 	/**
 	 * @brief Get all the branch lengths of a subtree.
@@ -218,7 +218,7 @@ public:
 	 * @param node2 Second node.
 	 * @return Sum of all branch distances between the two nodes.
 	 */
-	static float GetDistanceBetweenAnyTwoNodes(const N* node1, const N* node2);
+    static float GetDistanceBetweenAnyTwoNodes(N *node1, N *node2);
 
 private:
 	/**
@@ -458,7 +458,7 @@ void TreeTools<N>::ScaleTree(const N* node, float factor)
 }
 
 template <class N>
-std::vector<N*> TreeTools<N>::GetPathBetweenAnyTwoNodes(const N* node1, const N* node2, bool includeAncestor)
+std::vector<N*> TreeTools<N>::GetPathBetweenAnyTwoNodes(N* node1, N* node2, bool includeAncestor)
 {
   std::vector<N*> path;
   std::vector<N*> pathMatrix1;
@@ -504,7 +504,7 @@ std::vector<N*> TreeTools<N>::GetPathBetweenAnyTwoNodes(const N* node1, const N*
 }
 
 template <class N>
-float TreeTools<N>::GetDistanceBetweenAnyTwoNodes(const N* node1, const N* node2)
+float TreeTools<N>::GetDistanceBetweenAnyTwoNodes( N* node1, N* node2)
 {
   std::vector<N*> path = GetPathBetweenAnyTwoNodes(node1, node2, false);
   float d = 0;

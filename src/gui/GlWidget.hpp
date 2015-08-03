@@ -79,6 +79,12 @@ public slots:
         sortSubtrees(pygmy::VisualTree::DESCENDING);
     }
 
+    void midpointRoot()
+    {
+        m_visualTree->MidpointRoot();
+        update();
+    }
+
 public:
     GLWidget(QWidget *parent = 0);
     ~GLWidget();

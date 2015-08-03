@@ -87,6 +87,11 @@ void MainWindow::createMenus()
     menuTree->addAction(sortDescendingAct);
     connect(sortDescendingAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(sortSubtreesDescending()));
 
+    QAction * midpointRootAct = new QAction(tr("&Midpoint Root"), menuTree);
+    midpointRootAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_M));
+    menuTree->addAction(midpointRootAct);
+    connect(midpointRootAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(midpointRoot()));
+
     //menuHelp actions
     QAction *aboutAction = helpMenu->addAction(tr("&About"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
