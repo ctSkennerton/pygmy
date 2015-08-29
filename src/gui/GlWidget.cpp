@@ -273,6 +273,7 @@ void GLWidget::setTree(utils::Tree<pygmy::NodePhylo>::Ptr tree)
     }
 
     emit TranslationChanged(static_cast<int>(GetTranslation()));
+    emit LargestLabelHeight(static_cast<int>(m_visualTree->GetHighestLabel()));
     // Rebuild any display lists and render the scene
     QOpenGLWidget::update();
 }

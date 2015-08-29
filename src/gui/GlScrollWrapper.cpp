@@ -67,3 +67,8 @@ void GLScrollWrapper::GoToViewportFraction(float fraction)
     verticalScrollBar()->setValue(verticalScrollBar()->maximum() * fraction);
 }
 
+void GLScrollWrapper::VerticalSingleStepSize(int step)
+{
+    verticalScrollBar()->setSingleStep(step);
+}
+

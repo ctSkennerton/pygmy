@@ -63,6 +63,7 @@ signals:
     void TranslationFractionChanged(float frac);
     void ViewportHeightFraction(float frac);
     void ShouldUpdateOverview();
+    void LargestLabelHeight(int height);
 
 
 public slots:

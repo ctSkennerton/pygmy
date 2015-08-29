@@ -21,6 +21,7 @@ public slots:
     /** Sets the position of the vertical scrollbar*/
     void SetVerticalPosition(int position);
     void GoToViewportFraction(float fraction);
+    void VerticalSingleStepSize(int step);
 
 protected:
     void resizeEvent(QResizeEvent *);
