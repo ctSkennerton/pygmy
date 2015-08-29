@@ -40,7 +40,8 @@ SOURCES +=\
     src/gui/GlScrollWrapper.cpp \
     src/gui/GlWidgetBase.cpp \
     src/gui/GlWidgetOverview.cpp \
-    src/gui/SimpleSearch.cpp
+    src/gui/SimpleSearch.cpp \
+    #src/gui/PreferencesDialog.cpp
 
 HEADERS  += \
     src/gui/MainWindow.hpp \
@@ -70,11 +71,13 @@ HEADERS  += \
     src/gui/GlWidgetBase.hpp \
     src/gui/GlWidgetOverview.hpp \
     src/gui/SimpleSearch.hpp \
-    src/core/TextSearch.hpp
+    src/core/TextSearch.hpp \
+    #src/gui/PreferencesDialog.hpp
 
 RESOURCES += \
     resources.qrc
 
 FORMS += \
-    src/gui/SimpleSearch.ui
+    src/gui/SimpleSearch.ui \
+    #src/gui/PreferencesDialog.ui
 
