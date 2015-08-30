@@ -228,8 +228,8 @@ void MainWindow::readSettings()
 void MainWindow::about()
 {
    QMessageBox::about(this, tr("Pygmy"),
-            tr("Copyright (c) 2009, Donovan Parks (donovan.parks@gmail.com) \n"
-               "              2015, Donovan Parks, Connor Skennerton (c.skennerton@gmail.com) "
+            tr("Copyright (c) 2009, Donovan Parks     (donovan.parks@gmail.com) \n"
+               "              2015, Connor Skennerton (c.skennerton@gmail.com) "
                ));
 }
 
