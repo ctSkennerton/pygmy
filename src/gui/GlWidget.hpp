@@ -64,6 +64,7 @@ signals:
     void ViewportHeightFraction(float frac);
     void ShouldUpdateOverview();
     void LargestLabelHeight(int height);
+    void ShouldRedrawOverviewTree();
 
 
 public slots:
@@ -83,6 +84,7 @@ public slots:
     void midpointRoot()
     {
         m_visualTree->MidpointRoot();
+        emit ShouldRedrawOverviewTree();
         update();
     }
 

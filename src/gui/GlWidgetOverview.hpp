@@ -38,6 +38,17 @@ public slots:
      */
     virtual void ViewportHeightFraction(float frac) { m_viewportHeightFrac = frac; }
 
+    void Redraw();
+   /**
+    * @brief Reconstruct tree display lists.
+    */
+   void RedrawTree();
+
+   /**
+    * @brief Reconstruct text search display lists.
+    */
+   void RedrawTextSearch();
+
 public:
 	/** Constructor. */
     GLWidgetOverview(QWidget * parent);
@@ -68,6 +79,8 @@ public:
 	 */
 	virtual VisualTreePtr GetTree() { return m_visualTree; }
 
+    virtual void SetSearchFilter(pygmy::FilterPtr filter);
+
 
     
 protected:
@@ -80,19 +93,6 @@ protected:
      void resizeGL(int w, int h);
 
      void initializeGL();
-	
-     void Redraw();
-	/** 
-	 * @brief Reconstruct tree display lists.
-	 * @param refresh True if GL scene should be re-rendered.
-	 */
-    virtual void RedrawTree();
-
-	/** 
-	 * @brief Reconstruct text search display lists.
-	 * @param refresh True if GL scene should be re-rendered.
-	 */
-    virtual void RedrawTextSearch();
 	
 	/** Set min/max values for zooming. */
 	virtual void ZoomExtents() { m_zoomMin = 1.0f; m_zoomMax = 1.0f; }

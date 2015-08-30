@@ -26,7 +26,11 @@ public:
      * @brief Filter node labels based on a text search.
      * @param filter Filter object containing all items filtered by the search.
      */
-    void SetSearchFilter(pygmy::FilterPtr filter) {m_searchFilter = filter; m_visualTree->SetSearchFilter(filter); }
+    virtual void SetSearchFilter(pygmy::FilterPtr filter)
+    {
+        m_searchFilter = filter;
+        m_visualTree->SetSearchFilter(filter);
+    }
 
 
 

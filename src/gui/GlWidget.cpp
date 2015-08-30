@@ -233,6 +233,7 @@ void GLWidget::ShowContextMenu(const QPoint& pos) // this is a slot
     if (selectedItem == rerootAct)
     {
         m_visualTree->Reroot();
+        emit ShouldRedrawOverviewTree();
         update();
     }
     else
@@ -284,6 +285,7 @@ void GLWidget::sortSubtrees(pygmy::VisualTree::SUBTREE_SORT sortStyle)
     {
         m_visualTree->SetSubtreeSortStyle(sortStyle);
         m_visualTree->Layout();
+        emit ShouldRedrawOverviewTree();
         update();
     }
 }

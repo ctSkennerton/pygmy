@@ -150,7 +150,9 @@ MainWindow::MainWindow() : m_textSearch(new TextSearch)
     //connections below can be written the other way. I'm sure there is something about Qt that
     //I'm just not understanding
     connect(m_glTreeWidget, SIGNAL(ShouldUpdateOverview()), m_glTreeWidgetOverview, SLOT(update()));
+
     connect(m_simpleSearch, SIGNAL(SearchResultsChanged()), m_glTreeWidget, SLOT(update()));
+    connect(m_simpleSearch, SIGNAL(SearchResultsChanged()), m_glTreeWidgetOverview, SLOT(RedrawTextSearch()));
 
     connect(m_glTreeWidget, &GLWidget::treeSizeChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::canvasHeight);
     connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::valueChanged, m_glTreeWidget, &GLWidget::translate);
@@ -160,6 +162,7 @@ MainWindow::MainWindow() : m_textSearch(new TextSearch)
 
     connect(m_glTreeWidget, &GLWidget::TranslationFractionChanged, m_glTreeWidgetOverview, &GLWidgetOverview::TranslationFraction);
     connect(m_glTreeWidget, &GLWidget::ViewportHeightFraction, m_glTreeWidgetOverview, &GLWidgetOverview::ViewportHeightFraction);
+    connect(m_glTreeWidget, &GLWidget::ShouldRedrawOverviewTree, m_glTreeWidgetOverview, &GLWidgetOverview::Redraw);
     connect(m_glTreeWidgetOverview, &GLWidgetOverview::newTranslationFraction, m_glTreeWidgetCanvas, &GLScrollWrapper::GoToViewportFraction);
 
     createDocks();
@@ -206,6 +209,7 @@ void MainWindow::open()
     VisualTreePtr ptr = m_glTreeWidget->GetVisualTree();
     m_glTreeWidgetOverview->SetTree(ptr);
     m_glTreeWidgetOverview->SetSearchFilter(m_textSearch->DataFilter());
+
     m_simpleSearch->SetTextSearch(m_textSearch);
 
 }

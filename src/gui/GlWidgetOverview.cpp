@@ -79,6 +79,8 @@ void GLWidgetOverview::initializeGL()
 void GLWidgetOverview::SetTree(VisualTreePtr visualTree)
 {
 	m_visualTree = visualTree;
+    // redraw the tree in the overview
+    RedrawTree();
 }
 
 /*void GLWidgetOverview::TranslateView(int dx, int dy)
@@ -292,8 +294,10 @@ void GLWidgetOverview::paintGL()
 	if(m_visualTree)
 	{		
         qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__;
-        RedrawTree();
-        RedrawTextSearch();
+
+        //RedrawTree();
+        //RedrawTextSearch();
+
         // *** Render overview tree. ***
 		glPushMatrix();	
 		{			
@@ -375,3 +379,12 @@ void GLWidgetOverview::resizeGL(int w, int h)
     glUtils::ErrorGL::Check();
 
 }
+
+
+void GLWidgetOverview::SetSearchFilter(pygmy::FilterPtr filter)
+{
+    m_searchFilter = filter;
+    m_visualTree->SetSearchFilter(filter);
+    RedrawTextSearch();
+}
+
