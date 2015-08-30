@@ -29,3 +29,9 @@
 
 # OS X
 *.DS_Store
+
+# Qt
+.qmake.stash
+pygmy.pro.user
+pygmy.pro.user.3.3-pre1
+
