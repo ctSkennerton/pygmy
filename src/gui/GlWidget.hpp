@@ -149,6 +149,7 @@ protected:
       * all newly created widgets get a resize event automatically).
       */
     void resizeGL(int width, int height) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e);
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void ShowContextMenu(const QPoint& pos);
 

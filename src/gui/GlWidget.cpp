@@ -162,6 +162,12 @@ void GLWidget::paintGL()
 
 }
 
+void GLWidget::resizeEvent(QResizeEvent *e)
+{
+    QOpenGLWidget::resizeEvent(e);
+    emit ShouldRedrawOverviewTree();
+}
+
 void GLWidget::resizeGL(int w, int h)
 {
     glUtils::ErrorGL::Check();
