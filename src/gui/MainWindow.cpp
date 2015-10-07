@@ -104,13 +104,6 @@ void MainWindow::createMenus()
 
 void MainWindow::createDocks()
 {
-    // Make a dock for the search dialog
-    QDockWidget *searchDockWidget = new QDockWidget(tr("Search"), this);
-    searchDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea |
-                                      Qt::RightDockWidgetArea);
-    //searchDockWidget->setWidget(dockWidgetContents);
-    addDockWidget(Qt::RightDockWidgetArea, searchDockWidget);
-
 
     // Make a dock that will show the information of the currently selected record
     QDockWidget *recordDockWidget = new QDockWidget(tr("Current Record"), this);
@@ -158,7 +151,6 @@ MainWindow::MainWindow() : m_textSearch(new TextSearch)
     connect(m_glTreeWidgetCanvas->verticalScrollBar(), &QScrollBar::valueChanged, m_glTreeWidget, &GLWidget::translate);
     connect(m_glTreeWidget, &GLWidget::TranslationChanged, m_glTreeWidgetCanvas, &GLScrollWrapper::SetVerticalPosition);
     connect(m_glTreeWidget, &GLWidget::LargestLabelHeight, m_glTreeWidgetCanvas, &GLScrollWrapper::VerticalSingleStepSize);
-
 
     connect(m_glTreeWidget, &GLWidget::TranslationFractionChanged, m_glTreeWidgetOverview, &GLWidgetOverview::TranslationFraction);
     connect(m_glTreeWidget, &GLWidget::ViewportHeightFraction, m_glTreeWidgetOverview, &GLWidgetOverview::ViewportHeightFraction);
