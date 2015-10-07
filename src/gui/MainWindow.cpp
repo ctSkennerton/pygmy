@@ -92,6 +92,14 @@ void MainWindow::createMenus()
     menuTree->addAction(midpointRootAct);
     connect(midpointRootAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(midpointRoot()));
 
+    QAction * phylogramBranchesAct = new QAction(tr("&Phylogram"), menuTree);
+    menuTree->addAction(phylogramBranchesAct);
+    connect(phylogramBranchesAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(setPhylogramBranchStyle()));
+
+    QAction * cladogramBranchesAct = new QAction(tr("&Cladogram"), menuTree);
+    menuTree->addAction(cladogramBranchesAct);
+    connect(cladogramBranchesAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(setCladogramBranchStyle()));
+
     //menuHelp actions
     QAction *aboutAction = helpMenu->addAction(tr("&About"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));

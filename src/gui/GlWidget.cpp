@@ -296,6 +296,17 @@ void GLWidget::sortSubtrees(pygmy::VisualTree::SUBTREE_SORT sortStyle)
     }
 }
 
+void GLWidget::changeTreeBranchStyle(pygmy::VisualTree::BRANCH_STYLE branchStyle)
+{
+    if(m_visualTree->GetBranchStyle() != branchStyle)
+    {
+        m_visualTree->SetBranchStyle(branchStyle);
+        m_visualTree->Layout();
+        emit ShouldRedrawOverviewTree();
+        update();
+    }
+}
+
 void GLWidget::SetTranslation(float translation)
 {
 

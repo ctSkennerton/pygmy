@@ -81,6 +81,16 @@ public slots:
         sortSubtrees(pygmy::VisualTree::DESCENDING);
     }
 
+    void setPhylogramBranchStyle()
+    {
+        changeTreeBranchStyle(pygmy::VisualTree::PHYLOGRAM_BRANCHES);
+    }
+
+    void setCladogramBranchStyle()
+    {
+        changeTreeBranchStyle(pygmy::VisualTree::CLADOGRAM_BRANCHES);
+    }
+
     void midpointRoot()
     {
         m_visualTree->MidpointRoot();
@@ -157,6 +167,8 @@ protected:
     void ZoomExtents();
     void TranslationExtents();
     void sortSubtrees(pygmy::VisualTree::SUBTREE_SORT sortStyle);
+    void changeTreeBranchStyle(pygmy::VisualTree::BRANCH_STYLE branchStyle);
+
 
 protected:
 
