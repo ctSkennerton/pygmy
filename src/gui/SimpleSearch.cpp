@@ -16,9 +16,11 @@ SimpleSearch::~SimpleSearch()
 void SimpleSearch::on_findButton_clicked()
 {
     QString searchString = ui->lineEdit->text();
-    m_textSearch->FilterData(searchString, ui->regularExpressionCheckBox->isChecked(), ui->caseInsensitiveCheckBox->isChecked() );
-    // check for the modifiers for insensitive and regular expression
-    emit SearchResultsChanged();
+    if (!searchString.isEmpty()) {
+        m_textSearch->FilterData(searchString, ui->regularExpressionCheckBox->isChecked(), ui->caseInsensitiveCheckBox->isChecked() );
+        // check for the modifiers for insensitive and regular expression
+        emit SearchResultsChanged();
+    }
 }
 
 void SimpleSearch::on_advancedButton_clicked()

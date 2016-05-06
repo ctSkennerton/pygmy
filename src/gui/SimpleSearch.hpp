@@ -20,14 +20,7 @@ signals:
 public:
     explicit SimpleSearch(QWidget *parent = 0);
     ~SimpleSearch();
-//    QSize sizeHint() const
-//    {
-//        return QSize(600,  75);
-//    }
-//    QSize minimumSizeHint() const
-//    {
-//        return QSize(300, 50);
-//    }
+
     void SetTextSearch(pygmy::TextSearchPtr search)
     {
         m_textSearch = search;
