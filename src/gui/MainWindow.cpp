@@ -44,6 +44,8 @@
 #include "../utils/Tree.hpp"
 #include "../core/VisualTree.hpp"
 #include "../core/State.hpp"
+#include "../core/MetadataIO.hpp"
+
 
 #include <QMenuBar>
 #include <QMenu>
@@ -69,6 +71,11 @@ void MainWindow::createMenus()
     openAct->setShortcuts(QKeySequence::Open);
     menuFile->addAction(openAct);
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+
+    QAction *openAnnotationsAct = new QAction(menuFile);
+    openAnnotationsAct->setText(tr("Open Annotation File..."));
+    menuFile->addAction(openAnnotationsAct);
+    connect(openAnnotationsAct, SIGNAL(triggered()), this, SLOT(openAnnotationsFile()));
 
     //menuEdit actions
     QAction * findAct = new QAction(tr("&Find"), menuEdit);
@@ -214,6 +221,25 @@ void MainWindow::open()
 
 }
 
+void MainWindow::openAnnotationsFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                            tr("Open Annotations file"),
+                                            (State::Inst().GetPreviousDirectory().isEmpty()) ? QDir::homePath() : State::Inst().GetPreviousDirectory(),
+                                            tr("Tree Files (*.tsv *.txt);;All Files (*)")
+                                            );
+    // The user did not choose a file - clicked cancel
+    if(fileName.isNull())
+    {
+        return;
+    }
+    m_metadataInfo.reset( new MetadataInfo());
+    VisualTreePtr treePtr = m_glTreeWidget->GetVisualTree();
+    if(pygmy::MetadataIO::Read(fileName, treePtr, m_metadataInfo)) {
+        treePtr->SetMetadataInfo(m_metadataInfo);
+    }
+}
+
 void MainWindow::writeSettings()
 {
     State::Inst().Save();
@@ -229,7 +255,7 @@ void MainWindow::about()
 {
    QMessageBox::about(this, tr("Pygmy"),
             tr("Copyright (c) 2009, Donovan Parks     (donovan.parks@gmail.com) \n"
-               "              2015, Connor Skennerton (c.skennerton@gmail.com) "
+               "              2015 - 2017, Connor Skennerton (c.skennerton@gmail.com) "
                ));
 }
 

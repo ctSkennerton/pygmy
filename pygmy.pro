@@ -18,7 +18,7 @@ ICON = resources/images/pygmy.icns
 
 INCLUDEPATH += /usr/local/include /usr/local/include/freetype2
 
-LIBS += -L/usr/local/lib -lftgl
+LIBS += -L"/usr/local/lib" -lftgl
 
 SOURCES +=\
     src/gui/GlWidget.cpp \
@@ -42,6 +42,7 @@ SOURCES +=\
     src/gui/GlWidgetOverview.cpp \
     src/gui/SimpleSearch.cpp \
     #src/gui/PreferencesDialog.cpp
+    src/core/MetadataIO.cpp
 
 HEADERS  += \
     src/gui/MainWindow.hpp \
@@ -73,6 +74,7 @@ HEADERS  += \
     src/gui/SimpleSearch.hpp \
     src/core/TextSearch.hpp \
     #src/gui/PreferencesDialog.hpp
+    src/core/MetadataIO.hpp
 
 RESOURCES += \
     resources.qrc

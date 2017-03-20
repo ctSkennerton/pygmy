@@ -7,134 +7,93 @@
 // http://creativecommons.org/licenses/by-sa/3.0/
 //=======================================================================
 
-#include "../core/Precompiled.hpp"
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
+
+#include <map>
 
 #include "../core/MetadataIO.hpp"
-
-#include "../core/App.hpp"
 #include "../core/VisualTree.hpp"
 #include "../core/MetadataInfo.hpp"
 #include "../core/NodePhylo.hpp"
 
-#include "../utils/Log.hpp"
-#include "../utils/StringTools.hpp"
 
-using namespace boost;
 using namespace std;
-using namespace utils;
 using namespace pygmy;
 
-bool MetadataIO::Read(const std::wstring& filename, VisualTreePtr visualTree, MetadataInfoPtr metadataInfo) 
+bool MetadataIO::Read(const QString& filename, VisualTreePtr visualTree, MetadataInfoPtr metadataInfo)
 {
 	const int ROWS_TO_SHOW_PROGRESS_DLG = 2000;
 
 	// clear any previously loaded metadata
 	metadataInfo->Clear();
 
-	// open file containing metadata
-	// convert from wstring to string cause apparently 
-	// wifstream in gcc 4.8 takes const char *
-	std::string tmp(filename.begin(), filename.end());
-	wifstream infile(tmp.c_str());
-	if(!infile.is_open()) 
-	{
-		utils::Log::Inst().Warning(_T("(Warning) Failed to open metadata file."));	
-		return false;
-	}
+    QFile inFile (filename);
+    if (!inFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        // The file could not be found
+        QMessageBox msgBox;
+        msgBox.setText ("Unable to open input file");
+        msgBox.exec();
+        return false;
+    }
 
-	// read in column names
-	wstring columnHeaders;
-	getline(infile, columnHeaders);
+    QTextStream in(&inFile);
 
-	// tokenize columns
-	tokenizer< escaped_list_separator<wchar_t>, wstring::const_iterator, wstring > columnTokens(columnHeaders);
-	tokenizer< escaped_list_separator<wchar_t>, wstring::const_iterator, wstring >::iterator colIter;   
+    QString first_line = in.readLine();
+    if (first_line.isEmpty()) {
+        QMessageBox msgBox;
+        msgBox.setText ("The provided annotations file is empty");
+        msgBox.exec();
+        return false;
+    }
 
-	// parse all rows
-	wstring line;
-	vector<wstring> rows;
-	while(getline(infile, line))
-		rows.push_back(line);
+    QStringList header_fields = first_line.split("\t");
 
-	wxProgressDialog* progressDlg = NULL;
-	if(rows.size() > ROWS_TO_SHOW_PROGRESS_DLG)
-	{
-		progressDlg = new wxProgressDialog(_T("Loading file"), _T("Loading ") + filename + _T("..."),
-																														rows.size()-1, App::Inst().GetMainFrame(), 
-																														wxPD_APP_MODAL | wxPD_CAN_ABORT | wxPD_SMOOTH |
-																														wxPD_ELAPSED_TIME | wxPD_AUTO_HIDE);
-	}
-	else
-	{
-		::wxBeginBusyCursor();
-	}
+    int line_number = 0;
+    while (!in.atEnd()) {
+        line_number++;
 
-	uint rowNum = 0;
-	vector<wstring>::const_iterator it;
-	for(it = rows.begin(); it != rows.end(); ++it)
-	{
-		if(progressDlg && rowNum % 25 == 0)
-			progressDlg->Update(rowNum);		
+        QString current_line = in.readLine();
 
-		rowNum++;
+        if (current_line.isEmpty()) continue;
 
-		tokenizer< escaped_list_separator<wchar_t>, wstring::const_iterator, wstring > dataTokens(*it);
-		tokenizer< escaped_list_separator<wchar_t>, wstring::const_iterator, wstring >::iterator dataIter = dataTokens.begin();                
+        QStringList fields = current_line.split("\t");
+        if(fields.size() != header_fields.size()) {
+            QMessageBox msgBox;
+            QString msg = QString("Line %1 contains a different number of fields than expected %2 != %3").arg(line_number, fields.size(), header_fields.size());
 
-		wstring id = _T("");
+            msgBox.setText (msg);
+            msgBox.exec();
+            return false;
+        }
+        QString &id = fields[0];
+        if(id.size() == 0) {
+            // no Id for the metadata
+            continue;
+        }
+        std::map<QString, QString> current_metadata;
+        for (int i = 1; i < fields.size(); i++) {
+            current_metadata[header_fields[i]] = fields[i];
+        }
 
-		std::map<std::wstring, std::wstring> metadata;
-		for(colIter = columnTokens.begin(); colIter != columnTokens.end(); ++colIter)
-		{
-			std::wstring columnHeader = *colIter;
-			std::wstring columnValue = *dataIter;
-			metadata.insert(pair<wstring, wstring>(columnHeader, columnValue));
+        // associate metadata with leaf node
+        NodePhylo* nodeOriginal = visualTree->GetOriginalTree()->GetNode(id);
+        NodePhylo* nodeActive = visualTree->GetTree()->GetNode(id);
+        if(nodeOriginal)
+        {
+            // failure to find a node with a given id is not necessarily an error
+            // since the metadata file may simple span more sites/leaves than the
+            // tree currently being considered
+            nodeOriginal->SetMetadata(current_metadata);
 
-			// determine which column we are looking at (this allows user to put columns in any order)
-			if(utils::StringTools::ToLower(*colIter) == _T("sequence id"))
-			{
-				id = *dataIter;
-			}
+            if(nodeActive)
+                nodeActive->SetMetadata(current_metadata);
 
-			// move to next column
-			dataIter++;
-		}
-
-		// check for required data
-		if(id == _T(""))
-		{
-			if(progressDlg)
-				progressDlg->Destroy();
-
-			utils::Log::Inst().Warning(_T("(Warning) Missing 'Sequence Id' field."));
-			return false;
-		}
-		
-		// associate metadata with leaf node
-		NodePhylo* nodeOriginal = visualTree->GetOriginalTree()->GetNode(id);
-		NodePhylo* nodeActive = visualTree->GetTree()->GetNode(id);
-		if(nodeOriginal)
-		{
-			// failure to find a node with a given id is not necessarily an error
-			// since the metadata file may simple span more sites/leaves than the
-			// tree currently being considered
-			nodeOriginal->SetMetadata(metadata);
-
-			if(nodeActive)
-				nodeActive->SetMetadata(metadata);
-
-			metadataInfo->AddMetadata(metadata);
-		}
-	}
-
-	// closing the file stream.
-	infile.close();
-
-	if(progressDlg)
-		progressDlg->Destroy();
-	else
-		::wxEndBusyCursor();
-
+            metadataInfo->AddMetadata(current_metadata);
+        }
+    }
+    inFile.close();
 	return true;
 }
 

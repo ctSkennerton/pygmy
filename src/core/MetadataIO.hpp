@@ -10,8 +10,7 @@
 #ifndef _METADATA_IO_
 #define _METADATA_IO_
 
-#include "../core/Precompiled.hpp"
-
+#include "../core/DataTypes.hpp"
 namespace pygmy
 {
 
@@ -29,7 +28,7 @@ public:
 	 * @param tree Tree metadata is to be associated with.
 	 * @param metadataInfo Classes which summarize information about each metadata field.
 	 */
-	static bool Read(const std::wstring& filename, VisualTreePtr visualTree, MetadataInfoPtr metadataInfo);
+    static bool Read(const QString&  filename, VisualTreePtr visualTree, MetadataInfoPtr metadataInfo);
 };
 
 }

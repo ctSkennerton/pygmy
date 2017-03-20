@@ -48,6 +48,7 @@
 #include "SimpleSearch.hpp"
 #include "../core/TextSearch.hpp"
 #include "../core/DataTypes.hpp"
+#include "../core/MetadataInfo.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -59,6 +60,7 @@ public:
 private slots:
     void open();
     void about();
+    void openAnnotationsFile();
 
 
 
@@ -76,6 +78,8 @@ private:
     GLWidgetOverview * m_glTreeWidgetOverview;
     SimpleSearch * m_simpleSearch;
     TextSearchPtr m_textSearch;
+    MetadataInfoPtr m_metadataInfo;
+
 };
 
 #endif
