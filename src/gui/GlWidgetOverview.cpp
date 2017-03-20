@@ -293,7 +293,7 @@ void GLWidgetOverview::paintGL()
 	// ------------------ render the tree ---------------
 	if(m_visualTree)
 	{		
-        qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__;
+        //qDebug() <<__FILE__<<__LINE__<<__PRETTY_FUNCTION__;
 
         //RedrawTree();
         //RedrawTextSearch();
