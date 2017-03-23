@@ -410,7 +410,7 @@ void VisualTree::RenderLeafNodeLabels(float translation, float zoom)
 			// render label		
 			if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
 			{
-                QString label = leaf->GetName() + " [" + leaf->GetData(State::Inst().GetMetadataField()) + "]";
+                QString label = leaf->GetName() + " (" + leaf->GetData(State::Inst().GetMetadataField()) + ")";
 				State::Inst().GetFont()->Render(label, fontX, int(fontY - translation + 0.5));	
 			}
 			else if(State::Inst().GetShowLeafLabels())

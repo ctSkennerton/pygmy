@@ -238,6 +238,8 @@ void MainWindow::openAnnotationsFile()
     if(pygmy::MetadataIO::Read(fileName, treePtr, m_metadataInfo)) {
         treePtr->SetMetadataInfo(m_metadataInfo);
     }
+    State::Inst().SetMetadataField("organism");
+    State::Inst().SetShowMetadataLabels(true);
 }
 
 void MainWindow::writeSettings()
