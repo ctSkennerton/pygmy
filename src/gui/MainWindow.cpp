@@ -240,6 +240,7 @@ void MainWindow::openAnnotationsFile()
     }
     State::Inst().SetMetadataField("organism");
     State::Inst().SetShowMetadataLabels(true);
+    treePtr->LabelBoundingBoxes();
 }
 
 void MainWindow::writeSettings()
