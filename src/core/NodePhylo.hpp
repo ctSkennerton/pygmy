@@ -13,6 +13,7 @@
 #include "../utils/Node.hpp"
 #include "../utils/Point.hpp"
 #include "../utils/Colour.hpp"
+#include "State.hpp"
 
 namespace pygmy
 {
@@ -233,6 +234,22 @@ public:
 	/** Determine if node is currently selected. */
 	virtual bool IsSelected() const { return m_bSelected; }
 
+    QString GetLabel() {
+        if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
+        {
+            QString label = GetName() + " (" + GetData(State::Inst().GetMetadataField()) + ")";
+            return label;
+        }
+        else if(State::Inst().GetShowLeafLabels())
+        {
+            return GetName();
+        }
+        else if(State::Inst().GetShowMetadataLabels())
+        {
+            return GetData(State::Inst().GetMetadataField());
+        }
+    }
+
 protected:
 	/** Bootstrap value for node. */
 	float m_bootstrap;
@@ -266,6 +283,7 @@ protected:
 
 	/** Flag indicating if node is currently selected. */
 	bool m_bSelected;
+
 };
 
 } 

@@ -407,8 +407,9 @@ void VisualTree::RenderLeafNodeLabels(float translation, float zoom)
 			int fontY = int(border.y + childPos.y * m_treeHeight * zoom - 0.2f * (height-descender) + 0.5);	
 			int fontX = int(border.x + childPos.x * m_treeWidth + State::Inst().GetLabelOffset() + 0.5);
 
-			// render label		
-			if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
+            // render label
+            State::Inst().GetFont()->Render(leaf->GetLabel(), fontX, int(fontY - translation + 0.5));
+            /*if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
 			{
                 QString label = leaf->GetName() + " (" + leaf->GetData(State::Inst().GetMetadataField()) + ")";
 				State::Inst().GetFont()->Render(label, fontX, int(fontY - translation + 0.5));	
@@ -420,7 +421,7 @@ void VisualTree::RenderLeafNodeLabels(float translation, float zoom)
 			else if(State::Inst().GetShowMetadataLabels())
 			{
 				State::Inst().GetFont()->Render(leaf->GetData(State::Inst().GetMetadataField()), fontX, int(fontY - translation + 0.5));
-			}
+            }*/
 		}
 	}
 	glPopMatrix();
@@ -652,13 +653,7 @@ void VisualTree::LabelBoundingBoxes()
 	State::Inst().GetFont()->SetSize(State::Inst().GetTreeFontSize());
     for(NodePhylo* leaf : leafNodes)
 	{
-        QString label;
-		if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
-            label = leaf->GetName() + " [" + leaf->GetData(State::Inst().GetMetadataField()) + "]";
-		else if(State::Inst().GetShowLeafLabels())
-			label = leaf->GetName();
-		else if(State::Inst().GetShowMetadataLabels())
-			label = leaf->GetData(State::Inst().GetMetadataField());
+        QString label = leaf->GetLabel();
 
 		BBox bbox = State::Inst().GetFont()->GetBoundingBox(label);
 		mapItem item = mapItem(leaf->GetId(), bbox);
