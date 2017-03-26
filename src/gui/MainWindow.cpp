@@ -259,6 +259,7 @@ void MainWindow::openAnnotationsFile()
     treePtr->LabelBoundingBoxes();
 
     updateSearchFields();
+    m_glTreeWidget->update();
 }
 
 void MainWindow::writeSettings()
