@@ -50,7 +50,7 @@ bool MetadataIO::Read(const QString& filename, VisualTreePtr visualTree, Metadat
 
     QStringList header_fields = first_line.split("\t");
 
-    int line_number = 0;
+    int line_number = 1;
     while (!in.atEnd()) {
         line_number++;
 
@@ -61,7 +61,7 @@ bool MetadataIO::Read(const QString& filename, VisualTreePtr visualTree, Metadat
         QStringList fields = current_line.split("\t");
         if(fields.size() != header_fields.size()) {
             QMessageBox msgBox;
-            QString msg = QString("Line %1 contains a different number of fields than expected %2 != %3").arg(line_number, fields.size(), header_fields.size());
+            QString msg = QString("Line %1 contains a different number of fields than expected %2 != %3").arg(line_number).arg(fields.size()).arg(header_fields.size());
 
             msgBox.setText (msg);
             msgBox.exec();
