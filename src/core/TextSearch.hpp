@@ -30,7 +30,7 @@ public:
 	TextSearch(): m_dataFilter(new Filter()) {}
 
 	/** Clear the list of words. */
-	void Clear() { m_words.clear(); }
+    void Clear() { m_words.clear(); m_dataFilter->Clear(); }
 
 	/**
 	 * @brief Add a word to the list.

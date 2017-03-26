@@ -224,6 +224,7 @@ void MainWindow::open()
     setWindowTitle(tree->GetName());
 
     m_glTreeWidget->setTree(tree);
+    m_textSearch->Clear();
     m_glTreeWidget->SetSearchFilter(m_textSearch->DataFilter());
     VisualTreePtr ptr = m_glTreeWidget->GetVisualTree();
     m_glTreeWidgetOverview->SetTree(ptr);
