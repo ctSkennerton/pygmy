@@ -61,6 +61,7 @@ private slots:
     void open();
     void about();
     void openAnnotationsFile();
+    void updateSearchFields();
 
 
 

@@ -187,6 +187,18 @@ MainWindow::MainWindow() : m_textSearch(new TextSearch)
 
 }
 
+void MainWindow::updateSearchFields()
+{
+    utils::Tree<NodePhylo>::Ptr tree = m_glTreeWidget->GetVisualTree()->GetTree();
+    // set up the text search object
+    std::vector<NodePhylo *> leaf_nodes = tree->GetLeaves();
+    m_textSearch->Clear();
+    for(NodePhylo * leaf : leaf_nodes)
+    {
+        m_textSearch->Add(leaf->GetLabel(), leaf->GetId());
+    }
+}
+
 void MainWindow::open()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -211,15 +223,6 @@ void MainWindow::open()
     }
     setWindowTitle(tree->GetName());
 
-
-    // set up the text search object
-    std::vector<NodePhylo *> leaf_nodes = tree->GetLeaves();
-    m_textSearch->Clear();
-    for(NodePhylo * leaf : leaf_nodes)
-    {
-        m_textSearch->Add(leaf->GetName(), leaf->GetId());
-    }
-
     m_glTreeWidget->setTree(tree);
     m_glTreeWidget->SetSearchFilter(m_textSearch->DataFilter());
     VisualTreePtr ptr = m_glTreeWidget->GetVisualTree();
@@ -227,6 +230,7 @@ void MainWindow::open()
     m_glTreeWidgetOverview->SetSearchFilter(m_textSearch->DataFilter());
 
     m_simpleSearch->SetTextSearch(m_textSearch);
+    updateSearchFields();
 
 }
 
@@ -252,6 +256,8 @@ void MainWindow::openAnnotationsFile()
     // this calculates the width of the labels, which we need since
     // I'm hard coding the organism labels to show
     treePtr->LabelBoundingBoxes();
+
+    updateSearchFields();
 }
 
 void MainWindow::writeSettings()
