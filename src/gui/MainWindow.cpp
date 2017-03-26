@@ -48,6 +48,7 @@
 
 
 #include <QMenuBar>
+#include <QToolBar>
 #include <QMenu>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -64,6 +65,7 @@ void MainWindow::createMenus()
     QMenu *menuEdit = menuBar->addMenu(tr("&Edit"));
     QMenu *menuTree = menuBar->addMenu(tr("&Tree"));
     QMenu *helpMenu = new QMenu(tr("&Help"), this);
+    QToolBar * treeToolBar = addToolBar(tr("Tree"));
 
     //menuFile actions
     QAction *openAct = new QAction(menuFile);
@@ -87,24 +89,31 @@ void MainWindow::createMenus()
     QAction * sortAscendingAct = new QAction(tr("&Sort Ascending"), menuTree);
     sortAscendingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
     menuTree->addAction(sortAscendingAct);
+    treeToolBar->addAction(sortAscendingAct);
     connect(sortAscendingAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(sortSubtreesAscending()));
 
     QAction * sortDescendingAct = new QAction(tr("&Sort Descending"), menuTree);
     sortDescendingAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
     menuTree->addAction(sortDescendingAct);
+    treeToolBar->addAction(sortDescendingAct);
     connect(sortDescendingAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(sortSubtreesDescending()));
 
     QAction * midpointRootAct = new QAction(tr("&Midpoint Root"), menuTree);
     midpointRootAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_M));
     menuTree->addAction(midpointRootAct);
+    treeToolBar->addAction(midpointRootAct);
     connect(midpointRootAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(midpointRoot()));
 
-    QAction * phylogramBranchesAct = new QAction(tr("&Phylogram"), menuTree);
+    const QIcon phylogramBranchesIcon = QIcon("://resources/images/phylogram.xpm");
+    QAction * phylogramBranchesAct = new QAction(phylogramBranchesIcon, tr("&Phylogram"), menuTree);
     menuTree->addAction(phylogramBranchesAct);
+    treeToolBar->addAction(phylogramBranchesAct);
     connect(phylogramBranchesAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(setPhylogramBranchStyle()));
 
-    QAction * cladogramBranchesAct = new QAction(tr("&Cladogram"), menuTree);
+    const QIcon cladogramBranchesIcon = QIcon("://resources/images/cladogram_rect.xpm");
+    QAction * cladogramBranchesAct = new QAction(cladogramBranchesIcon, tr("&Cladogram"), menuTree);
     menuTree->addAction(cladogramBranchesAct);
+    treeToolBar->addAction(cladogramBranchesAct);
     connect(cladogramBranchesAct, SIGNAL(triggered()), m_glTreeWidget, SLOT(setCladogramBranchStyle()));
 
     //menuHelp actions
@@ -240,6 +249,8 @@ void MainWindow::openAnnotationsFile()
     }
     State::Inst().SetMetadataField("organism");
     State::Inst().SetShowMetadataLabels(true);
+    // this calculates the width of the labels, which we need since
+    // I'm hard coding the organism labels to show
     treePtr->LabelBoundingBoxes();
 }
 

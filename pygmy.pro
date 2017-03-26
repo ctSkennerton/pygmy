@@ -42,7 +42,8 @@ SOURCES +=\
     src/gui/GlWidgetOverview.cpp \
     src/gui/SimpleSearch.cpp \
     #src/gui/PreferencesDialog.cpp
-    src/core/MetadataIO.cpp
+    src/core/MetadataIO.cpp \
+    src/gui/treeoptions.cpp
 
 HEADERS  += \
     src/gui/MainWindow.hpp \
@@ -74,12 +75,13 @@ HEADERS  += \
     src/gui/SimpleSearch.hpp \
     src/core/TextSearch.hpp \
     #src/gui/PreferencesDialog.hpp
-    src/core/MetadataIO.hpp
+    src/core/MetadataIO.hpp \
+    src/gui/treeoptions.hpp
 
-RESOURCES += \
-    resources.qrc
+RESOURCES += resources.qrc
 
 FORMS += \
     src/gui/SimpleSearch.ui \
     #src/gui/PreferencesDialog.ui
+    src/gui/treeoptions.ui
 

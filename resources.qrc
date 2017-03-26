@@ -8,5 +8,11 @@
         <file>resources/fonts/times.ttf</file>
         <file>resources/fonts/trebuchet.ttf</file>
         <file>resources/fonts/verdana.ttf</file>
+        <file>resources/images/cladogram_rect.ico</file>
+        <file>resources/images/phylogram.ico</file>
+        <file>resources/images/cladogram_rectArtboard 1.png</file>
+        <file>resources/images/phylogramArtboard 1.png</file>
+        <file>resources/images/cladogram_rect.xpm</file>
+        <file>resources/images/phylogram.xpm</file>
     </qresource>
 </RCC>
