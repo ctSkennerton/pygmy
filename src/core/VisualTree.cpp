@@ -184,7 +184,10 @@ void VisualTree::Render(int width, int height, float translation, float zoom)
 	RenderInternalLabels(translation, zoom);
 
 	// *** Render the active node. ***
-	RenderActiveNode(translation, zoom);
+    // This renders slightly weird as it's
+    // y-pos is always slightly below the position
+    // that it should be
+    //RenderActiveNode(translation, zoom);
 
 	glUtils::ErrorGL::Check();
 }
@@ -409,19 +412,6 @@ void VisualTree::RenderLeafNodeLabels(float translation, float zoom)
 
             // render label
             State::Inst().GetFont()->Render(leaf->GetLabel(), fontX, int(fontY - translation + 0.5));
-            /*if(State::Inst().GetShowLeafLabels() && State::Inst().GetShowMetadataLabels())
-			{
-                QString label = leaf->GetName() + " (" + leaf->GetData(State::Inst().GetMetadataField()) + ")";
-				State::Inst().GetFont()->Render(label, fontX, int(fontY - translation + 0.5));	
-			}
-			else if(State::Inst().GetShowLeafLabels())
-			{
-				State::Inst().GetFont()->Render(leaf->GetName(), fontX, int(fontY - translation + 0.5));
-			}
-			else if(State::Inst().GetShowMetadataLabels())
-			{
-				State::Inst().GetFont()->Render(leaf->GetData(State::Inst().GetMetadataField()), fontX, int(fontY - translation + 0.5));
-            }*/
 		}
 	}
 	glPopMatrix();
@@ -551,7 +541,7 @@ void VisualTree::RenderInternalLabels(float translation, float zoom)
 
 void VisualTree::RenderActiveNode(float translation, float zoom)
 {
-    /*
+
 	glUtils::ErrorGL::Check();
 
 	if(m_activeNode.node != NULL)
@@ -575,7 +565,7 @@ void VisualTree::RenderActiveNode(float translation, float zoom)
 			{
 				Point childPos = child->GetPosition();
 
-				if(m_layout == VisualTree::SLANTED_CLADOGRAM)
+                if(GetBranchStyle() == VisualTree::SLANTED_CLADOGRAM)
 				{
 					glBegin(GL_LINES); 
 						glVertex2f(activePos.x, activePos.y);
@@ -598,7 +588,7 @@ void VisualTree::RenderActiveNode(float translation, float zoom)
 			{
 				parentPos = m_activeNode.node->GetParent()->GetPosition();
 
-				if(m_layout == VisualTree::SLANTED_CLADOGRAM)
+                if(GetBranchStyle() == VisualTree::SLANTED_CLADOGRAM)
 				{
 					glBegin(GL_LINES); 
 						glVertex2f(activePos.x, activePos.y);
@@ -632,7 +622,7 @@ void VisualTree::RenderActiveNode(float translation, float zoom)
 	}
 
 	glUtils::ErrorGL::Check();
-    */
+
 }
 
 void VisualTree::LabelBoundingBoxes()
