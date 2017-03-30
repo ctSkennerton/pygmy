@@ -192,6 +192,8 @@ MainWindow::MainWindow() : m_textSearch(new TextSearch)
     connect(m_treeOptions, SIGNAL(TreeOptionsChanged()), m_glTreeWidget, SLOT(update()));
     connect(m_treeOptions, &TreeOptions::leafFontChanged, m_glTreeWidget, &GLWidget::ModifiedFont);
     connect(m_treeOptions, SIGNAL(leafLabelsChanged()), m_glTreeWidget, SLOT(updateLeafWidths()));
+    connect(m_treeOptions, &TreeOptions::leafLabelsChanged, this, &MainWindow::updateSearchFields);
+
 
     createDocks();
 
@@ -265,7 +267,6 @@ void MainWindow::openAnnotationsFile()
         treePtr->SetMetadataInfo(m_metadataInfo);
     }
 
-    updateSearchFields();
     QStringList metadata_fields = m_metadataInfo->GetFields();
     m_treeOptions->loadMetadataKeys(metadata_fields);
     m_glTreeWidget->update();
