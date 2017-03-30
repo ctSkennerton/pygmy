@@ -15,6 +15,8 @@
 #include "../utils/Tree.hpp"
 
 #include <cfloat>
+#include <QStringList>
+
 
 namespace pygmy
 {
@@ -92,7 +94,7 @@ public:
 	void Clear() { m_metadataInfo.clear(); }
 
 	/** Get all fields. */
-    std::vector<QString> GetFields();
+    QStringList GetFields();
 
 	/** Check if data is missing. */
     static bool IsMissingData(const QString& value);

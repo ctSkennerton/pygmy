@@ -10,22 +10,22 @@
 
 #include "../core/MetadataInfo.hpp"
 #include "../core/NodePhylo.hpp"
-
 #include "../utils/Tree.hpp"
+
 
 using namespace utils;
 using namespace pygmy;
 
 const float FieldInfo::NA = -FLT_MAX;
 
-std::vector<QString> MetadataInfo::GetFields()
+QStringList MetadataInfo::GetFields()
 {
-    std::vector<QString> fields;
+    QStringList fields;
 
     typedef std::pair<QString, FieldInfo> pair_t;
 	foreach(pair_t data, m_metadataInfo)
 	{	
-		fields.push_back(data.first);
+        fields.append(data.first);
 	}
 
 	return fields;

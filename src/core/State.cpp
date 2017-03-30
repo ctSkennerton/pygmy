@@ -64,7 +64,7 @@ void State::Load()
     m_bOptimizeLeafNodes = settings.value("Tree/optimizeLeafOrdering", false).toBool();
 
     m_bShowInternalLabels = settings.value("InternalLabels/showLabels", false).toBool();
-    m_internalLabelField = settings.value("InternalLabels/field", "Parsimony Data").toString();
+    m_internalLabelField = settings.value("InternalLabels/field", "Name").toString();
     m_internalLabelPos = settings.value("InternalLabels/position", "Above Left").toString();
     m_internalLabelSize = settings.value("InternalLabels/fontSize", 10).toUInt();
     m_bInternalLabelScientific = settings.value("InternalLabels/scientific", false).toBool();

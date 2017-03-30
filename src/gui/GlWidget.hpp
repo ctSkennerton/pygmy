@@ -98,6 +98,15 @@ public slots:
         update();
     }
 
+    void updateLeafWidths()
+    {
+        m_visualTree->LabelBoundingBoxes();
+    }
+
+    /** Indicate that the font size or style has been modified and that any values
+            dependent on the font should be recalculated. */
+    void ModifiedFont();
+
 public:
     GLWidget(QWidget *parent = 0);
     ~GLWidget();
@@ -117,9 +126,6 @@ public:
 
     VisualTreePtr GetVisualTree() {return m_visualTree;}
 
-    /** Indicate that the font size or style has been modified and that any values
-            dependent on the font should be recalculated. */
-    void ModifiedFont();
 
     void AdjustViewport();
 

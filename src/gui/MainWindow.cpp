@@ -135,6 +135,13 @@ void MainWindow::createDocks()
                                       Qt::RightDockWidgetArea);
     //recordDockWidget->setWidget(dockWidgetContents);
     addDockWidget(Qt::RightDockWidgetArea, recordDockWidget);
+
+    // Make a dock that will show the information of the currently selected record
+    QDockWidget *treeSettingsDockWidget = new QDockWidget(tr("Options"), this);
+    treeSettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea |
+                                      Qt::RightDockWidgetArea);
+    treeSettingsDockWidget->setWidget(m_treeOptions);
+    addDockWidget(Qt::LeftDockWidgetArea, treeSettingsDockWidget);
 }
 
 MainWindow::MainWindow() : m_textSearch(new TextSearch)
@@ -146,6 +153,7 @@ MainWindow::MainWindow() : m_textSearch(new TextSearch)
     m_glTreeWidgetCanvas->setViewport(m_glTreeWidget);
     m_glTreeWidgetOverview = new GLWidgetOverview(window);
     m_simpleSearch = new SimpleSearch(window);
+    m_treeOptions = new TreeOptions(window);
     // hide the find widget untile the user wants to show it by
     // clicking find from the menu
     m_simpleSearch->hide();
@@ -180,6 +188,10 @@ MainWindow::MainWindow() : m_textSearch(new TextSearch)
     connect(m_glTreeWidget, &GLWidget::ViewportHeightFraction, m_glTreeWidgetOverview, &GLWidgetOverview::ViewportHeightFraction);
     connect(m_glTreeWidget, &GLWidget::ShouldRedrawOverviewTree, m_glTreeWidgetOverview, &GLWidgetOverview::Redraw);
     connect(m_glTreeWidgetOverview, &GLWidgetOverview::newTranslationFraction, m_glTreeWidgetCanvas, &GLScrollWrapper::GoToViewportFraction);
+
+    connect(m_treeOptions, SIGNAL(TreeOptionsChanged()), m_glTreeWidget, SLOT(update()));
+    connect(m_treeOptions, &TreeOptions::leafFontChanged, m_glTreeWidget, &GLWidget::ModifiedFont);
+    connect(m_treeOptions, SIGNAL(leafLabelsChanged()), m_glTreeWidget, SLOT(updateLeafWidths()));
 
     createDocks();
 
@@ -232,7 +244,7 @@ void MainWindow::open()
 
     m_simpleSearch->SetTextSearch(m_textSearch);
     updateSearchFields();
-
+    m_treeOptions->setupFromState();
 }
 
 void MainWindow::openAnnotationsFile()
@@ -252,13 +264,10 @@ void MainWindow::openAnnotationsFile()
     if(pygmy::MetadataIO::Read(fileName, treePtr, m_metadataInfo)) {
         treePtr->SetMetadataInfo(m_metadataInfo);
     }
-    State::Inst().SetMetadataField("organism");
-    State::Inst().SetShowMetadataLabels(true);
-    // this calculates the width of the labels, which we need since
-    // I'm hard coding the organism labels to show
-    treePtr->LabelBoundingBoxes();
 
     updateSearchFields();
+    QStringList metadata_fields = m_metadataInfo->GetFields();
+    m_treeOptions->loadMetadataKeys(metadata_fields);
     m_glTreeWidget->update();
 }
 
@@ -270,7 +279,6 @@ void MainWindow::writeSettings()
 void MainWindow::readSettings()
 {
    State::Inst().Load();
-
 }
 
 void MainWindow::about()

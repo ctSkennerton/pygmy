@@ -390,10 +390,15 @@ void GLWidget::ModifiedFont()
 {
     if(!m_visualTree)
         return;
-
     m_visualTree->LabelBoundingBoxes();
-    AdjustViewport();
+    m_visualTree->CalculateTreeDimensions(QOpenGLWidget::size().width(), QOpenGLWidget::size().height(), GetZoom());
     ZoomExtents();
+    TranslationExtents();
+    // AdjustViewport makes no difference here
+    //AdjustViewport();
+
+    emit TranslationChanged(static_cast<int>(m_translateMax - GetTranslation()));
+    emit LargestLabelHeight(static_cast<int>(m_visualTree->GetHighestLabel()));
 }
 
 void GLWidget::ZoomExtents()

@@ -46,6 +46,7 @@
 #include "GlWidget.hpp"
 #include "GlWidgetOverview.hpp"
 #include "SimpleSearch.hpp"
+#include "treeoptions.hpp"
 #include "../core/TextSearch.hpp"
 #include "../core/DataTypes.hpp"
 #include "../core/MetadataInfo.hpp"
@@ -78,6 +79,7 @@ private:
     GLWidget * m_glTreeWidget;
     GLWidgetOverview * m_glTreeWidgetOverview;
     SimpleSearch * m_simpleSearch;
+    TreeOptions * m_treeOptions;
     TextSearchPtr m_textSearch;
     MetadataInfoPtr m_metadataInfo;
 
